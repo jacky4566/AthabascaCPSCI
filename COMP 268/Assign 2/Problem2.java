@@ -23,48 +23,7 @@
 *   Run:      java Problem2.java
 *
 * Classes:
-*
-* Class: Book
-*   Description: 
-*    Stores and retrieves information regarding a target book.
-*    Target is stored as a set of private strings.
-*
-*   Constructors:
-*    Book(String, String, String, String, String, Int)
-*    Use this contrustor when we want to create a new instance and assign all the relavent information. Fields as follows:
-*     newtitle
-*     newISBN
-*     newAuthor
-*     newEdition
-*     newPublisher
-*     newYear
-*
-*   Book()
-*    Use this contrustor when we want to create a new instance with no information assigned. Variables will remain NULL.
-* 
-*   Methods:
-*    String getTitle(): Returns the current value of private variable Title as a String.
-*    String getISBN(): Returns the current value of private variable ISBN as a String.
-*    String getAuthor(): Returns the current value of private variable Author as a String.
-*    String getEdition(): Returns the current value of private variable Edition as a String.
-*    String setPublisher(): Returns the current value of private variable Publisher as a String.
-*    String getYear(): Returns the current value of private variable Year as a String for easy printing. 
-* 
-*    setTitle(String): Sets the current value of private variable Title. Accepts a single String value.
-*    setISBN(String): Sets the current value of private variable ISBN as a String. Accepts a single String value.
-*    setAuthor(String): Sets the current value of private variable Author as a String. Accepts a single String value.
-*    setEdition(String): Sets the current value of private variable Edition as a String. Accepts a single String value.
-*    setPublisher(String): Sets the current value of private variable Publisher as a String. Accepts a single String value.
-*    setYear(int): Sets the current value of private variable Year as a integer. Accepts a single integer value.
-*
-*    Instance Variables:
-*    Private String title: Private variable of type String that stores information about the title of a book.
-*    Private String ISBN: Private variable of type String that stores information about the ISBN of a book. 
-*    Private String author: Private variable of type String that stores information about the author of a book.
-*    Private String edition: Private variable of type String that stores information about the edition of a book.
-*    Private String publisher: Private variable of type String that stores information about the publisher of a book.
-*    Private int year: Private variable of type integer that stores information about the first year published. Expected value will never exceed 32bit signed.
-*
+*  Book.java
 */
 
 /**
@@ -98,80 +57,6 @@
 */
 
 public class Problem2 {
-
-    static class Book { //Class of Book
-        private String title; //Private variables can only be modified by functions internal to the class
-        private String ISBN ;
-        private String author;
-        private String edition;
-        private String publisher;
-        private int year;
-
-        public Book(String newtitle, String newISBN, String newAuthor, String newEdition, String newPublisher,
-        int newYear) {
-            // If the book is given data into the constructor, Store it in the private
-            // variables.
-            this.title = newtitle;
-            this.ISBN = newISBN;
-            this.author = newAuthor;
-            this.edition = newEdition;
-            this.publisher = newPublisher;
-            this.year = newYear;
-        }
-
-        public Book() {// constructor
-            // If no information is given the private variables will remain null.
-        }
-
-        //Getters and Setters
-        public String getTitle() {
-            return title;
-        }
-
-        public void setTitle(String newtitle) {
-            this.title = newtitle;
-        }
-
-        public String getISBN() {
-            return ISBN;
-        }
-
-        public void setISBN(String newISBN) {
-            this.ISBN = newISBN;
-        }
-
-        public String getAuthor() {
-            return author;
-        }
-
-        public void setAuthor(String newAuthor) {
-            this.author = newAuthor;
-        }
-
-        public String getEdition() {
-            return edition;
-        }
-
-        public void setEdition(String newEdition) {
-            this.edition = newEdition;
-        }
-
-        public String getPublisher() {
-            return publisher;
-        }
-
-        public void setPublisher(String newPublisher) {
-            this.publisher = newPublisher;
-        }
-
-        public String getYear() {
-            return Integer.toString(year);
-        }
-
-        public void setYear(int newYear) {
-            this.year = newYear;
-        }
-    }
 
     public static void main(String[] args) {
         Book book1 = new Book(); //create a new instance of book with no variables.

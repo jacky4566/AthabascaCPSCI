@@ -21,83 +21,8 @@
 * Run:      java Problem3.java
 *
 * Classes:
-*
-* Class: Animal
-*  Description: Parent class that acts as default
-*
-*  Constructors:
-*   Animal()
-*    Prints the generic phrase "I am an animal"
-* 
-*  Methods:
-*   void sound():  Prints a default sound
-* 
-*  Instance Variables:
-*   None
-*
-* Class: Pig
-*  Description: Creates a child class pig that inherits from Animal class
-*
-*  Constructors:
-*   Pig()
-*    Prints the phrase "I am a Pig"
-* 
-*  Methods:
-*   void sound():  Prints a pig specific sound
-* 
-*  Instance Variables:
-*   None
-*
-* Class: Sheep
-*  Description: Creates a child class pig that inherits from Animal class
-*
-*  Constructors:
-*   Sheep()
-*    Prints the phrase "I am a Sheep"
-* 
-*  Methods:
-*   void sound():  Prints a Sheep specific sound
-* 
-*  Instance Variables:
-*   None
-*
-* Class: Duck
-*  Description: Creates a child class Duck that inherits from Animal class
-*
-*  Constructors:
-*   Duck()
-*    Prints the phrase "I am a Duck"
-* 
-*  Methods:
-*   void sound():  Prints a Duck specific sound
-* 
-*  Instance Variables:
-*   None
-*
-* Class: Cow
-*  Description: Creates a child class Cow that inherits from Animal class
-*
-*  Constructors:
-*   Cow()
-*    Prints the phrase "I am a Cow"
-* 
-*  Methods:
-*   void sound():  Prints a Cow specific sound
-* 
-*  Instance Variables:
-*   None
-*
-* Class: AnimalTest
-*  Description: Requests input from the user and returns appropriate requested animal object
-*
-*  Constructors:
-*   None
-* 
-*  Methods:
-*   Animal request(): Requests input from the user and returns appropriate requested animal object
-* 
-*  Instance Variables:
-*   None
+*  Animal.java
+*  AnimalTest.java
 *
 */
 
@@ -109,29 +34,29 @@
 * EXPECTED:
 * Static test:
 
-I am an animal
-I am a Pig
-pig says "oink"
+    I am an animal
+    I am a Pig
+    pig says "oink"
 
-I am an animal
-I am a Sheep
-sheep says "baah"
+    I am an animal
+    I am a Sheep
+    sheep says "baah"
 
-I am an animal
-I am a Duck
-duck says "quack"
+    I am an animal
+    I am a Duck
+    duck says "quack"
 
-I am an animal
-I am a Cow
-cow says "moo"
+    I am an animal
+    I am a Cow
+    cow says "moo"
 
-Animal Sound generator
-Please Select a Sound:
-P: Pig
-S: Sheep
-D: Duck
-C: Cow
-?
+    Animal Sound generator
+    Please Select a Sound:
+    P: Pig
+    S: Sheep
+    D: Duck
+    C: Cow
+    ?
 
 * User question will diverge the output from here, see good/bad cases.
 * Program will end with the following print:
@@ -175,101 +100,7 @@ Thank you, Good bye
 
 */
 
-import textio.TextIO;
-
 public class Problem1 {
-
-    static class Animal{ //Default class for all animals
-
-        public Animal() {// constructor
-            System.out.println("I am an animal");
-        }
-
-        public void sound(){
-            System.out.println("An animal makes a sound based on the animal that it is");
-        }
-    }
-
-    static class Pig extends Animal{ //Pig Class
-
-        public Pig() {// constructor
-            System.out.println("I am a Pig");
-        }
-
-        @Override
-        public void sound() {
-            System.out.println("pig says \"oink\"");
-        }
-    }
-
-    static class Sheep extends Animal{ //Sheep Class
-
-        public Sheep() {// constructor
-            System.out.println("I am a Sheep");
-        }
-
-        @Override
-        public void sound() {
-            System.out.println("sheep says \"baah\"");
-        }
-    }
-
-    static class Duck extends Animal{ //Duck Class
-
-        public Duck() {// constructor
-            System.out.println("I am a Duck");
-        }
-
-        @Override
-        public void sound() {
-            System.out.println("duck says \"quack\"");
-        }
-    }
-
-    static class Cow extends Animal{ //Cow Class
-
-        public Cow() {// constructor
-            System.out.println("I am a Cow");
-        }
-
-        @Override
-        public void sound() {
-            System.out.println("cow says \"moo\"");
-        }
-    }
-
-    static class AnimalTest { //Animal test class
-        
-        Animal request() { // starts a request from user and acts upon it
-            System.out.println("Animal Sound generator");
-            System.out.println("Please Select a Sound:");
-            System.out.println("P: Pig");
-            System.out.println("S: Sheep");
-            System.out.println("D: Duck");
-            System.out.println("C: Cow");
-            System.out.print("? ");
-            char userInput = TextIO.getlnChar();
-            System.out.println(); // add some white space for easy reading
-            switch (userInput) { // Use a switch case to output the data.
-                case 'p':
-                case 'P':
-                    return new Pig();
-                case 's':
-                case 'S':
-                    return new Sheep();
-                case 'd':
-                case 'D':
-                    return new Duck();
-                case 'c':
-                case 'C':
-                    return new Cow();
-                default:
-                    System.out.println("Invalid Entry");
-                    return new Animal();
-            }
-        }
-    }
-
     public static void main(String[] args) { //Main program
         Pig porky = new Pig(); //create new instance of Pig
         porky.sound();         //Make Pig noise
@@ -287,8 +118,8 @@ public class Problem1 {
         beef.sound();          //Make Cow noise
         System.out.println();  //add whitespace
 
-        AnimalTest userAnimal = new AnimalTest(); //Create new class of animal test
-        Animal testAnimal = userAnimal.request(); //Class does the user request and returns requested type
+        //AnimalTest userAnimal = new AnimalTest(); //Create new class of animal test
+        Animal testAnimal = AnimalTest.request(); //Class does the user request and returns requested type
         testAnimal.sound();                        //Newly created animat makes noise. 
 
         System.out.println("Thank you, Good bye");
