@@ -39,7 +39,7 @@
 *   User inputs a good text file with some or no words: excerpt.txt shown below
 
         Problem 1: Count words in file.
-        Checks passed. Reading taget file: excerpt.txt
+        Checks passed. Reading target file: excerpt.txt
         Number of words: 342
 
 * Bad data cases:
@@ -70,7 +70,7 @@ public class Problem1 {
                         if (!args[0].endsWith(".txt")) { //check if given file ends with .txt extension
                                 System.out.println("Incorrect file type, expected *.txt");
                         } else {                
-                                System.out.println("Checks passed. Reading taget file: " + args[0]);
+                                System.out.println("Checks passed. Reading target file: " + args[0]);
                                 File targetfile = new File(args[0]);                                    // Creation of File Descriptor for input file
                                 try (Scanner sc = new Scanner(new FileInputStream(targetfile))) {       //create a new scanner. must be caught with some exceptions
                                         int count = 0;                                                  //counter

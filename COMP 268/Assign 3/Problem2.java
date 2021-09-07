@@ -42,7 +42,7 @@
     Problem 2: Line Printer
     Press enter for each new line.
     Please input target file: excerpt.txt
-    Checks passed. Reading taget file: excerpt.txt
+    Checks passed. Reading target file: excerpt.txt
     Line#    1 contains text: There was nothing so VERY remarkable in that; nor did Alice 
     Line#    2 contains text: think it so VERY much out of the way to hear the Rabbit say to 
     ...
@@ -82,7 +82,7 @@ public class Problem2 {
         if (!userInput.endsWith(".txt")) { // check if given file ends with .txt extension
             System.out.println("Incorrect file type, expected *.txt");
         } else {
-            System.out.println("Checks passed. Reading taget file: " + userInput);
+            System.out.println("Checks passed. Reading target file: " + userInput);
             File targetfile = new File(userInput); // Creation of File Descriptor for input file
             try (Scanner sc = new Scanner(new FileInputStream(targetfile))) { // create a new scanner. must be caught with some exceptions
                 int lineCount = 0; // counter
