@@ -15,5 +15,6 @@ A Text based Adventure game
 ---------------------------------------------------------
 Use the command line to enter commands and interact with the enviroment.
 Global Commands:
-[ d ] Enable Debug Information
+[ i ] Inventory
+[ h ] Help
 [ q ] Quit at any time
