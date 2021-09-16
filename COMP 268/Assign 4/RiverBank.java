@@ -20,7 +20,7 @@ public class RiverBank extends Location {
                     if (super.takeItem(newAction.getSecondaryArg())){
                         System.out.println("You take the item: " + newAction.getSecondaryArg());
                     }else{
-                        System.out.println("No item called " + newAction.getSecondaryArg());
+                        System.out.println("No item called: " + newAction.getSecondaryArg());
                     }
                     break;
                 case QUIT:
@@ -36,6 +36,7 @@ public class RiverBank extends Location {
                 case LOOKAROUND:
                     super.lookAround();
                     break;
+                case ENTER:
                 case YES:
                     System.out.println(Control.getFromDatabase(super.getLocationIDString(), "DownTheRabbitHole"));
                     tumblingGraphics();

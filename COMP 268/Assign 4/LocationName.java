@@ -4,6 +4,7 @@ public enum LocationName {
     ERRANTS,
     MUSHROOMS,
     TEA,
-    PIE,
+    CROQUET,
+    COURTROOM,
     END
 }

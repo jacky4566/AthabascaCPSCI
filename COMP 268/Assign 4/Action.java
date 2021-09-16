@@ -22,6 +22,8 @@ public class Action {
             thisAction = ActionType.TAKE;
         } else if (inputArgs[0].contains("h") || inputArgs[0].contains("H") || inputArgs[0].contains("help")) {
             thisAction = ActionType.HELP;
+        }else if (inputArgs[0].contains("e") || inputArgs[0].contains("E") || inputArgs[0].contains("enter") || inputArgs[0].contains("exit")) {
+            thisAction = ActionType.ENTER;
         } else if (inputArgs[0].contains("y") || inputArgs[0].contains("Y") || inputArgs[0].contains("yes")) {
             thisAction = ActionType.YES;
         } else if (inputArgs[0].contains("n") || inputArgs[0].contains("N") || inputArgs[0].contains("no")) {
