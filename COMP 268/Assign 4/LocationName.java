@@ -5,6 +5,5 @@ public enum LocationName {
     MUSHROOMS,
     TEA,
     PIE,
-    SAFE,
     END
 }

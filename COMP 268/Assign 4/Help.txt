@@ -1,1 +1,7 @@
-This is a help file.
+Use the command line to enter commands and interact with the enviroment.
+Global Commands:
+[ i ] Inventory
+[ l ] Look Around
+[ t ] Take Item
+[ h ] Help
+[ q ] Quit at any time

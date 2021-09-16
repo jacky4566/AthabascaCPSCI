@@ -8,24 +8,23 @@ public class Game {
     }
 
     public void run() {
-        Control.printFile(Control.WELCOMEFILE);
-
+        Control.clearTerminal();
+        Control.printFile(Constants.WELCOMEFILE);
+        Control.printFile(Constants.HELPFILE);
+        // Load game resources
         LocationName currentLocation = LocationName.RIVERBANK;
-
         Character myPlayer = new Character("Alice");
-
         locationList.add(new RiverBank(myPlayer));
         locationList.add(new Tears(myPlayer));
 
-        ActionType input = ActionType.UNDEFINED;
-        while (input != ActionType.YES) {
-            System.out.print("Ready to proceed? ");
-            input = Control.getAction();
-        }
+        // Start user input
+        do {
+            System.out.print("Ready to Play? ");
+        } while (Control.getAction().getActionType() != ActionType.YES);
 
-        System.out.println();
-
+        // Main game loop
         while (currentLocation != LocationName.END) {
+            Control.clearTerminal();
             currentLocation = locationList.get(getLocationID(currentLocation)).enter();
         }
     }
