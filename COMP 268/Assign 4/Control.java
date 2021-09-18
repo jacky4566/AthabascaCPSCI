@@ -36,15 +36,15 @@ class Control {
             Scanner myReader = new Scanner(myFile);
             while (myReader.hasNextLine()) {
                 String data = myReader.nextLine();
-                if (data.charAt(0) == '#') { // this is a comment line
-
-                } else {
-                    String[] parts = { data.substring(0, data.indexOf(".")),
-                            data.substring(data.indexOf(".") + 1, data.indexOf(":")),
-                            data.substring(data.indexOf(":") + 1, data.length()) };
-                    parts[2] = parts[2].replace("\\n", "\n");
-                    if (parts[0].equals(dataSet) && parts[1].equals(key)) {
-                        returnValue = parts[2];
+                if (data != null) {// If not empty line
+                    if (data.charAt(0) != '#') { //Ignore comment lines
+                        String[] parts = { data.substring(0, data.indexOf(".")),
+                                data.substring(data.indexOf(".") + 1, data.indexOf(":")),
+                                data.substring(data.indexOf(":") + 1, data.length()) };
+                        parts[2] = parts[2].replace("\\n", "\n");
+                        if (parts[0].equals(dataSet) && parts[1].equals(key)) {
+                            returnValue = parts[2];
+                        }
                     }
                 }
             }
@@ -52,7 +52,9 @@ class Control {
                 returnValue = "String: " + dataSet + "." + key + " Not Found";
             }
             myReader.close();
-        } catch (FileNotFoundException e) {
+        } catch (
+
+        FileNotFoundException e) {
             System.out.println("File Not Found: " + Constants.DATABASEFILE);
             e.printStackTrace();
         } catch (Exception e) {

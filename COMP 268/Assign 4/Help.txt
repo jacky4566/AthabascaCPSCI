@@ -1,7 +1,10 @@
+Your goal is to help Alice navigate the perals of her Wonderland dream. Several outcomes are possible given the actions you take.
 Use the command line to enter commands and interact with the enviroment.
 Global Commands:
+[ e ] Exit room
 [ i ] Inventory
 [ l ] Look Around
 [ t ] Take Item
+[ u ] Use Item
 [ h ] Help
 [ q ] Quit at any time

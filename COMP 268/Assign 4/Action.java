@@ -1,41 +1,44 @@
 public class Action {
 
-    private ActionType thisAction;
+    private ActionType thisAction = ActionType.INVALID;
     private String secondaryArg;
 
-    public Action(){
+    public Action() {
 
     }
 
     public Action(String userInput) {
+        userInput = userInput.toLowerCase();
         String[] inputArgs = userInput.split(" ");
-        if (inputArgs.length > 1){
+        if (inputArgs.length > 1) {
             secondaryArg = inputArgs[1];
         }
-        if (inputArgs[0].contains("q") || inputArgs[0].contains("Q") || inputArgs[0].contains("quit")) {
+        if (inputArgs[0].startsWith("q") || inputArgs[0].startsWith("quit")) {
             thisAction = ActionType.QUIT;
-        } else if (inputArgs[0].contains("i") || inputArgs[0].contains("I") || inputArgs[0].contains("inventory")) {
+        } else if (inputArgs[0].startsWith("i") || inputArgs[0].startsWith("inventory")) {
             thisAction = ActionType.INVENTORY;
-        } else if (inputArgs[0].contains("l") || inputArgs[0].contains("L") || inputArgs[0].contains("look")) {
+        } else if (inputArgs[0].startsWith("u") || inputArgs[0].startsWith("use")) {
+            thisAction = ActionType.USE;
+        } else if (inputArgs[0].startsWith("l") || inputArgs[0].startsWith("look")) {
             thisAction = ActionType.LOOKAROUND;
-        } else if (inputArgs[0].contains("t") || inputArgs[0].contains("T") || inputArgs[0].contains("take")) {
+        } else if (inputArgs[0].startsWith("t") || inputArgs[0].startsWith("take")) {
             thisAction = ActionType.TAKE;
-        } else if (inputArgs[0].contains("h") || inputArgs[0].contains("H") || inputArgs[0].contains("help")) {
+        } else if (inputArgs[0].startsWith("h") || inputArgs[0].startsWith("help")) {
             thisAction = ActionType.HELP;
-        }else if (inputArgs[0].contains("e") || inputArgs[0].contains("E") || inputArgs[0].contains("enter") || inputArgs[0].contains("exit")) {
-            thisAction = ActionType.ENTER;
-        } else if (inputArgs[0].contains("y") || inputArgs[0].contains("Y") || inputArgs[0].contains("yes")) {
+        } else if (inputArgs[0].startsWith("e") || inputArgs[0].startsWith("enter") || inputArgs[0].startsWith("exit")) {
+            thisAction = ActionType.EXIT;
+        } else if (inputArgs[0].startsWith("y") || inputArgs[0].startsWith("yes")) {
             thisAction = ActionType.YES;
-        } else if (inputArgs[0].contains("n") || inputArgs[0].contains("N") || inputArgs[0].contains("no")) {
+        } else if (inputArgs[0].startsWith("n") || inputArgs[0].startsWith("no")) {
             thisAction = ActionType.NO;
         }
     }
 
-    public ActionType getActionType(){
+    public ActionType getActionType() {
         return this.thisAction;
     }
 
-    public String getSecondaryArg(){
+    public String getSecondaryArg() {
         return secondaryArg;
     }
 

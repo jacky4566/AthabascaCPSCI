@@ -5,47 +5,18 @@ public class RiverBank extends Location {
         super.setMainChar(main);
         super.addItem(new Item("Leaf", "A green leaf"));
     }
+    
+    @Override
+    public void yes() {
+        System.out.println(Control.getFromDatabase(super.getLocationIDString(), "DownTheRabbitHole"));
+        tumblingGraphics();
+        super.setNextLocation(LocationName.TEARS);
+    }
 
     @Override
-    public LocationName enter() {
-        System.out.println(Control.getFromDatabase(super.getLocationIDString(), "EntryString"));
-        while (true) {
-            System.out.print(Control.getFromDatabase(super.getLocationIDString(), "Q1"));
-            Action newAction = Control.getAction();
-            switch (newAction.getActionType()) {
-                case TALK:
-                    System.out.println("No one to talk too");
-                    break;
-                case TAKE:
-                    if (super.takeItem(newAction.getSecondaryArg())){
-                        System.out.println("You take the item: " + newAction.getSecondaryArg());
-                    }else{
-                        System.out.println("No item called: " + newAction.getSecondaryArg());
-                    }
-                    break;
-                case QUIT:
-                    System.out.println("Thanks for Playing");
-                    System.exit(0);
-                    break;
-                case INVENTORY:
-                    super.getMainChar().getInventory().printInventory();
-                    break;
-                case HELP:
-                    Control.printFile(Constants.HELPFILE);
-                    break;
-                case LOOKAROUND:
-                    super.lookAround();
-                    break;
-                case ENTER:
-                case YES:
-                    System.out.println(Control.getFromDatabase(super.getLocationIDString(), "DownTheRabbitHole"));
-                    tumblingGraphics();
-                    return LocationName.TEARS;
-                case NO:
-                    System.out.println(Control.getFromDatabase(super.getLocationIDString(), "EndString"));
-                    return LocationName.END;
-            }
-        }
+    public void no() {
+        System.out.println(Control.getFromDatabase(super.getLocationIDString(), "EndString"));
+        super.quit();
     }
 
     public void tumblingGraphics() {
@@ -59,7 +30,7 @@ public class RiverBank extends Location {
                 }
             }
             if (j == 20) {
-                System.out.println("     Orange Marmalade   *             *");
+                System.out.println("   *   Orange Marmalade   *             *                     *");
             }
             System.out.println(starLine);
             try {

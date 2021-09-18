@@ -12,15 +12,19 @@ public class Game {
         Control.printFile(Constants.WELCOMEFILE);
         Control.printFile(Constants.HELPFILE);
         // Load game resources
-        LocationName currentLocation = LocationName.RIVERBANK;
+        LocationName currentLocation = LocationName.TEARS;
         Character myPlayer = new Character("Alice");
         locationList.add(new RiverBank(myPlayer));
         locationList.add(new Tears(myPlayer));
+        locationList.add(new Garden(myPlayer));
+        locationList.add(new Mushrooms(myPlayer));
+        locationList.add(new Tea(myPlayer));
+        locationList.add(new Courtyard(myPlayer));
+        locationList.add(new Courtroom(myPlayer));
 
         // Start user input
-        do {
-            System.out.print("Ready to Play? ");
-        } while (Control.getAction().getActionType() != ActionType.YES);
+        System.out.print("Press enter to continue");
+        Control.getAction();
 
         // Main game loop
         while (currentLocation != LocationName.END) {
@@ -35,6 +39,8 @@ public class Game {
                 return i;
             }
         }
-        return 0; // Should never return here
+        // Should never return here
+        System.out.println("Room not Found");
+        return -1;
     }
 }

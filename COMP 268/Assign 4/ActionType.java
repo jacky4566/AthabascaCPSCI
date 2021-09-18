@@ -1,11 +1,13 @@
 public enum ActionType {
-    ENTER,
+    EXIT,
     HELP,
     INVENTORY,
     LOOKAROUND,
     TAKE,
     TALK,
+    USE,
     YES,
     NO,
+    INVALID,
     QUIT
 }

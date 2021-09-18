@@ -1,10 +1,10 @@
 public enum LocationName {
     RIVERBANK,
     TEARS,
-    ERRANTS,
+    GARDEN,
     MUSHROOMS,
     TEA,
-    CROQUET,
+    COURTYARD,
     COURTROOM,
     END
 }

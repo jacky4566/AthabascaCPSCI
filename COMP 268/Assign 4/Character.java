@@ -1,6 +1,7 @@
 public class Character {
     private String name = "Not a Name";
     private Inventory inventory =  new Inventory();
+    private int size = 6; //as measured by Alice in feet
 
     public Character(String myName) {
         this.name = myName;
@@ -19,6 +20,13 @@ public class Character {
         inventory.addItem(newItem);
     }
 
+    public void setSize(int size){
+        this.size = size;
+    }
+
     // SETTERS
+    public int getSize(){
+        return this.size;
+    }
 
 }
