@@ -1,8 +1,8 @@
 public class Door {
     private String doorName;
     private LocationName locationCode;
-    private boolean isLocked;
-    private int maxSize;
+    private boolean isLocked = false;
+    private int maxSize = 6;
 
     // constructor
     public Door(String doorName, LocationName locationCode, boolean isLocked, int maxSize) {
@@ -12,11 +12,15 @@ public class Door {
         this.maxSize = maxSize;
     }
 
+    public Door(String doorName, LocationName locationCode, boolean isLocked) {
+        this.doorName = doorName;
+        this.locationCode = locationCode;
+        this.isLocked = isLocked;
+    }
+
     public Door(String doorName, LocationName locationCode) {
         this.doorName = doorName;
         this.locationCode = locationCode;
-        this.isLocked = false;
-        this.maxSize = 6;
     }
 
     // getter

@@ -11,6 +11,10 @@ class Control {
         return new Action(TextIO.getlnString());
     }
 
+    static char getChar(){
+        return TextIO.getlnChar();
+    }
+
     static void printFile(String target) {
         try {
             File myFile = new File(target);
@@ -32,30 +36,28 @@ class Control {
     static String getFromDatabase(String dataSet, String key) {
         String returnValue = null;
         try {
-            File myFile = new File(Constants.DATABASEFILE);
+            File myFile = new File(dataSet);
             Scanner myReader = new Scanner(myFile);
             while (myReader.hasNextLine()) {
                 String data = myReader.nextLine();
                 if (data != null) {// If not empty line
-                    if (data.charAt(0) != '#') { //Ignore comment lines
-                        String[] parts = { data.substring(0, data.indexOf(".")),
-                                data.substring(data.indexOf(".") + 1, data.indexOf(":")),
-                                data.substring(data.indexOf(":") + 1, data.length()) };
-                        parts[2] = parts[2].replace("\\n", "\n");
-                        if (parts[0].equals(dataSet) && parts[1].equals(key)) {
-                            returnValue = parts[2];
+                    if (data.charAt(0) != '#') { // Ignore comment lines
+                        String[] parts = { data.substring(0, data.indexOf(":")), data.substring(data.indexOf(":") + 1, data.length()) };
+                        parts[1] = parts[1].replace("\\n", "\n");
+                        if (parts[0].equalsIgnoreCase(key)) {
+                            returnValue = parts[1];
                         }
                     }
                 }
             }
             if (returnValue == null) { // obj not found
-                returnValue = "String: " + dataSet + "." + key + " Not Found";
+                returnValue = "String: " + dataSet + ": " + key + " Not Found";
             }
             myReader.close();
         } catch (
 
         FileNotFoundException e) {
-            System.out.println("File Not Found: " + Constants.DATABASEFILE);
+            System.out.println("File Not Found: " + dataSet);
             e.printStackTrace();
         } catch (Exception e) {
             System.out.println("An error occurred.");

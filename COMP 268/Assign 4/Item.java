@@ -1,18 +1,18 @@
 public class Item {
-    private String _name;
-    private String _description;
+    private String name;
+    private String description;
 
-    public Item(String myName, String myDescription){
-        _name = myName;
-        _description = myDescription;
+    public Item(String myName){
+        this.name = myName;
+        this.description = Control.getFromDatabase(Constants.ITEMDATABASE, myName);
     }
 
     //GETTER
     public String getName(){
-        return _name;
+        return this.name;
     }
 
     public String getDesciption(){
-        return _description;
+        return this.description;
     }
 }

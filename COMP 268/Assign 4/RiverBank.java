@@ -1,21 +1,21 @@
 public class RiverBank extends Location {
 
-    public RiverBank(Character main) {
+    public RiverBank(Alice main) {
         super.setLocationID(LocationName.RIVERBANK);
         super.setMainChar(main);
-        super.addItem(new Item("Leaf", "A green leaf"));
+        super.addItem(new Item("Leaf"));
     }
     
     @Override
     public void yes() {
-        System.out.println(Control.getFromDatabase(super.getLocationIDString(), "DownTheRabbitHole"));
+        System.out.println(Control.getFromDatabase(super.getdatabaseFile(), "DownTheRabbitHole"));
         tumblingGraphics();
         super.setNextLocation(LocationName.TEARS);
     }
 
     @Override
     public void no() {
-        System.out.println(Control.getFromDatabase(super.getLocationIDString(), "EndString"));
+        System.out.println(Control.getFromDatabase(super.getdatabaseFile(), "EndString"));
         super.quit();
     }
 

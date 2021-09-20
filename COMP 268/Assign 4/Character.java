@@ -1,13 +1,27 @@
 public class Character {
-    private String name = "Not a Name";
-    private Inventory inventory =  new Inventory();
-    private int size = 6; //as measured by Alice in feet
+    private String name = "Not a Name"; //Stores Character name
+    private Inventory inventory = new Inventory(); //Stores Character Inventory
+    private ConversationNode question;
+    private String doorGuard; //does this character guard a door
 
+    // Constructor
     public Character(String myName) {
         this.name = myName;
+        this.question = new ConversationNode(myName);
     }
 
-    // GETTERS
+    public Character(String myName, String doorName) {
+        this.name = myName;
+        this.question = new ConversationNode(myName);
+        this.doorGuard = doorName;
+    }
+
+    // Functions
+    public void addInventory(Item newItem) {
+        inventory.addItem(newItem);
+    }
+
+    // Getters
     public String getName() {
         return this.name;
     }
@@ -16,17 +30,14 @@ public class Character {
         return this.inventory;
     }
 
-    public void addInventory(Item newItem) {
-        inventory.addItem(newItem);
+    public ConversationNode getConversation(){
+        return question;
     }
 
-    public void setSize(int size){
-        this.size = size;
+    public String getDoorGuard(){
+        return doorGuard;
     }
 
-    // SETTERS
-    public int getSize(){
-        return this.size;
-    }
+    // Setters
 
 }

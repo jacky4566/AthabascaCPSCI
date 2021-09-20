@@ -25,6 +25,15 @@ public class Inventory {
         return false;
     }
 
+    public boolean itemExists(String search){
+        for (Item someItem : itemList) {
+            if (someItem.getName().equalsIgnoreCase(search)){
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void printInventory() {
         System.out.println("Items in your Inventory:");
         for (Item someItem : itemList) {

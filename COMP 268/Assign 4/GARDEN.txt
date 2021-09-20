@@ -1,0 +1,4 @@
+ROOMDESCRIPTION:A peacful garden. Alice feels safe here, you may store items here. Use Keep to put an item in your safe.
+PromptString:?
+EntryString:You enter a garden, a large cat causually lays in a tree nearby.
+ReturnString:Back in the garden.

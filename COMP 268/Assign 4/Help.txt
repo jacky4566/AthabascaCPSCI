@@ -3,8 +3,9 @@ Use the command line to enter commands and interact with the enviroment.
 Global Commands:
 [ e ] Exit room
 [ i ] Inventory
-[ l ] Look Around
-[ t ] Take Item
-[ u ] Use Item
+[ u ] Use Item from Inventory
+[ l ] Look Around room
+[ t ] Take Item from room
+[ s ] Speak With a Character, you must specify a charcter and your response. 
 [ h ] Help
 [ q ] Quit at any time

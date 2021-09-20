@@ -1,0 +1,4 @@
+query:I am the Dormouse of the Hall of Tears. Answer me this, Does a mouse like cats?
+answer:no
+responseCorrect:Your right. No Mouse would like cats. You should attend the tea party!
+responseWrong:Guess again!

@@ -1,6 +1,8 @@
 public class Tea extends Location {
 
-    public Tea(Character main) {
+    
+
+    public Tea(Alice main) {
         super.setLocationID(LocationName.TEA);
         super.setMainChar(main);
         super.addExit(new Door("Hall", LocationName.TEARS));

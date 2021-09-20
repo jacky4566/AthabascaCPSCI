@@ -1,0 +1,6 @@
+#This is a datafile for all the strings and large blocks of text
+EntryString:Alice was beginning to get very tired of sitting by her sister on the bank, and of having nothing to do. \nOnce or twice she had peeped into the book her sister was reading,\nbut it had no pictures or conversations in it, and what is the use of a book, thought Alice, without pictures or conversations?\n\n
+PromptString:After a while of pondering this and that. Alice sees a peculuar white rabbit. Seemingly in a hurry after checking his watch kept in a... petty coat. The rabbit disapears into a nearby bush\nFollow him?
+ROOMDESCRIPTION:You are sitting on a riverbank with your sister. There is nothing notable.
+DownTheRabbitHole:You fell down the rabbit hole...
+EndString:Alice wakes from a restful nap.

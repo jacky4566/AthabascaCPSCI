@@ -1,0 +1,5 @@
+#This is a datafile for all the strings and large blocks of text
+ROOMDESCRIPTION:A hall with many doors, Alice also sees a little three-legged table, all made of solid glass; there was nothing on it except a tiny golden key.
+PromptString:?
+EntryString:Alice lands with not but a scratch. she finds herself in a long, low hall, which was lit up by a row of lamps hanging from the roof. \nThe hall is lined with many doors of many sizes. Alice also sees a little three-legged table, all made of solid glass; there was nothing on it except a tiny golden key.
+ReturnString:Back in the hall of many doors.

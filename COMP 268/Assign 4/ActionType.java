@@ -4,10 +4,11 @@ public enum ActionType {
     INVENTORY,
     LOOKAROUND,
     TAKE,
-    TALK,
+    SPEAK,
     USE,
     YES,
     NO,
     INVALID,
+    KEEP,
     QUIT
 }

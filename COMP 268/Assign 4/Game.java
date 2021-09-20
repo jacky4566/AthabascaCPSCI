@@ -12,8 +12,8 @@ public class Game {
         Control.printFile(Constants.WELCOMEFILE);
         Control.printFile(Constants.HELPFILE);
         // Load game resources
-        LocationName currentLocation = LocationName.TEARS;
-        Character myPlayer = new Character("Alice");
+        LocationName currentLocation = LocationName.RIVERBANK;
+        Alice myPlayer = new Alice();
         locationList.add(new RiverBank(myPlayer));
         locationList.add(new Tears(myPlayer));
         locationList.add(new Garden(myPlayer));

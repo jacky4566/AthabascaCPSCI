@@ -1,0 +1,6 @@
+#This is a datafile for all the strings and large blocks of text
+Leaf:A green leaf
+Key:A Small golden Key
+Bottle:DRINK ME
+Cake:EAT ME
+Mushroom:A strange multicolour Mushroom

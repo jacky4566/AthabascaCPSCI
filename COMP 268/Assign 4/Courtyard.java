@@ -1,6 +1,6 @@
 public class Courtyard extends Location {
 
-    public Courtyard(Character main) {
+    public Courtyard(Alice main) {
         super.setLocationID(LocationName.COURTYARD);
         super.setMainChar(main);
         super.addExit(new Door("Yard", LocationName.TEA));

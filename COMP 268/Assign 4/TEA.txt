@@ -1,0 +1,4 @@
+ROOMDESCRIPTION:You are standing in front of a large table. Set out with a tea party. \nThe Mad Hatter, March Hare, and Dormouse sit in attendance.
+PromptString:?
+EntryString:"No room! No room!" Alice was told as she apprached the tea party at a large house.
+ReturnString:Back at the tea party.
