@@ -5,6 +5,8 @@ public class ConversationNode {
     private String answer;
     private String responseCorrect;
     private String responseWrong;
+    private String responseHint;
+    private int guessCount = 0; //keeps track of the number of guesses
 
     public ConversationNode(String charName) {
         this.databaseFile = charName + ".txt";
@@ -12,6 +14,7 @@ public class ConversationNode {
         this.answer = Control.getFromDatabase(this.databaseFile, "answer");
         this.responseCorrect = Control.getFromDatabase(this.databaseFile, "responseCorrect");
         this.responseWrong = Control.getFromDatabase(this.databaseFile, "responseWrong");
+        this.responseHint = Control.getFromDatabase(this.databaseFile, "responseHint");
     }
 
     // Setters
@@ -30,11 +33,17 @@ public class ConversationNode {
         if (nodeComplete) { // If this conversation node is complete
             return responseCorrect; // else return the final retort
         } else {
+            guessCount++;
+            System.out.println(inputAnswer);
             if (inputAnswer.equalsIgnoreCase(answer)){
                 nodeComplete = true;
                 return responseCorrect;
             }else{
-                return responseWrong; // else return the initial question
+                if (guessCount >= 3){
+                    return responseHint; // else return the initial question
+                }else{
+                    return responseWrong; // else return the initial question
+                }
             }
         }
     }
