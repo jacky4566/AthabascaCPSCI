@@ -1,4 +1,4 @@
-public enum LocationName {
+public enum LocationList {
     RIVERBANK,
     TEARS,
     GARDEN,

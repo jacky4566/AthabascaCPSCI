@@ -18,6 +18,9 @@ public class Inventory {
     public boolean consumeItem(String name){
         for (Item someItem : itemList) {
             if (someItem.getName().equalsIgnoreCase(name)){
+                someItem.action();
+                System.out.println("Item Used: " + someItem.getName());
+                System.out.println(someItem.getActionText());
                 itemList.remove(someItem);
                 return true;
             }
@@ -25,13 +28,22 @@ public class Inventory {
         return false;
     }
 
-    public boolean itemExists(String search){
+    public boolean hasItem(String name){
         for (Item someItem : itemList) {
-            if (someItem.getName().equalsIgnoreCase(search)){
+            if (someItem.getName().equalsIgnoreCase(name)){
                 return true;
             }
         }
         return false;
+    }
+
+    public Item getItem(String name){
+        for (Item someItem : itemList) {
+            if (someItem.getName().equalsIgnoreCase(name)){
+                return someItem;
+            }
+        }
+        return null;
     }
 
     public void printInventory() {

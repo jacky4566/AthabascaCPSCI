@@ -6,11 +6,11 @@ public class Action {
 
     public Action(String userInput) {
         userInput = userInput.toLowerCase();
-        String[] inputArgs = userInput.split(" ");
+        String[] inputArgs = userInput.split(" ", 3);
         if (inputArgs.length > 2) {
             secondArg = inputArgs[2];
             firstArg = inputArgs[1];
-        }else if (inputArgs.length > 1) {
+        } else if (inputArgs.length > 1) {
             firstArg = inputArgs[1];
         }
         if (inputArgs[0].startsWith("q") || inputArgs[0].startsWith("quit")) {
@@ -27,7 +27,8 @@ public class Action {
             thisAction = ActionType.SPEAK;
         } else if (inputArgs[0].startsWith("h") || inputArgs[0].startsWith("help")) {
             thisAction = ActionType.HELP;
-        } else if (inputArgs[0].startsWith("e") || inputArgs[0].startsWith("enter") || inputArgs[0].startsWith("exit")) {
+        } else if (inputArgs[0].startsWith("e") || inputArgs[0].startsWith("enter")
+                || inputArgs[0].startsWith("exit")) {
             thisAction = ActionType.EXIT;
         } else if (inputArgs[0].startsWith("y") || inputArgs[0].startsWith("yes")) {
             thisAction = ActionType.YES;
@@ -35,7 +36,7 @@ public class Action {
             thisAction = ActionType.NO;
         } else if (inputArgs[0].startsWith("k") || inputArgs[0].startsWith("keep")) {
             thisAction = ActionType.KEEP;
-        } 
+        }
     }
 
     public ActionType getActionType() {

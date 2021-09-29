@@ -1,5 +1,5 @@
 query:The Hatter opened his eyes very wide on hearing this; but all he said was, 'Why is a raven like a writing-desk?'
-answer:Both can produce a few notes
-responseCorrect:Your right. No Mouse would like cats. You should attend the tea party!
+answer:Both can write notes
+responseCorrect:You know the Queen would like to play croquet all day if she could.
 responseWrong:Guess again!
 responseHint:Ravens and writing-desks, one makes music while the other passes notes. Guess again!

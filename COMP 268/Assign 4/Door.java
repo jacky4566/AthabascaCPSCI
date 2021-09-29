@@ -1,24 +1,24 @@
 public class Door {
     private String doorName;
-    private LocationName locationCode;
+    private LocationList locationCode;
     private boolean isLocked = false;
     private int maxSize = 6;
 
     // constructor
-    public Door(String doorName, LocationName locationCode, boolean isLocked, int maxSize) {
+    public Door(String doorName, LocationList locationCode, boolean isLocked, int maxSize) {
         this.doorName = doorName;
         this.locationCode = locationCode;
         this.isLocked = isLocked;
         this.maxSize = maxSize;
     }
 
-    public Door(String doorName, LocationName locationCode, boolean isLocked) {
+    public Door(String doorName, LocationList locationCode, boolean isLocked) {
         this.doorName = doorName;
         this.locationCode = locationCode;
         this.isLocked = isLocked;
     }
 
-    public Door(String doorName, LocationName locationCode) {
+    public Door(String doorName, LocationList locationCode) {
         this.doorName = doorName;
         this.locationCode = locationCode;
     }
@@ -27,7 +27,7 @@ public class Door {
     public String getName() {
         return doorName;
     }
-    public LocationName getCode() {
+    public LocationList getCode() {
         return locationCode;
     }
     public boolean getLock() {

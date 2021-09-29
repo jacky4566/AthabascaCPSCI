@@ -12,7 +12,7 @@ public class Game {
         Control.printFile(Constants.WELCOMEFILE);
         Control.printFile(Constants.HELPFILE);
         // Load game resources
-        LocationName currentLocation = LocationName.TEA;
+        LocationList currentLocation = LocationList.RIVERBANK;
         Alice myPlayer = new Alice();
         locationList.add(new RiverBank(myPlayer));
         locationList.add(new Tears(myPlayer));
@@ -27,13 +27,13 @@ public class Game {
         Control.getAction();
 
         // Main game loop
-        while (currentLocation != LocationName.END) {
+        while (currentLocation != LocationList.END) {
             Control.clearTerminal();
             currentLocation = locationList.get(getLocationID(currentLocation)).enter();
         }
     }
 
-    public int getLocationID(LocationName findThis) { // looks for the target location in an arraylist
+    public int getLocationID(LocationList findThis) { // looks for the target location in an arraylist
         for (int i = 0; i < locationList.size(); i++) {
             if (locationList.get(i).getLocationID() == findThis) {
                 return i;

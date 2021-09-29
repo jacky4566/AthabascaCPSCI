@@ -11,7 +11,7 @@ class Control {
         return new Action(TextIO.getlnString());
     }
 
-    static char getChar(){
+    static char getChar() {
         return TextIO.getlnChar();
     }
 
@@ -42,7 +42,8 @@ class Control {
                 String data = myReader.nextLine();
                 if (data != null) {// If not empty line
                     if (data.charAt(0) != '#') { // Ignore comment lines
-                        String[] parts = { data.substring(0, data.indexOf(":")), data.substring(data.indexOf(":") + 1, data.length()) };
+                        String[] parts = { data.substring(0, data.indexOf(":")),
+                                data.substring(data.indexOf(":") + 1, data.length()) };
                         parts[1] = parts[1].replace("\\n", "\n");
                         if (parts[0].equalsIgnoreCase(key)) {
                             returnValue = parts[1];
@@ -54,9 +55,7 @@ class Control {
                 returnValue = "String: " + dataSet + ": " + key + " Not Found";
             }
             myReader.close();
-        } catch (
-
-        FileNotFoundException e) {
+        } catch (FileNotFoundException e) {
             System.out.println("File Not Found: " + dataSet);
             e.printStackTrace();
         } catch (Exception e) {

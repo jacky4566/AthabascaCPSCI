@@ -1,11 +1,10 @@
 public class Mushrooms extends Location {
 
     public Mushrooms(Alice main) {
-        super.setLocationID(LocationName.MUSHROOMS);
-        super.setMainChar(main);
-        super.addExit(new Door("Pathway", LocationName.GARDEN));
-        super.addExit(new Door("Yard", LocationName.TEA));
-        super.addItem(new Item("Mushroom"));
+        super(main, LocationList.MUSHROOMS);
+        super.addExit(new Door("Pathway", LocationList.GARDEN));
+        super.addExit(new Door("Yard", LocationList.TEA));
+        super.addItem(new Mushroom());
         super.addCharacter(new Character("Caterpillar"));
     }
 }

@@ -5,12 +5,11 @@ public class Garden extends Location {
     private ArrayList<Item> safe = new ArrayList<>();
 
     public Garden(Alice main) {
-        super.setLocationID(LocationName.GARDEN);
-        super.setMainChar(main);
-        super.addExit(new Door("Hall", LocationName.TEARS));
-        super.addExit(new Door("Forest", LocationName.MUSHROOMS, true));
+        super(main, LocationList.GARDEN);
+        super.addExit(new Door("Hall", LocationList.TEARS));
+        super.addExit(new Door("Forest", LocationList.MUSHROOMS, true));
         super.addCharacter(new Character("Cat", "Forest"));
-        safe.add(new Item("Leaf"));
+        safe.add(new Leaf());
     }
 
     @Override
@@ -30,9 +29,8 @@ public class Garden extends Location {
     public void keepItem(String itemName) {
         Inventory aliceInventory = super.getMainChar().getInventory();
         for (int i = 0; i < aliceInventory.countInventory(); i++) {
-            if (aliceInventory.itemExists(itemName)) {
+            if (aliceInventory.hasItem(itemName)) {
                 aliceInventory.consumeItem(itemName);
-                safe.add(new Item(itemName));
                 System.out.println("Item put in safe: " + itemName);
                 return;
             }

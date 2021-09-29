@@ -1,13 +1,14 @@
 import java.util.Random;
 
-public class MushroomGame {
-    // a minigame played from the mushroom
+public class Mushroom extends Item {
 
-    private MushroomGame() {
-
+    public Mushroom(){
+        super(ItemList.MUSHROOM);
     }
 
-    public static void run() {
+    @Override
+    public void action() {
+        //A fun mini game
         System.out.println(
                 "Alice begins to grow. OR maybe to shrink? \nYou must help Alice get to the right size. She wants to be exactly 6 feet tall!\nPress S to shrink and G to grow");
         int size = 4;
