@@ -9,7 +9,7 @@ public class ConversationNode {
     private int guessCount = 0; //keeps track of the number of guesses
 
     public ConversationNode(String charName) {
-        this.databaseFile = charName + ".txt";
+        this.databaseFile = "CHAR" + charName + ".txt";
         this.query = Control.getFromDatabase(this.databaseFile, "query");
         this.answer = Control.getFromDatabase(this.databaseFile, "answer");
         this.responseCorrect = Control.getFromDatabase(this.databaseFile, "responseCorrect");
@@ -34,8 +34,7 @@ public class ConversationNode {
             return responseCorrect; // else return the final retort
         } else {
             guessCount++;
-            System.out.println(inputAnswer);
-            if (inputAnswer.equalsIgnoreCase(answer)){
+            if (inputAnswer.toLowerCase().contains(this.answer)){
                 nodeComplete = true;
                 return responseCorrect;
             }else{
@@ -46,6 +45,10 @@ public class ConversationNode {
                 }
             }
         }
+    }
+
+    public int getAttempts(){
+        return guessCount;
     }
 
     public boolean getComplete(){

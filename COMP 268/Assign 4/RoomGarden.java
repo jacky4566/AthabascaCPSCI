@@ -1,15 +1,15 @@
 import java.util.ArrayList;
 
-public class Garden extends Location {
+public class RoomGarden extends Location {
 
     private ArrayList<Item> safe = new ArrayList<>();
 
-    public Garden(Alice main) {
+    public RoomGarden(Alice main) {
         super(main, LocationList.GARDEN);
-        super.addExit(new Door("Hall", LocationList.TEARS));
-        super.addExit(new Door("Forest", LocationList.MUSHROOMS, true));
-        super.addCharacter(new Character("Cat", "Forest"));
-        safe.add(new Leaf());
+        super.addExit(new Door("Hall", LocationList.CORRIDOR));
+        super.addExit(new Door("Forest", LocationList.MUSHROOM, true));
+        super.addCharacter(new Character("Cat", CharacterList.CAT, "Forest"));
+        safe.add(new ItemLeaf());
     }
 
     @Override
@@ -30,7 +30,8 @@ public class Garden extends Location {
         Inventory aliceInventory = super.getMainChar().getInventory();
         for (int i = 0; i < aliceInventory.countInventory(); i++) {
             if (aliceInventory.hasItem(itemName)) {
-                aliceInventory.consumeItem(itemName);
+                safe.add(aliceInventory.getItem(itemName));
+                aliceInventory.destroyItem(itemName);
                 System.out.println("Item put in safe: " + itemName);
                 return;
             }

@@ -1,13 +1,13 @@
 import java.util.Random;
 
-public class Mushroom extends Item {
+public class ItemMushroom extends Item {
 
-    public Mushroom(){
+    public ItemMushroom(){
         super(ItemList.MUSHROOM);
     }
 
     @Override
-    public void action() {
+    public boolean action() {
         //A fun mini game
         System.out.println(
                 "Alice begins to grow. OR maybe to shrink? \nYou must help Alice get to the right size. She wants to be exactly 6 feet tall!\nPress S to shrink and G to grow");
@@ -39,5 +39,6 @@ public class Mushroom extends Item {
                 break;
             }
         }
+        return true;
     }
 }

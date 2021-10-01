@@ -5,5 +5,10 @@ public enum ItemList {
     BOTTLE,
     MUSHROOM,
     MALLET,
-    BALL
+    BALL,
+    GLOVES,
+    FAN,
+    TEA,
+    WATCH,
+    SLIPPERS
 }

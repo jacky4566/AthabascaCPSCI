@@ -1,10 +1,10 @@
 public enum LocationList {
     RIVERBANK,
-    TEARS,
+    CORRIDOR,
     GARDEN,
-    MUSHROOMS,
+    MUSHROOM,
     TEA,
     COURTYARD,
-    COURTROOM,
+    COURT,
     END
 }

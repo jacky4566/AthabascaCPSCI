@@ -7,9 +7,11 @@ public class Location {
     private boolean firstVisit = true;
     private String databaseFile;
     private String roomDescription;
+    private String promptDescription;
     private ArrayList<Character> NPC = new ArrayList<>();
     private ArrayList<Item> loot = new ArrayList<>();
     private ArrayList<Door> roomExits = new ArrayList<>();
+    private LocationList nextRoom;
 
     public Location() {
         // To be overridden
@@ -17,9 +19,11 @@ public class Location {
 
     public Location(Alice main, LocationList locationID) {
         this.locationID = locationID;
-        this.databaseFile = locationID + ".txt";
+        nextRoom = locationID;
+        this.databaseFile = "ROOM" + locationID + ".txt";
         this.alice = main;
         roomDescription = Control.getFromDatabase(this.databaseFile, "ROOMDESCRIPTION");
+        promptDescription = Control.getFromDatabase(this.databaseFile, "PromptString");
     }
 
     public Alice getMainChar() {
@@ -88,7 +92,8 @@ public class Location {
                 this.nextLocation = null;
                 return returnLocation;
             }
-            System.out.print(Control.getFromDatabase(this.databaseFile, "PromptString"));
+            checkEnd();
+            System.out.print(promptDescription);
             Action newAction = Control.getAction();
             switch (newAction.getActionType()) {
                 case SPEAK:
@@ -101,7 +106,7 @@ public class Location {
                     useItem(newAction.getFirstArg());
                     break;
                 case QUIT:
-                    quit();
+                    Control.quit();
                     break;
                 case KEEP:
                     if (this.locationID == LocationList.GARDEN) { // if we are not leaving the room then loop again
@@ -118,12 +123,8 @@ public class Location {
                     lookAround();
                     break;
                 case EXIT:
-                    LocationList nextRoom = exit(newAction.getFirstArg()); // get target for next room
-                    if (nextRoom == this.locationID) { // if we are not leaving the room then loop again
-                        break;
-                    } else {
-                        return nextRoom;
-                    }
+                    nextRoom = exit(newAction.getFirstArg()); // get target for next room
+                    break;
                 case YES:
                     yes();
                     break;
@@ -134,6 +135,25 @@ public class Location {
                     System.out.println("Invalid Action");
                     break;
             }
+            if (nextRoom != this.locationID) { // if we are not leaving the room then loop again
+                return nextRoom;
+            }
+        }
+    }
+
+    public void checkEnd() {
+        if (this.locationID == LocationList.COURT) { // only really need this in the courtroom
+            for (int i = 0; i < NPC.size(); i++) {
+                if (NPC.get(i).getID() == CharacterList.QUEEN) {
+                    if (NPC.get(i).getConversation().getComplete()) { // End the game
+                        System.out.println(Control.getFromDatabase(this.getdatabaseFile(), "EndStringWin"));
+                        Control.quit();
+                    } else if (NPC.get(i).getConversation().getAttempts() >= 3) {
+                        System.out.println(Control.getFromDatabase(this.getdatabaseFile(), "EndStringLose"));
+                        Control.quit();
+                    }
+                }
+            }
         }
     }
 
@@ -142,7 +162,7 @@ public class Location {
             if (NPC.get(i).getName().equalsIgnoreCase(target)) {
                 if (response != null) {
                     System.out.println(NPC.get(i).getConversation().getConversation(response));
-                    if (NPC.get(i).getConversation().getComplete()) {
+                    if (NPC.get(i).getConversation().getComplete() && NPC.get(i).getDoorGuard() != null) {
                         unlockDoor(NPC.get(i).getDoorGuard());
                     }
                 } else {
@@ -170,15 +190,9 @@ public class Location {
         System.out.println("Item not Found: " + itemName);
     }
 
-    public boolean unlockDoor(String doorName) {
-        try {
-            getExits().get(getDoorID(doorName)).setLock(false);
-            System.out.println(doorName + " door unlocked");
-            return true;
-        } catch (Exception e) {
-            System.out.println(doorName + " door not found");
-            return false;
-        }
+    public void unlockDoor(String doorName) {
+        getExits().get(getDoorID(doorName)).setLock(false);
+        System.out.println(doorName + " door unlocked");
     }
 
     public void useItem(String itemName) {
@@ -194,20 +208,26 @@ public class Location {
                     alice.setSize(9);
                     break;
                 case KEY:
-                    if (this.locationID == LocationList.TEARS) { // key only works in one room
+                    if (this.locationID == LocationList.CORRIDOR) { // key only works in one room
                         unlockDoor("garden");
                         alice.getInventory().consumeItem(itemName);
                     }
-                    break;
-                case BALL:
-                    System.out.println(selectedItem.getActionText());
                     break;
                 case MALLET:
                     if (alice.getInventory().hasItem("ball") && this.locationID == LocationList.COURTYARD) {
                         alice.getInventory().consumeItem("ball");
                         alice.getInventory().consumeItem(itemName);
+                        nextRoom = LocationList.COURT;
+                        System.out.print("Press enter to continue");
+                        Control.getAction();
                     }
                     break;
+                case BALL:
+                case TEA:
+                case WATCH:
+                case SLIPPERS:
+                case FAN:
+                case GLOVES:
                 case LEAF:
                 case MUSHROOM:
                     alice.getInventory().consumeItem(itemName);
@@ -219,11 +239,6 @@ public class Location {
         } else {
             System.out.println("Item not found: " + itemName);
         }
-    }
-
-    public void quit() {
-        System.out.println("Thanks for Playing");
-        System.exit(0);
     }
 
     public void lookAround() {

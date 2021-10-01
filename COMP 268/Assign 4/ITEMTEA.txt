@@ -1,0 +1,2 @@
+DESCRIPTION:A cup of hot tea
+ACTION:Alice burns herself on the cup of tea and wakes from her dream.

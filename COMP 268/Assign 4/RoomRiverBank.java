@@ -1,21 +1,21 @@
-public class RiverBank extends Location {
+public class RoomRiverBank extends Location {
 
-    public RiverBank(Alice main) {
+    public RoomRiverBank(Alice main) {
         super(main, LocationList.RIVERBANK);
-        super.addItem(new Leaf());
+        super.addItem(new ItemLeaf());
     }
     
     @Override
     public void yes() {
         System.out.println(Control.getFromDatabase(super.getdatabaseFile(), "DownTheRabbitHole"));
         tumblingGraphics();
-        super.setNextLocation(LocationList.TEARS);
+        super.setNextLocation(LocationList.CORRIDOR);
     }
 
     @Override
     public void no() {
         System.out.println(Control.getFromDatabase(super.getdatabaseFile(), "EndString"));
-        super.quit();
+        Control.quit();
     }
 
     public void tumblingGraphics() {
@@ -32,16 +32,8 @@ public class RiverBank extends Location {
                 System.out.println("   *   Orange Marmalade   *             *                     *");
             }
             System.out.println(starLine);
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            Control.delayPrinter(1);
         }
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        Control.delayPrinter(5);
     }
 }

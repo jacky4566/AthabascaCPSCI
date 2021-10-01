@@ -69,4 +69,19 @@ class Control {
         for (int i = 0; i < 50; ++i)
             System.out.println();
     }
+
+    static void quit() {
+        System.out.println("Thanks for Playing");
+        System.exit(0);
+    }
+
+    static void delayPrinter(int timer) {
+        for (int i = 0; i < timer; i++) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }

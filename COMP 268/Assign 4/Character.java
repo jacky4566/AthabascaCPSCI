@@ -1,16 +1,18 @@
 public class Character {
+    private CharacterList ID;
     private String name = "Not a Name"; //Stores Character name
     private Inventory inventory = new Inventory(); //Stores Character Inventory
     private ConversationNode question;
     private String doorGuard; //does this character guard a door
 
     // Constructor
-    public Character(String myName) {
+    public Character(String myName, CharacterList ID) {
         this.name = myName;
+        this.ID = ID;
         this.question = new ConversationNode(myName);
     }
 
-    public Character(String myName, String doorName) {
+    public Character(String myName, CharacterList ID, String doorName) {
         this.name = myName;
         this.question = new ConversationNode(myName);
         this.doorGuard = doorName;
@@ -22,6 +24,10 @@ public class Character {
     }
 
     // Getters
+    public CharacterList getID() {
+        return this.ID;
+    }
+
     public String getName() {
         return this.name;
     }

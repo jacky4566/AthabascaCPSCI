@@ -1,4 +1,5 @@
 public class Item {
+    boolean isConsumable = true;
     private ItemList itemID;
     private String databaseFile;
     private String name;
@@ -11,8 +12,17 @@ public class Item {
 
     public Item(ItemList itemID){
         this.itemID = itemID;
-        this.name = this.itemID.toString();
-        this.databaseFile = itemID + ".txt";
+        this.name = itemID.toString();
+        this.databaseFile = "ITEM" + itemID + ".txt";
+        this.description = Control.getFromDatabase(databaseFile, "DESCRIPTION");
+        this.actionText = Control.getFromDatabase(databaseFile, "ACTION");
+    }
+
+    public Item(ItemList itemID, boolean consumable){
+        this.isConsumable = consumable;
+        this.itemID = itemID;
+        this.name = itemID.toString();
+        this.databaseFile = "ITEM" + itemID + ".txt";
         this.description = Control.getFromDatabase(databaseFile, "DESCRIPTION");
         this.actionText = Control.getFromDatabase(databaseFile, "ACTION");
     }
@@ -34,7 +44,10 @@ public class Item {
         return this.actionText;
     }
 
-    public void action(){
-        //to be overridden
+    public boolean action(){
+        //can be overridden
+        System.out.println("Item Used: " + this.getName());
+        System.out.println(this.getActionText());
+        return isConsumable;
     }
 }

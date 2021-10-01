@@ -12,15 +12,15 @@ public class Game {
         Control.printFile(Constants.WELCOMEFILE);
         Control.printFile(Constants.HELPFILE);
         // Load game resources
-        LocationList currentLocation = LocationList.RIVERBANK;
+        LocationList currentLocation = LocationList.COURTYARD;
         Alice myPlayer = new Alice();
-        locationList.add(new RiverBank(myPlayer));
-        locationList.add(new Tears(myPlayer));
-        locationList.add(new Garden(myPlayer));
-        locationList.add(new Mushrooms(myPlayer));
-        locationList.add(new Tea(myPlayer));
-        locationList.add(new Courtyard(myPlayer));
-        locationList.add(new Courtroom(myPlayer));
+        locationList.add(new RoomRiverBank(myPlayer));
+        locationList.add(new RoomCorridor(myPlayer));
+        locationList.add(new RoomGarden(myPlayer));
+        locationList.add(new RoomMushroom(myPlayer));
+        locationList.add(new RoomTea(myPlayer));
+        locationList.add(new RoomCourtyard(myPlayer));
+        locationList.add(new RoomCourt(myPlayer));
 
         // Start user input
         System.out.print("Press enter to continue");

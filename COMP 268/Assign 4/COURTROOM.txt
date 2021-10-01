@@ -1,3 +1,0 @@
-EntryString:blank
-PromptString:blank
-ROOMDESCRIPTION:blank
