@@ -1,16 +1,15 @@
 public class Action {
-
     private ActionType thisAction = ActionType.INVALID;
     private String firstArg;
     private String secondArg;
 
     public Action(String userInput) {
-        userInput = userInput.toLowerCase();
-        String[] inputArgs = userInput.split(" ", 3);
-        if (inputArgs.length > 2) {
+        userInput = userInput.toLowerCase(); // change input to lowercase to simplifer switch
+        String[] inputArgs = userInput.split(" ", 3);// split input by spaces. Maximum 3 Strings.
+        if (inputArgs.length > 2) { // If we have 3 arguments
             secondArg = inputArgs[2];
             firstArg = inputArgs[1];
-        } else if (inputArgs.length > 1) {
+        } else if (inputArgs.length > 1) {// if we have 2 arguments
             firstArg = inputArgs[1];
         }
         if (inputArgs[0].startsWith("q") || inputArgs[0].startsWith("quit")) {
@@ -27,8 +26,7 @@ public class Action {
             thisAction = ActionType.SPEAK;
         } else if (inputArgs[0].startsWith("h") || inputArgs[0].startsWith("help")) {
             thisAction = ActionType.HELP;
-        } else if (inputArgs[0].startsWith("e") || inputArgs[0].startsWith("enter")
-                || inputArgs[0].startsWith("exit")) {
+        } else if (inputArgs[0].startsWith("e") || inputArgs[0].startsWith("enter") || inputArgs[0].startsWith("exit")) {
             thisAction = ActionType.EXIT;
         } else if (inputArgs[0].startsWith("y") || inputArgs[0].startsWith("yes")) {
             thisAction = ActionType.YES;

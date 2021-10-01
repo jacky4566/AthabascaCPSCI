@@ -7,4 +7,6 @@ public class RoomCourtyard extends Location {
         super.addItem(new ItemMallet());
         super.addItem(new ItemBall());
     }
+
+    
 }

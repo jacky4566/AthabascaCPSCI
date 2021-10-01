@@ -2,7 +2,6 @@ import java.util.*;
 
 public class Location {
     private LocationList locationID;
-    private LocationList nextLocation = null;
     private Alice alice;
     private boolean firstVisit = true;
     private String databaseFile;
@@ -55,7 +54,7 @@ public class Location {
     }
 
     public void setNextLocation(LocationList nextLocation) {
-        this.nextLocation = nextLocation;
+        this.nextRoom = nextLocation;
     }
 
     public String getLocationIDString() {
@@ -85,13 +84,8 @@ public class Location {
     }
 
     public LocationList enter() {
-        getFirstVisit();
-        while (true) {
-            if (nextLocation != null) {
-                LocationList returnLocation = nextLocation;
-                this.nextLocation = null;
-                return returnLocation;
-            }
+        getFirstVisit(); //check if this is first visit to the room
+        while (true) { //loop until we have a new target room
             checkEnd();
             System.out.print(promptDescription);
             Action newAction = Control.getAction();

@@ -6,7 +6,7 @@ public class RoomRiverBank extends Location {
     }
     
     @Override
-    public void yes() {
+    public void yes() { //Since the first room is special we need to override the yes and no commands.
         System.out.println(Control.getFromDatabase(super.getdatabaseFile(), "DownTheRabbitHole"));
         tumblingGraphics();
         super.setNextLocation(LocationList.CORRIDOR);
@@ -18,7 +18,7 @@ public class RoomRiverBank extends Location {
         Control.quit();
     }
 
-    public void tumblingGraphics() {
+    public void tumblingGraphics() { //generates some fun graphics
         for (int j = 0; j < 40; j++) { // print stars
             StringBuilder starLine = new StringBuilder();
             for (int i = 0; i < Constants.CONSOLEWIDTH; i++) { // print stars
@@ -29,7 +29,7 @@ public class RoomRiverBank extends Location {
                 }
             }
             if (j == 20) {
-                System.out.println("   *   Orange Marmalade   *             *                     *");
+                System.out.println("   *   Orange Marmalade   *             *                     *"); //print this on line 20 of the star generator
             }
             System.out.println(starLine);
             Control.delayPrinter(1);

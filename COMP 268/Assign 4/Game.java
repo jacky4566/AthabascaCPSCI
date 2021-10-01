@@ -12,7 +12,7 @@ public class Game {
         Control.printFile(Constants.WELCOMEFILE);
         Control.printFile(Constants.HELPFILE);
         // Load game resources
-        LocationList currentLocation = LocationList.COURTYARD;
+        LocationList currentLocation = LocationList.RIVERBANK;
         Alice myPlayer = new Alice();
         locationList.add(new RoomRiverBank(myPlayer));
         locationList.add(new RoomCorridor(myPlayer));

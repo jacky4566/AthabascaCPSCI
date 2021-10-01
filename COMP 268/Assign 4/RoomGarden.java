@@ -2,6 +2,8 @@ import java.util.ArrayList;
 
 public class RoomGarden extends Location {
 
+    //Garden room is special becuase it acts as a safe room for storing items. Item commands are overriden
+
     private ArrayList<Item> safe = new ArrayList<>();
 
     public RoomGarden(Alice main) {
