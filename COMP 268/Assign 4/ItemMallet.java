@@ -1,6 +1,6 @@
 public class ItemMallet extends Item {
 
     public ItemMallet(){
-        super(ItemList.MALLET);
+        super(ItemList.MALLET, true);
     }
 }

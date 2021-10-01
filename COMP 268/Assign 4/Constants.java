@@ -1,4 +1,5 @@
 public class Constants {
+    //contains some constants for repeat use and easy changing
     private Constants() {
     }
 

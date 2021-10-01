@@ -1,7 +1,7 @@
 public class ItemTea extends Item {
 
     public ItemTea(){
-        super(ItemList.TEA);
+        super(ItemList.TEA, true);
     }
 
     @Override

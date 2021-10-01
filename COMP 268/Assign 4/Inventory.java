@@ -15,7 +15,7 @@ public class Inventory {
         itemList.add(newItem);
     }
 
-    public boolean consumeItem(String name){
+    public boolean consumeItem(String name){ //Alice used the item. Perform its action and destroy object
         for (Item someItem : itemList) {
             if (someItem.getName().equalsIgnoreCase(name)){
                 if (someItem.action()){
@@ -27,7 +27,7 @@ public class Inventory {
         return false;
     }
 
-    public boolean hasItem(String name){
+    public boolean hasItem(String name){ //Does this inventory contain the target item?
         for (Item someItem : itemList) {
             if (someItem.getName().equalsIgnoreCase(name)){
                 return true;
@@ -36,7 +36,7 @@ public class Inventory {
         return false;
     }
 
-    public Item getItem(String name){
+    public Item getItem(String name){ //retrieve item from inventory
         for (Item someItem : itemList) {
             if (someItem.getName().equalsIgnoreCase(name)){
                 return someItem;
@@ -45,7 +45,7 @@ public class Inventory {
         return null;
     }
 
-    public boolean destroyItem(String name){
+    public boolean destroyItem(String name){ //destory item without action
         for (Item someItem : itemList) {
             if (someItem.getName().equalsIgnoreCase(name)){
                 itemList.remove(someItem);
@@ -56,7 +56,7 @@ public class Inventory {
     }
 
 
-    public void printInventory() {
+    public void printInventory() { //print all items in inventory
         System.out.println("Items in your Inventory:");
         for (Item someItem : itemList) {
             System.out.println(" - " + someItem.getName() + ": " + someItem.getDesciption());

@@ -7,15 +7,7 @@ public class Item {
     private String actionText;
 
     public Item(){
-
-    }
-
-    public Item(ItemList itemID){
-        this.itemID = itemID;
-        this.name = itemID.toString();
-        this.databaseFile = "ITEM" + itemID + ".txt";
-        this.description = Control.getFromDatabase(databaseFile, "DESCRIPTION");
-        this.actionText = Control.getFromDatabase(databaseFile, "ACTION");
+       //Not to be used
     }
 
     public Item(ItemList itemID, boolean consumable){
@@ -32,7 +24,7 @@ public class Item {
         return itemID;
     }
 
-    public String getName(){
+    public String getName(){ //Gets name. Format 1st letter capital
         return this.name.substring(0, 1).toUpperCase() + this.name.substring(1).toLowerCase();
     }
 

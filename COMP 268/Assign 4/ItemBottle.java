@@ -1,6 +1,6 @@
 public class ItemBottle extends Item {
 
     public ItemBottle(){
-        super(ItemList.BOTTLE);
+        super(ItemList.BOTTLE, true);
     }
 }

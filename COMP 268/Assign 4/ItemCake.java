@@ -1,6 +1,6 @@
 public class ItemCake extends Item {
 
     public ItemCake(){
-        super(ItemList.CAKE);
+        super(ItemList.CAKE, true);
     }
 }

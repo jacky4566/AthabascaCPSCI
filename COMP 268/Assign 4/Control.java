@@ -15,7 +15,7 @@ class Control {
         return TextIO.getlnChar();
     }
 
-    static void printFile(String target) {
+    static void printFile(String target) {//prints the contents of the target file
         try {
             File myFile = new File(target);
             Scanner myReader = new Scanner(myFile);
@@ -33,7 +33,7 @@ class Control {
         }
     }
 
-    static String getFromDatabase(String dataSet, String key) {
+    static String getFromDatabase(String dataSet, String key) { //Gets a target string from a data file which matches the key
         String returnValue = null;
         try {
             File myFile = new File(dataSet);
@@ -65,17 +65,17 @@ class Control {
         return returnValue;
     }
 
-    static void clearTerminal() {
+    static void clearTerminal() { //prints a bunch of lines to clear the terminal
         for (int i = 0; i < 50; ++i)
             System.out.println();
     }
 
-    static void quit() {
+    static void quit() {//ends java runtime
         System.out.println("Thanks for Playing");
         System.exit(0);
     }
 
-    static void delayPrinter(int timer) {
+    static void delayPrinter(int timer) { //use for delay
         for (int i = 0; i < timer; i++) {
             try {
                 Thread.sleep(100);
