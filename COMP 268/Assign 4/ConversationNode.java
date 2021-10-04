@@ -1,5 +1,49 @@
+/**
+* title: ConversationNode.java
+* description: Create a converstation node, contians a question and answer for user to interact with
+* date: 03/10/2021
+* Jackson Wiebe 3519635
+* 1.0
+*/
+
+/**
+* DOCUMENTATION...
+*/
+/**
+*
+* Class: ConversationNode
+*   Description: 
+*    A class for creating converstaion between the user and target character. Contains string values and status of this conversation node.
+*
+*   Constructors:
+*    ConversationNode(String)
+*     Takes a common name for the character and looks up all the relavent String information from a database of the same name.
+* 
+*   Methods:
+*    String getConversation():
+*     Approach a character without argument. Prints out the question or statement of this character.
+*
+*    String getConversation(String):
+*     Approach a character with argument. Checks if answer is correct and prints out resulting statement of this character.
+*
+*    int getAttempts():
+*     Returns the number of attempts on this puzzle.
+*
+*    boolean getComplete():
+*     Returns the status of this node. 
+*
+*   Instance Variables:
+*    private boolean nodeComplete:      Boolean status if this node is complete
+*    private String query:              String of this characters query, fetched from txt file of same name
+*    private String answer:             String of this characters correct answer, fetched from txt file of same name
+*    private String responseCorrect:    String of this characters response when correct answer given, fetched from txt file of same name
+*    private String responseWrong:      String of this characters response when incorrect answer given, fetched from txt file of same name
+*    private String responseHint:       String of hint given after 3 failed attempts, fetched from txt file of same name
+*    private int guessCount:            Counter for number of attempts on this puzzle
+*
+*/
+
 public class ConversationNode {
-    private String databaseFile;
     private boolean nodeComplete = false;
     private String query;
     private String answer;
@@ -9,15 +53,13 @@ public class ConversationNode {
     private int guessCount = 0; //keeps track of the number of guesses
 
     public ConversationNode(String charName) {
-        this.databaseFile = "CHAR" + charName + ".txt";
-        this.query = Control.getFromDatabase(this.databaseFile, "query");
-        this.answer = Control.getFromDatabase(this.databaseFile, "answer");
-        this.responseCorrect = Control.getFromDatabase(this.databaseFile, "responseCorrect");
-        this.responseWrong = Control.getFromDatabase(this.databaseFile, "responseWrong");
-        this.responseHint = Control.getFromDatabase(this.databaseFile, "responseHint");
+        String databaseFile = "CHAR" + charName + ".txt";
+        this.query = Control.getFromDatabase(databaseFile, "query");
+        this.answer = Control.getFromDatabase(databaseFile, "answer");
+        this.responseCorrect = Control.getFromDatabase(databaseFile, "responseCorrect");
+        this.responseWrong = Control.getFromDatabase(databaseFile, "responseWrong");
+        this.responseHint = Control.getFromDatabase(databaseFile, "responseHint");
     }
-
-    // Setters
 
     // Getters
     public String getConversation() {

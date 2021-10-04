@@ -1,3 +1,42 @@
+/**
+* title: Action.java
+* description: Create an Action object that holds the result of the intended user action
+* date: 03/10/2021
+* Jackson Wiebe 3519635
+* 1.0
+*/
+
+/**
+* DOCUMENTATION...
+*/
+/**
+*
+* Class: Action
+*   Description: 
+*    Gets user information from the terminal and converts that to a useable enum with assigned actions. 
+*
+*   Constructors:
+*    Action(String)
+*     Given an input string. This constructor will decode the input for our assigned input enums. 
+*     method also splits our input into appropriate arguments for later processing.
+* 
+*   Methods:
+*    ActionType getActionType():
+*     Returns the actionType Enum of this action.
+*
+*    String getFirstArg():
+*     Returns the first argument as assigned in the constructor.
+*
+*    String getSecondArg():
+*     Returns the second argument as assigned in the constructor.
+*
+*   Instance Variables:
+*    private ActionType thisAction:     Contains the enum ActionType of this Action. Default is INVALID.
+*    private String firstArg:           Contains a string of the first argument, if present.
+*    private String secondArg:          Contains a string of all text after the first argument, if present. 
+*
+*/
+
 public class Action {
     private ActionType thisAction = ActionType.INVALID;
     private String firstArg;

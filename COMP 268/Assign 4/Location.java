@@ -1,3 +1,121 @@
+/**
+* title: Location.java
+* description: Mid level location parent class, Contains all primary code for room loops and action to execute.
+* date: 03/10/2021
+* Jackson Wiebe 3519635
+* 1.0
+*/
+
+/**
+* DOCUMENTATION...
+*/
+/**
+*
+* Class: Location
+*   Description: 
+*    A large class that contains loops for handling user input and task execution. Keeps track of all item, characters, and exits within a room.
+*
+*   Constructors:
+*    Location()
+*     To be overriden by child room classes.
+*
+*    Location(Alice, LocationList)
+*     Takes a reference to the main character alice and the enum LocationList for this room. Gets all the String text from target TXT file of the same name. 
+* 
+*   Methods:
+*    void addExit(Door):
+*     Add a new door to this room.
+*
+*    void addCharacter(Character):
+*     Add a new charcter to this room.
+*
+*    void addItem(Item):
+*     Add a new item to this room.
+*
+*    LocationList enter():
+*     Code runs upon entry to room, returns the next room for the user to enter. Acts as a run() for this room.
+*     Checks if we have visted this room before. Checks for end game condition and processes user choice.
+*
+*    void checkEnd():
+*     Checks for end game conditions
+*
+*    void speak(String, String):
+*     Speak to a given character (first arg) with player reponse (Second arg)
+*     Can unlock doors and perform actions if user is succesful with thier prompt.
+*
+*    void keepItem(String):
+*     to be overriden for safe room
+*
+*    void takeItem(String):
+*     Take item stored in room. Removes from room linked list and add to alice inventory.
+*
+*    void unlockDoor(String):
+*     Unlocks door based on given name
+*
+*    void useItem(String):
+*     Uses a target item. Switch is used to determine each items unique action based on the item Enum
+*
+*    void lookAround():
+*     Prints a description of the room including items, characters, and exits.
+*
+*    void listItems():
+*     Prints all items found in room. Overriden by safe room.
+*
+*    LocationList exit(String):
+*     Attempts to exit the room based on a given string door name. Returns next room to traverse based on LocationList Enum.
+*
+*    void yes():
+*     To be overriden
+*
+*    void no():
+*     To be overriden
+*
+*    Alice getMainChar():
+*     Returns reference to Alice object stored in room.
+*
+*    ArrayList<Door> getExits():
+*     Returns list of exits in this room.
+*
+*    LocationList getLocationID():
+*     Returns LocationList enum of this room
+*
+*    String getLocationIDString():
+*     Returns name of room as string
+*
+*    String getLocationIDString():
+*     Returns name of room as string
+*
+*    String getdatabaseFile():
+*     Returns TXT database file of text information for this room
+*
+*    void getFirstVisit():
+*     If this is a first visit to the room print out the entry text
+*
+*    ArrayList<Item> getLoot():
+*     Returns list of items in this room
+*
+*    int getDoorID():
+*     returns list pointer to a target door
+*
+*    void setNextLocation():
+*     Sets the next location to traverse once we exit the room
+*
+*   Instance Variables:
+*    private LocationList locationID;       Contains Enum LocationList of this location
+*    private Alice alice;                   Contains reference to the main character for manipulation
+*    private boolean firstVisit;            Boolean state if user has not visited this room before, Default is true        
+*    private String databaseFile;           TXT name of database file for Strings related to this room.
+*    private String roomDescription;        String text of description of this room, fetched from database file
+*    private String promptDescription;      String text of prompt display by room at each input, fetched from database file
+*    private String entryString;            String text of text play upon entry to room, fetched from database file
+*    private String returnString;           String text of text play upon re-entry to room, fetched from database file
+*    private ArrayList<Character> NPC:      LinkList of None Playable characters in this room
+*    private ArrayList<Item> loot:          LinkList of items in this room
+*    private ArrayList<Door> roomExits:     LinkList of exits in this room
+*    private LocationList nextRoom;         Enum LocationList of next room after exit has ben decided.
+*
+*/
+
 import java.util.*;
 
 public class Location {
@@ -7,6 +125,8 @@ public class Location {
     private String databaseFile;
     private String roomDescription;
     private String promptDescription;
+    private String entryString;
+    private String returnString;
     private ArrayList<Character> NPC = new ArrayList<>();
     private ArrayList<Item> loot = new ArrayList<>();
     private ArrayList<Door> roomExits = new ArrayList<>();
@@ -19,14 +139,12 @@ public class Location {
     public Location(Alice main, LocationList locationID) {
         this.locationID = locationID;
         nextRoom = locationID;
-        this.databaseFile = "ROOM" + locationID + ".txt";
         this.alice = main;
-        roomDescription = Control.getFromDatabase(this.databaseFile, "ROOMDESCRIPTION");
-        promptDescription = Control.getFromDatabase(this.databaseFile, "PromptString");
-    }
-
-    public Alice getMainChar() {
-        return this.alice;
+        databaseFile = "ROOM" + locationID + ".txt";
+        roomDescription = Control.getFromDatabase(databaseFile, "ROOMDESCRIPTION");
+        promptDescription = Control.getFromDatabase(databaseFile, "PromptString");
+        entryString = Control.getFromDatabase(databaseFile, "EntryString");
+        returnString = Control.getFromDatabase(databaseFile, "ReturnString");
     }
 
     public void addExit(Door newDoor) {
@@ -37,50 +155,8 @@ public class Location {
         this.NPC.add(newNPC);
     }
 
-    public ArrayList<Door> getExits() {
-        return this.roomExits;
-    }
-
-    public String getdatabaseFile() {
-        return this.databaseFile;
-    }
-
-    public LocationList getLocationID() {
-        return locationID;
-    }
-
     public void addItem(Item newLoot) {
         this.loot.add(newLoot);
-    }
-
-    public void setNextLocation(LocationList nextLocation) {
-        this.nextRoom = nextLocation;
-    }
-
-    public String getLocationIDString() {
-        return locationID.toString();
-    }
-
-    public void getFirstVisit() {
-        if (firstVisit) {
-            System.out.println(Control.getFromDatabase(this.databaseFile, "EntryString"));
-            firstVisit = false;
-        } else {
-            System.out.println(Control.getFromDatabase(this.databaseFile, "ReturnString"));
-        }
-    }
-
-    public ArrayList<Item> getLoot() {
-        return this.loot;
-    }
-
-    public int getDoorID(String findThis) { // looks for the target location in an arraylist
-        for (int i = 0; i < roomExits.size(); i++) {
-            if (roomExits.get(i).getName().equalsIgnoreCase(findThis)) {
-                return i;
-            }
-        }
-        return -1;
     }
 
     public LocationList enter() {
@@ -205,6 +281,8 @@ public class Location {
                     if (this.locationID == LocationList.CORRIDOR) { // key only works in one room
                         unlockDoor("garden");
                         alice.getInventory().consumeItem(itemName);
+                    }else{
+                        System.out.println("That item doesnt work here");
                     }
                     break;
                 case MALLET:
@@ -290,5 +368,53 @@ public class Location {
 
     public void no() {
         // to be overriden
+    }
+
+    //GETTERS
+    public Alice getMainChar() {
+        return this.alice;
+    }
+
+    public ArrayList<Door> getExits() {
+        return this.roomExits;
+    }
+
+    public LocationList getLocationID() {
+        return locationID;
+    }
+
+    public String getLocationIDString() {
+        return locationID.toString();
+    }
+
+    public String getdatabaseFile(){
+        return this.databaseFile;
+    }
+
+    public void getFirstVisit() {
+        if (firstVisit) {
+            System.out.println(entryString);
+            firstVisit = false;
+        } else {
+            System.out.println(returnString);
+        }
+    }
+
+    public ArrayList<Item> getLoot() {
+        return this.loot;
+    }
+
+    public int getDoorID(String findThis) { // looks for the target location in an arraylist
+        for (int i = 0; i < roomExits.size(); i++) {
+            if (roomExits.get(i).getName().equalsIgnoreCase(findThis)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    //SETTERS
+    public void setNextLocation(LocationList nextLocation) {
+        this.nextRoom = nextLocation;
     }
 }
