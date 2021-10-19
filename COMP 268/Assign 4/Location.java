@@ -160,6 +160,7 @@ public class Location {
     }
 
     public LocationList enter() {
+        nextRoom = this.locationID;
         getFirstVisit(); //check if this is first visit to the room
         while (true) { //loop until we have a new target room
             checkEnd();
