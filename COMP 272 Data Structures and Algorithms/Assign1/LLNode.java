@@ -25,9 +25,11 @@
 *  Constructor:
     LLNode()
      Generates a new node with a random Int for data.
+     Also pre-populates minimum value with newly assinged data
 
 *  Methods:
-    None
+    setMin(int)
+     Takes a single int and will update this.min with the smallest value. Used for tracking MinStack
 
 *  Class Variables:
     LLNode nextPtr
@@ -38,14 +40,23 @@
 
     int data
      Integer type to hold node data. Used for demonstration purposes. Could also contain any required data elemnt. 
+
+    int min
+     Used to keep track of minimum value for MinStack
 */
 
  public class LLNode {
     LLNode nextPtr;
     LLNode previousPtr; // Used for double linked list
     int data;
+    int min;
 
     LLNode() { // initialize with some data
         data = (int) (Math.random() * 100);
+        min = data;
+    }
+
+    public void setMin(int value){
+        min = Math.min(min,value);
     }
 }
