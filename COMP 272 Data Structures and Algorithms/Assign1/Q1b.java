@@ -1,5 +1,5 @@
 /**
-* title: Assign1Stack.java
+* title: Q1b.java
 * date: 12/12/2021
 * Jackson Wiebe 3519635
 * 1.0
@@ -17,7 +17,7 @@
 *
 * Compiling and running instructions
 *  Compile:  javac *.java 
-*  Run:      java Assign1Stack
+*  Run:      java Q1b
 *
 * Dependent Classes:
 *  Stack.java
@@ -47,10 +47,11 @@ Done
 **
 * Class text and resources
 * https://java2blog.com/implement-stack-using-two-queues-in-java/
+* https://en.wikipedia.org/wiki/Stack_(abstract_data_type)
 *
 */
 
-public class Assign1Stack {
+public class Q1b {
     public static void main(String[] args) { //Main program
         //Some start text
         System.out.println("Demo of a stack with 2 Queues"); 

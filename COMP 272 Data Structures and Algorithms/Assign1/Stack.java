@@ -81,6 +81,7 @@ public class Stack {
     }
     
     public int size() {
+        //Get size of our virtual stack
         return queue1.size();
     }
 }

@@ -1,5 +1,5 @@
 /**
-* title: Assign1PQ.java
+* title: Q1a.java
 * date: 12/12/2021
 * Jackson Wiebe 3519635
 * 1.0
@@ -18,7 +18,7 @@
 *
 * Compiling and running instructions
 *  Compile:  javac *.java 
-*  Run:      java Assign1PQ
+*  Run:      java Q1a
 *
 * Dependent Classes:
 *  PriorityQueue.java
@@ -57,9 +57,11 @@ Done
 * https://www.geeksforgeeks.org/priority-queue-class-in-java/
 * https://www.freecodecamp.org/news/priority-queue-implementation-in-java/
 * https://algorithmtutor.com/Data-Structures/Tree/Priority-Queues/
+* https://en.wikipedia.org/wiki/Queue_(abstract_data_type)
+* 
 */
 
-public class Assign1PQ {
+public class Q1a {
     public static void main(String[] args) { //Main program
         //Some start text
         System.out.println("Demo of Priority Queue"); 
