@@ -1,5 +1,0 @@
-frankie.whittaker@jocogov.org
-MargoTest3027
-
-CREATE USER 'server'@'localhost' IDENTIFIED BY 'Thispsd1234';
-GRANT ALL PRIVILEGES ON * . * TO 'server'@'localhost';
