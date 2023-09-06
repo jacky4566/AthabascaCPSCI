@@ -16,7 +16,6 @@ import java.util.Calendar;
 
 public class GameView extends SurfaceView implements Runnable{
     volatile boolean playing = false;
-    VelocityTracker mVelocityTracker;
     private Context context;
     private Canvas canvas;
     Thread gameThread = null;
@@ -65,10 +64,18 @@ public class GameView extends SurfaceView implements Runnable{
         }
     }
 
-    private void logic(){
+    private void logic() {
         //Does all game logic
-        if (onScreenTetra == null){
-            onScreenTetra = new Tetra(((playAreaRight - playAreaLeft) / 2) + playAreaLeft , tetraSize);
+        if (onScreenTetra == null) {
+            onScreenTetra = new Tetra(((playAreaRight - playAreaLeft) / 2) + playAreaLeft, tetraSize);
+        } else{
+            //Move tetra
+            onScreenTetra.moveDown();
+        }
+        //check for collision with sand or walls
+        if (onScreenTetra.checkBottom(screenY) || onScreenTetra.checkSand(sand.sandArray, playAreaLeft)){
+            onScreenTetra.explode(sand.sandArray, playAreaLeft);
+            onScreenTetra = null;
         }
     }
 
@@ -81,16 +88,7 @@ public class GameView extends SurfaceView implements Runnable{
 
             //Draw Current Tetra
             if (onScreenTetra != null){
-                //Move tetra
-                onScreenTetra.moveDown();
-                //check for collision with sand or walls
-                if (onScreenTetra.checkBottom(screenY) || onScreenTetra.checkSand(sand.sandArray, playAreaLeft)){
-                    onScreenTetra.explode(sand.sandArray, playAreaLeft);
-                    onScreenTetra = null;
-                }else {
-                    //draw it
-                    onScreenTetra.draw(canvas);
-                }
+                onScreenTetra.draw(canvas);
             }
 
             //Draw Sand
@@ -122,7 +120,6 @@ public class GameView extends SurfaceView implements Runnable{
     }
 
     // Make a new thread and start it
-    // Execution moves to the R
     public void resume() {
         playing = true;
         gameThread = new Thread(this);
@@ -136,11 +133,6 @@ public class GameView extends SurfaceView implements Runnable{
         if (onScreenTetra == null) {
             return true; //Nothing to move
         }
-
-        if (mVelocityTracker == null) {
-            mVelocityTracker = VelocityTracker.obtain();
-        }
-
         switch (motionEvent.getAction()) {
             case MotionEvent.ACTION_DOWN:{
                 startClickTime = Calendar.getInstance().getTimeInMillis();
@@ -154,20 +146,12 @@ public class GameView extends SurfaceView implements Runnable{
                     onScreenTetra.rotate();
                     onScreenTetra.checkWalls((int)motionEvent.getX(),playAreaLeft,playAreaRight); //This will catch out of bounds from rotation
                 }
-
             }
             case MotionEvent.ACTION_MOVE: {
                 onScreenTetra.userDrag((int)motionEvent.getX(),playAreaLeft,playAreaRight);
-                mVelocityTracker.addMovement(motionEvent);
-                mVelocityTracker.computeCurrentVelocity(1000);
-                float vy = mVelocityTracker.getYVelocity();
-                if (vy >800.0){
-                    onScreenTetra.userSmash();
-                }
                 return true;
             }
         }
-
 
         return true;
     }

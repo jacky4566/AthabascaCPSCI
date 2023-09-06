@@ -25,48 +25,44 @@ public class Tetra {
 
     public Tetra(int x, int scale){
         Random rand = new Random();
-        //type = TetraType.values()[rand.nextInt(TetraType.values().length)];
-        type = TetraType.I;
+        type = TetraType.values()[rand.nextInt(TetraType.values().length)];
+        //type = TetraType.I;
         location = new Point(x,0);
         tetraScale = scale;
         switch (type){
             case I:
-                tetraColor.setColor(Color.parseColor("#008080")); // Teal
+                tetraColor.setColor(CONSTANTS.Tetra_Color_I); // Teal
                 shapeGrid = new boolean[][]{{false, true, false, false}, {false, true, false, false}, {false, true, false, false}, {false, true, false, false}};
                 break;
             case J:
-                tetraColor.setColor(Color.parseColor("#00008B")); // Dark Blue
+                tetraColor.setColor(CONSTANTS.Tetra_Color_J); // Dark Blue
                 shapeGrid = new boolean[][]{{false, false, true, false}, {true, true, true, false}, {false, false, false, false}, {false, false, false, false}};
                 break;
             case L:
-                tetraColor.setColor(Color.parseColor("#ff8c00")); // Dark Orange
+                tetraColor.setColor(CONSTANTS.Tetra_Color_L); // Dark Orange
                 shapeGrid = new boolean[][]{{false, false, false, false}, {true, true, true, false}, {false, false, true, false}, {false, false, false, false}};
                 break;
             case O:
-                tetraColor.setColor(Color.parseColor("#ffff00")); // Yellow
+                tetraColor.setColor(CONSTANTS.Tetra_Color_O); // Yellow
                 shapeGrid = new boolean[][]{{false, false, false, false}, {false, true, true, false}, {false, true, true, false}, {false, false, false, false}};
                 break;
             case S:
-                tetraColor.setColor(Color.parseColor("#ff0000")); // Red
+                tetraColor.setColor(CONSTANTS.Tetra_Color_S); // Red
                 shapeGrid = new boolean[][]{{false, false, false, false}, {false, true, true, false}, {true, true, false, false}, {false, false, false, false}};
                 break;
             case Z:
-                tetraColor.setColor(Color.parseColor("#7fffd4")); // Green
+                tetraColor.setColor(CONSTANTS.Tetra_Color_Z); // Green
                 shapeGrid = new boolean[][]{{false, false, false, false}, {true, true, false, false}, {false, true, true, false}, {false, false, false, false}};
                 break;
             case T:
-                tetraColor.setColor(Color.parseColor("#800080")); // Purple
+                tetraColor.setColor(CONSTANTS.Tetra_Color_T); // Purple
                 shapeGrid = new boolean[][]{{false, false, true, false}, {false, true, true, false}, {false, false, true, false}, {false, false, false, false}};
                 break;
         }
     }
 
     public void moveDown(){
-        location.offset(0,2);
-    }
-
-    public void userSmash(){
-        location.offset(0,50);
+        location.offset(0,5);
     }
     public void rotate(){
         //Right rotate 90 degrees
@@ -79,7 +75,7 @@ public class Tetra {
         shapeGrid = temp;
     }
 
-    public void userDrag(int newX,int playAreaLeft, int playAreaRight){
+    public void userDrag(int newX, int playAreaLeft, int playAreaRight){
         //Check for wall collision with new point
 
         //Range check to avoid glitchs caused by clicking off play area
@@ -90,7 +86,7 @@ public class Tetra {
 
         if (!checkWalls(newX, playAreaLeft, playAreaRight))
             //No Collision, safe to update location
-            location = new Point(newX, location.y);
+                location = new Point(newX, location.y);
     }
 
     public boolean checkWalls(int newX, int playAreaLeft, int playAreaRight){
@@ -132,14 +128,13 @@ public class Tetra {
                 if (shapeGrid[x][y]) {
                     //draw block
                     canvas.drawRect(location.x + (tetraScale * (x - 2)), location.y + (tetraScale * (y + 2)), location.x + (tetraScale * (x - 2)) + tetraScale, location.y + (tetraScale * (y + 2)) + tetraScale, tetraColor);
-                }
                     Paint border = new Paint(tetraColor);
                     border.setStyle(Paint.Style.STROKE);
                     ColorFilter filter = new LightingColorFilter(0xFFFFFFFF, 0x00222222);
                     border.setColorFilter(filter);
                     border.setStrokeWidth(tetraScale / 10);
                     canvas.drawRect(location.x + (tetraScale * (x - 2)), location.y + (tetraScale * (y + 2)), location.x + (tetraScale * (x - 2)) + tetraScale, location.y + (tetraScale * (y + 2)) + tetraScale, border);
-
+                }
             }
         }
     }
@@ -167,12 +162,15 @@ public class Tetra {
         for (int x =0; x< 4; x++){
             for(int y = 0; y<4; y++) {
                 if (shapeGrid[x][y]) {
-                    Rect Box = new Rect(location.x,location.y-(tetraScale * y),location.x + tetraScale,location.y + tetraScale - (tetraScale * y));
+                    Rect Box = new Rect(location.x + (tetraScale * (x - 2)),
+                            location.y + (tetraScale * (y + 2)),
+                            location.x + (tetraScale * (x - 2)) + tetraScale,
+                            location.y + (tetraScale * (y + 2)) + tetraScale);
                     for (int sandx =0; sandx< sandArray.length; sandx++){
                         for(int sandy = 0; sandy<sandArray[0].length; sandy++) {
                             // Collision
                             if ((sandArray[sandx][sandy] != null) &&
-                                    Box.contains(sandx+ offset,sandy)
+                                    Box.contains(sandx + offset,sandy)
                             )
                                 return true;
                         }
