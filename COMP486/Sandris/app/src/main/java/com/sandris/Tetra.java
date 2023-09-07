@@ -23,11 +23,11 @@ public class Tetra {
     private Paint tetraColor = new Paint();
     private int tetraScale;
 
-    public Tetra(int x, int scale){
+    public Tetra(int x, int y, int scale){
         Random rand = new Random();
         type = TetraType.values()[rand.nextInt(TetraType.values().length)];
         //type = TetraType.I;
-        location = new Point(x,0);
+        location = new Point(x,y);
         tetraScale = scale;
         switch (type){
             case I:
@@ -62,7 +62,7 @@ public class Tetra {
     }
 
     public void moveDown(){
-        location.offset(0,5);
+        location.offset(0,tetraScale);
     }
     public void rotate(){
         //Right rotate 90 degrees
@@ -182,16 +182,16 @@ public class Tetra {
         return false;
     }
 
-    public void explode(TetraType[][] sandArray, int leftOffset){
+    public void explode(TetraType[][] sandArray, Rect playArea){
         //Explodes the Tetra into sand
         for (int x =0; x< 4; x++){
             for(int y = 0; y<4; y++) {
                 if (shapeGrid[x][y]) {
                     //Add to sand grid
-                    int blockX = location.x + (tetraScale * (x-2)) -leftOffset;
-                    int blockY = location.y + (tetraScale * (y+2));
-                    for (int drawx = blockX;  drawx< (blockX + tetraScale); drawx++) {
-                        for (int drawy = blockY + tetraScale; drawy > blockY ; drawy--) {
+                    int sandX = (location.x + (tetraScale * (x-2)) - playArea.left) / 8;
+                    int sandY = (location.y + (tetraScale * (y+2)) - playArea.top ) / 8;
+                    for (int drawx = sandX;  drawx < (sandX + 10); drawx++) {
+                        for (int drawy = sandY;  drawy < (sandY + 10); drawy++) {
                             sandArray[drawx][drawy] = type;
                         }
                     }

@@ -4,17 +4,17 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.VelocityTracker;
-
-import androidx.core.view.VelocityTrackerCompat;
 
 import java.util.Calendar;
 
 public class GameView extends SurfaceView implements Runnable{
+
+    //Game area 10x20
     volatile boolean playing = false;
     private Context context;
     private Canvas canvas;
@@ -22,17 +22,19 @@ public class GameView extends SurfaceView implements Runnable{
     Thread sandThread = null;
     private SurfaceHolder ourHolder;
 
-    private float scaling = 1.0F;
+     int scaling;
 
     private Tetra onScreenTetra;
 
     private static float marginRight = 0.20F;
     private static float marginLeft = 0.05F;
+    private static float marginTop = 0.05F;
+    private static float marginBottom = 0.05F;
+
     private int screenX;
     private int screenY;
-    private int playAreaLeft;
-    private int playAreaRight;
-    private int tetraSize;
+
+    private  Rect playArea; //Defines play area in screen coordinates
 
     private Sand sand;
 
@@ -47,12 +49,14 @@ public class GameView extends SurfaceView implements Runnable{
 
         screenX = x;
         screenY = y;
-        playAreaLeft = (int)(screenX * marginLeft);
-        playAreaRight = (int)(screenX * (1.0F - marginRight)); //
-        playAreaRight = playAreaRight - ((playAreaLeft - playAreaRight) % 10); //Ensure width fits 10 blocks from left to right
-        tetraSize = (playAreaRight - playAreaLeft) / 10; //Size of each Tetra
 
-        sand = new Sand(playAreaRight - playAreaLeft, screenY, playing);
+        Rect potentialPlayArea = new Rect((int)(screenX * marginLeft),(int)(screenY * marginTop),(int)(screenX * (1.0-marginRight)),(int)(screenY * (1.0-marginBottom)));
+        int potentialWidth = potentialPlayArea.width() - (potentialPlayArea.width() % 10);
+        int potentialHeight = (potentialPlayArea.height() - (potentialPlayArea.height() % 10))/2; //Game ratio is 1:2
+        scaling = Math.min(potentialWidth,potentialHeight) / 10;
+        playArea = new Rect(potentialPlayArea.centerX() - (scaling*5),potentialPlayArea.centerY() - (scaling*10),potentialPlayArea.centerX() + (scaling*5),potentialPlayArea.centerY() + (scaling*10));
+
+        sand = new Sand(100, 200);
 
         ourHolder = getHolder();
     }
@@ -61,20 +65,26 @@ public class GameView extends SurfaceView implements Runnable{
         while (playing) {
             logic();
             draw();
+            try {
+                Thread.sleep(200);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
     private void logic() {
         //Does all game logic
         if (onScreenTetra == null) {
-            onScreenTetra = new Tetra(((playAreaRight - playAreaLeft) / 2) + playAreaLeft, tetraSize);
+            onScreenTetra = new Tetra(playArea.centerX(), playArea.top, scaling);
         } else{
             //Move tetra
             onScreenTetra.moveDown();
         }
         //check for collision with sand or walls
-        if (onScreenTetra.checkBottom(screenY) || onScreenTetra.checkSand(sand.sandArray, playAreaLeft)){
-            onScreenTetra.explode(sand.sandArray, playAreaLeft);
+
+        if (onScreenTetra.checkBottom(playArea.bottom) ){//|| onScreenTetra.checkSand(sand.sandArray, playArea.left)){
+            onScreenTetra.explode(sand.sandArray, playArea);
             onScreenTetra = null;
         }
     }
@@ -92,7 +102,7 @@ public class GameView extends SurfaceView implements Runnable{
             }
 
             //Draw Sand
-            sand.draw(canvas, playAreaLeft);
+            drawSand();
 
             ourHolder.unlockCanvasAndPost(canvas);
         }
@@ -101,11 +111,48 @@ public class GameView extends SurfaceView implements Runnable{
     private void drawBackground(){
         Paint paint = new Paint();
         paint.setColor(Color.BLACK); // Set the color of the pixel
-        canvas.drawRect(0, 0, screenX, screenY, paint);
+        paint.setStyle(Paint.Style.FILL);
+        canvas.drawPaint(paint); //Fill background
 
+        //Draw Play area
         paint.setColor(Color.DKGRAY); // Set the color of the pixel
-        canvas.drawRect(0, 0, playAreaLeft, screenY, paint);
-        canvas.drawRect(playAreaRight, 0, screenX, screenY, paint);
+        canvas.drawRect(playArea, paint);
+    }
+
+    public void drawSand(){
+        Paint paint = new Paint();
+        int sandScale = scaling/10;
+        for (int x =0; x< sand.getSandPitWidth(); x++){
+            for(int y = 0; y<sand.getSandPitHeight(); y++) {
+                if (sand.sandArray[x][y] != null){
+                    switch (sand.sandArray[x][y]){
+                        case I:
+                            paint.setColor(CONSTANTS.Tetra_Color_I); // Teal
+                            break;
+                        case J:
+                            paint.setColor(CONSTANTS.Tetra_Color_J); // Dark Blue
+                            break;
+                        case L:
+                            paint.setColor(CONSTANTS.Tetra_Color_L); // Dark Orange
+                            break;
+                        case O:
+                            paint.setColor(CONSTANTS.Tetra_Color_O); // Yellow
+                            break;
+                        case S:
+                            paint.setColor(CONSTANTS.Tetra_Color_S); // Red
+                            break;
+                        case Z:
+                            paint.setColor(CONSTANTS.Tetra_Color_Z); // Green
+                            break;
+                        case T:
+                            paint.setColor(CONSTANTS.Tetra_Color_T); // Purple
+                            break;
+                    }
+                    Rect sandPixel = new Rect((x*sandScale)+playArea.left,(y*sandScale)+playArea.top,(x*sandScale)+sandScale+playArea.left,(y*sandScale)+sandScale+playArea.top);
+                    canvas.drawRect(sandPixel,paint);
+                }
+            }
+        }
     }
     // Clean up our thread if the game is interrupted or the player quits
     public void pause(){
@@ -144,11 +191,11 @@ public class GameView extends SurfaceView implements Runnable{
                     //click event has occurred
                     Log.d("touch", "click");
                     onScreenTetra.rotate();
-                    onScreenTetra.checkWalls((int)motionEvent.getX(),playAreaLeft,playAreaRight); //This will catch out of bounds from rotation
+                    onScreenTetra.checkWalls((int)motionEvent.getX(),playArea.left,playArea.right); //This will catch out of bounds from rotation
                 }
             }
             case MotionEvent.ACTION_MOVE: {
-                onScreenTetra.userDrag((int)motionEvent.getX(),playAreaLeft,playAreaRight);
+                onScreenTetra.userDrag((int)motionEvent.getX(),playArea.left,playArea.right);
                 return true;
             }
         }
