@@ -1,46 +1,33 @@
 package com.sandris;
 
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.Rect;
-import android.util.Log;
-
 
 public class Sand implements Runnable {
-
     public TetraType[][] sandArray;
-    private int sandPitWidth;
-    private int sandPitHeight;
-    public Sand(int width, int height) {
-        sandPitWidth = width;
-        sandPitHeight = height;
-        sandArray = new TetraType[sandPitWidth][sandPitHeight];
+    private long threadStart;
+    public int sandTopLevel; // Optimization: Keeps track of the top level of our sand for checking
+    public Sand(int width, int height ) {
+        sandArray = new TetraType[width][height];
     }
 
     @Override
     public void run() {
-        while(true){
+        while(true) {
+            threadStart = System.nanoTime();
             moveSand();
+
+            while ((System.nanoTime() - threadStart) < 100000000) {
+                Thread.yield();
+            }
         }
     }
-
-    public int getSandPitWidth(){
-        return sandPitWidth;
-    }
-
-    public int getSandPitHeight(){
-        return sandPitHeight;
-    }
-
-
     private void moveSand(){
         //Moves all the sand particles bottom to top
         boolean keepProcessing;
         int leftRight = 0; //used to generate sudo random left right choices.
-        for(int y = sandPitHeight - 2; y>=0; y--) {
+        for(int y = sandArray[0].length - 2; y>=0; y--) {
             keepProcessing = false;
-            for (int x =0; x< sandPitWidth; x++){
+            for (int x =0; x< sandArray.length; x++){
                 if (sandArray[x][y] != null) {
                     keepProcessing = true;
                     //For each entity that is affected by gravity
@@ -58,7 +45,7 @@ public class Sand implements Runnable {
                             //We are not at the wall and we can move diagonal left
                             sandArray[x - 1][y + 1] = sandArray[x][y];
                             sandArray[x][y] = null;
-                        }else if ((x + 1 < sandPitWidth &&
+                        }else if ((x + 1 < sandArray.length &&
                                 (sandArray[x + 1][y + 1] == null))){
                             //We are not at the wall and we can move diagonal right
                             sandArray[x + 1][y + 1] = sandArray[x][y];
@@ -66,7 +53,7 @@ public class Sand implements Runnable {
                         }
                     } else  {
                         //Try right
-                        if ((x + 1 < sandPitWidth &&
+                        if ((x + 1 < sandArray.length &&
                                 (sandArray[x + 1][y + 1] == null))){
                             //We are not at the wall and we can move diagonal right
                                 sandArray[x + 1][y + 1] = sandArray[x][y];
@@ -81,8 +68,15 @@ public class Sand implements Runnable {
                 }
                 leftRight++;
             }
-            if (!keepProcessing)
+            if (!keepProcessing) {
+                sandTopLevel = y; //Update the new top level
                 return;
+            }
         }
+    }
+
+    private static void checkContinous(){
+        //Checks for a continuous line
+
     }
 }
