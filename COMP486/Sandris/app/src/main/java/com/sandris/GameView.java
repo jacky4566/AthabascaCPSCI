@@ -1,6 +1,5 @@
 package com.sandris;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -9,6 +8,8 @@ import android.graphics.LightingColorFilter;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -17,7 +18,9 @@ import android.view.SurfaceView;
 import java.util.Calendar;
 import java.util.Random;
 
-public class GameView extends SurfaceView implements Runnable{
+public class GameView extends SurfaceView implements Runnable {
+    static double phoneAngle, phoneZAngle; //In Radians
+    private GameViewListener gvListener;
     public static int score = 0;
     private Canvas canvas;
     Thread gameThread = null;
@@ -45,10 +48,12 @@ public class GameView extends SurfaceView implements Runnable{
     private int touchXStart;
     private int difficulty;
     private int nextColor;
+    private boolean useMotion;
 
-    public GameView(Context context, int screenX, int screenY, int diff){
+    public GameView(Context context, int screenX, int screenY, int diff, Boolean mMotion){
         super(context);
         difficulty = diff;
+        useMotion = mMotion;
 
 //Setup the Game area
         Rect potentialPlayArea = new Rect((int)(screenX * marginLeft),(int)(screenY * marginTop),(int)(screenX * (1.0-marginRight)),(int)(screenY * (1.0-marginBottom))); //Play area minus margins
@@ -105,7 +110,11 @@ public class GameView extends SurfaceView implements Runnable{
             nextColor = rand.nextInt(difficulty);
         } else{
             //Move tetra
-            onScreenTetromino.moveDown();
+            if (useMotion)
+                onScreenTetromino.moveMotion(phoneAngle, phoneZAngle);
+            else
+                onScreenTetromino.moveDown();
+            checkTetrominoWalls(onScreenTetromino);
             //check for collision with sand or walls
             if (checkTetrominoBottom(onScreenTetromino) || checkTetrominoSand(onScreenTetromino)){
                 explodeTetromino(onScreenTetromino);
@@ -217,10 +226,12 @@ public class GameView extends SurfaceView implements Runnable{
         }
         switch (motionEvent.getAction()) {
             case MotionEvent.ACTION_MOVE: {
-                int deltaX = (int) motionEvent.getX() - touchXStart;
-                touchXStart = (int) motionEvent.getX();
-                onScreenTetromino.location = new Point(onScreenTetromino.location.x + deltaX, onScreenTetromino.location.y);
-                checkTetrominoWalls(onScreenTetromino);
+                if (!useMotion) {
+                    int deltaX = (int) motionEvent.getX() - touchXStart;
+                    touchXStart = (int) motionEvent.getX();
+                    onScreenTetromino.location = new Point(onScreenTetromino.location.x + deltaX, onScreenTetromino.location.y);
+                    checkTetrominoWalls(onScreenTetromino);
+                }
                 return true;
             }
             case MotionEvent.ACTION_DOWN:{
@@ -272,7 +283,6 @@ public class GameView extends SurfaceView implements Runnable{
                         //Left wall collision detected!
                         //Snap to wall
                         checkPiece.location = new Point(playArea.left + (drawScaling  * CONSTANTS.blockScale * (2- x)), checkPiece.location.y);
-                        Log.d(this.getClass().getSimpleName(),"Wall Collision");
                         return true;
 
                     }
@@ -290,7 +300,6 @@ public class GameView extends SurfaceView implements Runnable{
                         //Right Wall collision detected!
                         //Snap to wall
                         checkPiece.location = new Point(playArea.right + (drawScaling * CONSTANTS.blockScale * (1-x)) -1, checkPiece.location.y);
-                        Log.d(this.getClass().getSimpleName(),"Wall Collision");
                         return true;
                     }
                 }
@@ -394,9 +403,35 @@ public class GameView extends SurfaceView implements Runnable{
         }
     }
 
+    public static void updateSensorData(SensorEvent event){
+        if (event.sensor.getType()==Sensor.TYPE_ACCELEROMETER){
+            double ax=event.values[0];
+            double ay=event.values[1];
+            double az=event.values[2];
+
+            double norm_Of_g = Math.sqrt(ax * ax + ay * ay + az * az);
+
+            ax = ax / norm_Of_g;
+            ay = ay / norm_Of_g;
+            az = az / norm_Of_g;
+
+            phoneAngle = Math.acos(ax);
+            phoneZAngle = Math.acos(az);
+        }
+    }
+
     private void gameOver(){
         Log.d(this.getClass().getSimpleName(),"Game Over");
-        Activity activity = (Activity)getContext();
-        activity.finish();
+        if (gvListener != null) {
+            gvListener.gameViewCallback(score);
+        }
+    }
+
+    public interface GameViewListener {
+        void gameViewCallback(int score);
+    }
+
+    public void setGameViewListener(GameViewListener listener) {
+        this.gvListener = listener;
     }
 }

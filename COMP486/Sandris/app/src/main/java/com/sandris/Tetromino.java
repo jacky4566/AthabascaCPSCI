@@ -10,9 +10,7 @@ import android.graphics.ColorFilter;
 import android.graphics.LightingColorFilter;
 import android.graphics.Paint;
 import android.graphics.Point;
-import android.graphics.Rect;
-
-import java.util.Random;
+import android.util.Log;
 
 public class Tetromino {
     public TetraType type;
@@ -80,7 +78,15 @@ public class Tetromino {
     }
 
     public void moveDown(){
+        //Basic function that moves down for testing
         location.offset(0,CONSTANTS.blockScale);
+    }
+    public void moveMotion(double phoneAngle, double phoneZAngle) {
+        //Moves Tetromino according to phone angle
+        double distance = Math.abs(Math.sin(phoneZAngle)) * 30.0;
+        int deltaX = -(int)(Math.floor(Math.cos(phoneAngle) * distance));
+        int deltaY = (int)(Math.floor(Math.sin(phoneAngle) * distance));
+        location.offset(deltaX,deltaY);
     }
     public void rotate(){
         //Right rotate 90 degrees
@@ -117,4 +123,6 @@ public class Tetromino {
             }
         }
     }
+
+
 }
