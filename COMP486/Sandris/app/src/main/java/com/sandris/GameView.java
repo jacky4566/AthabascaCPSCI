@@ -31,8 +31,8 @@ public class GameView extends SurfaceView implements Runnable {
     private long logicTimer;
 
 
-    private static float marginRight = 0.04F;
-    private static float marginLeft = 0.04F;
+    private static float marginRight = 0.02F;
+    private static float marginLeft = 0.02F;
     private static float marginTop = 0.08F;
     private static float marginBottom = 0.00F;
 
@@ -99,10 +99,10 @@ public class GameView extends SurfaceView implements Runnable {
 
     private void logic() {
         //Does all game logic
-        if (System.nanoTime() <= logicTimer + 15000000){
+        if (System.currentTimeMillis() <= logicTimer + 15){
             return;
         }
-        logicTimer = System.nanoTime();
+        logicTimer = System.currentTimeMillis();
         if (onScreenTetromino == null) {
             //Create new Tetromino
             onScreenTetromino = new Tetromino(playArea.centerX(), 0 - (drawScaling * CONSTANTS.blockScale * 2), drawScaling * CONSTANTS.blockScale, nextColor);
@@ -169,7 +169,7 @@ public class GameView extends SurfaceView implements Runnable {
 
     private void drawScoreboard(){
         Paint tetraColor = new Paint();
-        tetraColor = Tetromino.getColor(TetraType.values()[nextColor]);
+        tetraColor.setColor(Tetromino.getColor(nextColor));
         int tetraScale =  drawScaling * CONSTANTS.blockScale;
         Point location = new Point(playArea.left,(playArea.top / 2));
 
@@ -194,7 +194,7 @@ public class GameView extends SurfaceView implements Runnable {
         Paint textPaint = new Paint();
         textPaint.setColor(Color.WHITE);
         textPaint.setTextSize(tetraScale/2);
-        canvas.drawText("Next Block", (int)(location.x + ((float)tetraScale * 1.2)), location.y+tetraScale, textPaint);
+        canvas.drawText("Next Colour", (int)(location.x + ((float)tetraScale * 1.2)), location.y+tetraScale, textPaint);
 
         //Score
         canvas.drawText(String.valueOf(GameView.score), (int)(playArea.right - ((float)tetraScale * 1.2)), location.y+tetraScale, textPaint);
@@ -244,6 +244,7 @@ public class GameView extends SurfaceView implements Runnable {
                         clickDuration > MIN_CLICK_DURATION ) {
                     //click event has occurred
                     onScreenTetromino.rotate();
+                    new SoundEngine(SoundEffect.tetromino_rotate);
                     checkTetrominoWalls(onScreenTetromino); //This will catch out of bounds from rotation
                 }
             }
@@ -262,7 +263,6 @@ public class GameView extends SurfaceView implements Runnable {
                         // Collision detected!
                         //Snap to floor
                         checkPiece.location = new Point(checkPiece.location.x, playArea.bottom - (blockOffset * (y+3)));
-                        Log.d(this.getClass().getSimpleName(),"Bottom Collision");
                         return true;
                     }
                 }
@@ -326,10 +326,9 @@ public class GameView extends SurfaceView implements Runnable {
                     for (int sandx = 0; sandx< sand.sandArray.length; sandx++){
                         for(int sandy = 0; sandy<sand.sandArray[0].length; sandy++) {
                             // Collision
-                            if ((sand.sandArray[sandx][sandy] != null) &&
+                            if ((sand.sandArray[sandx][sandy] != 0) &&
                                     tetraBoundBox.contains(sandx ,sandy)
                             ) {
-                                Log.d(this.getClass().getSimpleName(), "Sand Collision");
                                 return true;
                             }
                         }
@@ -343,6 +342,7 @@ public class GameView extends SurfaceView implements Runnable {
 
     public void explodeTetromino(Tetromino tetra){
         //Explodes the Tetra into sand particles
+        new SoundEngine(SoundEffect.tetromino_drop);
         for (int x =0; x< 4; x++){
             for(int y = 0; y<4; y++) {
                 if (tetra.shapeGrid[x][y]) {
@@ -355,7 +355,7 @@ public class GameView extends SurfaceView implements Runnable {
                                 GameActivity.playing = false;
                                 return;
                             }
-                            sand.sandArray[drawx][drawy] = tetra.type;
+                            sand.sandArray[drawx][drawy] = tetra.tetraColor;
                         }
                     }
                 }
@@ -368,30 +368,8 @@ public class GameView extends SurfaceView implements Runnable {
         Paint paint = new Paint();
         for (int x =0; x< sand.sandArray.length; x++){
             for(int y = sand.sandArray[0].length - 1; y>=0; y--) {
-                if (sand.sandArray[x][y] != null){
-                    switch (sand.sandArray[x][y]){
-                        case I:
-                            paint.setColor(CONSTANTS.Tetra_Color_I); // Teal
-                            break;
-                        case J:
-                            paint.setColor(CONSTANTS.Tetra_Color_J); // Dark Blue
-                            break;
-                        case L:
-                            paint.setColor(CONSTANTS.Tetra_Color_L); // Dark Orange
-                            break;
-                        case O:
-                            paint.setColor(CONSTANTS.Tetra_Color_O); // Yellow
-                            break;
-                        case S:
-                            paint.setColor(CONSTANTS.Tetra_Color_S); // Red
-                            break;
-                        case Z:
-                            paint.setColor(CONSTANTS.Tetra_Color_Z); // Green
-                            break;
-                        case T:
-                            paint.setColor(CONSTANTS.Tetra_Color_T); // Purple
-                            break;
-                    }
+                if (sand.sandArray[x][y] != 0){
+                    paint.setColor(sand.sandArray[x][y]);
                     Rect sandPixel = new Rect(
                             (x*drawScaling)+playArea.left,
                             (y*drawScaling)+playArea.top,

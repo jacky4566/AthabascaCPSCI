@@ -12,69 +12,69 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.util.Log;
 
+import java.util.Random;
+
 public class Tetromino {
-    public TetraType type;
     public Point location;
     public boolean[][] shapeGrid = new boolean[4][4]; //Used to define for drawing and collision
-    public Paint tetraColor = new Paint();
+    public int tetraColor;
     public int tetraScale;
 
-    public Tetromino(int x, int y, int scale, int color){
-        type = TetraType.values()[color];
+    public Tetromino(int x, int y, int scale, int diff){
         location = new Point(x,y);
         tetraScale = scale;
-        tetraColor = getColor(type);
-        switch (type){
-            case I:
+        tetraColor = getColor(diff);
+        Random rand = new Random();
+        switch (rand.nextInt(6)){
+            case 0:
+                // I Shape
                 shapeGrid = new boolean[][]{{false, true, false, false}, {false, true, false, false}, {false, true, false, false}, {false, true, false, false}};
                 break;
-            case J:
+            case 1:
+                //J Shape
                 shapeGrid = new boolean[][]{{false, false, true, false}, {true, true, true, false}, {false, false, false, false}, {false, false, false, false}};
                 break;
-            case L:
+            case 2:
+                //L Shape
                 shapeGrid = new boolean[][]{{false, false, false, false}, {true, true, true, false}, {false, false, true, false}, {false, false, false, false}};
                 break;
-            case O:
+            case 3:
+                //O Shape
                 shapeGrid = new boolean[][]{{false, false, false, false}, {false, true, true, false}, {false, true, true, false}, {false, false, false, false}};
                 break;
-            case S:
+            case 4:
+                //S Shape
                 shapeGrid = new boolean[][]{{false, false, false, false}, {false, true, true, false}, {true, true, false, false}, {false, false, false, false}};
                 break;
-            case Z:
+            case 5:
+                //Z Shape
                 shapeGrid = new boolean[][]{{false, false, false, false}, {true, true, false, false}, {false, true, true, false}, {false, false, false, false}};
                 break;
-            case T:
+            case 6:
+                //T Shape
                 shapeGrid = new boolean[][]{{false, false, true, false}, {false, true, true, false}, {false, false, true, false}, {false, false, false, false}};
                 break;
         }
     }
 
-    public static Paint getColor(TetraType type){
-        Paint pain = new Paint();
+    public static int getColor(int type){
         switch (type){
-            case I:
-                pain.setColor(CONSTANTS.Tetra_Color_I);
-                return pain;
-            case J:
-                pain.setColor(CONSTANTS.Tetra_Color_J);
-                return pain;
-            case L:
-                pain.setColor(CONSTANTS.Tetra_Color_L);
-                return pain;
-            case O:
-                pain.setColor(CONSTANTS.Tetra_Color_O);
-                return pain;
-            case S:
-                pain.setColor(CONSTANTS.Tetra_Color_S);
-                return pain;
-            case Z:
-                pain.setColor(CONSTANTS.Tetra_Color_Z);
-                return pain;
-            case T:
-                pain.setColor(CONSTANTS.Tetra_Color_T);
-                return pain;
+            case 0:
+                return CONSTANTS.Tetra_Color_I;
+            case 1:
+                return CONSTANTS.Tetra_Color_J;
+            case 2:
+                return CONSTANTS.Tetra_Color_L;
+            case 3:
+                return CONSTANTS.Tetra_Color_O;
+            case 4:
+                return CONSTANTS.Tetra_Color_S;
+            case 5:
+                return CONSTANTS.Tetra_Color_Z;
+            case 6:
+                return CONSTANTS.Tetra_Color_T;
         }
-        return pain;
+        return 0;
     }
 
     public void moveDown(){
@@ -85,7 +85,7 @@ public class Tetromino {
         //Moves Tetromino according to phone angle
         double distance = Math.abs(Math.sin(phoneZAngle)) * 30.0;
         int deltaX = -(int)(Math.floor(Math.cos(phoneAngle) * distance));
-        int deltaY = (int)(Math.floor(Math.sin(phoneAngle) * distance));
+        int deltaY = (int)(Math.sin(phoneAngle) * distance);
         location.offset(deltaX,deltaY);
     }
     public void rotate(){
@@ -105,7 +105,9 @@ public class Tetromino {
             for(int y = 0; y<4; y++) {
                 if (shapeGrid[x][y]) {
                     //draw block
-                    canvas.drawRect(location.x + (tetraScale * (x - 2)), location.y + (tetraScale * (y + 2)), location.x + (tetraScale * (x - 2)) + tetraScale, location.y + (tetraScale * (y + 2)) + tetraScale, tetraColor);
+                    Paint paint = new Paint();
+                    paint.setColor(tetraColor);
+                    canvas.drawRect(location.x + (tetraScale * (x - 2)), location.y + (tetraScale * (y + 2)), location.x + (tetraScale * (x - 2)) + tetraScale, location.y + (tetraScale * (y + 2)) + tetraScale, paint);
                     //draw border
                     Paint border = new Paint(tetraColor);
                     border.setStyle(Paint.Style.STROKE);

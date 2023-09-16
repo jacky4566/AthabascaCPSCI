@@ -1,8 +1,7 @@
 package com.sandris;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Point;
 import android.hardware.Sensor;
@@ -11,6 +10,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.view.Display;
+import android.widget.Toast;
 
 public class GameActivity extends Activity implements GameView.GameViewListener, SensorEventListener {
     // This is where the "Play" button from HomeActivity sends us
@@ -21,9 +21,13 @@ public class GameActivity extends Activity implements GameView.GameViewListener,
     private int difficulty;
     private boolean useMotion;
     private SharedPreferences sharedPreferences;
+    public static String PACKAGE_NAME;
+    private static Context context;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        PACKAGE_NAME = getApplicationContext().getPackageName();
+        GameActivity.context = getApplicationContext();
 
         mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -62,15 +66,32 @@ public class GameActivity extends Activity implements GameView.GameViewListener,
     protected void onResume() {
         super.onResume();
         gameView.resume();
+        new SoundEngine(SoundEffect.gamestart);
         mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
     @Override
     public void gameViewCallback(int newScore) {
         sharedPreferences = getSharedPreferences("gamePrefs", MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putInt("highScore", newScore);
-        editor.commit();
+        int currentHighScore = sharedPreferences.getInt("highScore", 0);
+        if (newScore > currentHighScore) {
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putInt("highScore", newScore);
+            editor.commit();
+            new SoundEngine(SoundEffect.gameoverHighScore);
+            this.runOnUiThread(new Runnable() {
+                public void run() {
+                    Toast.makeText(getBaseContext(), "New High Score!", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }else{
+            new SoundEngine(SoundEffect.gameover);
+            this.runOnUiThread(new Runnable() {
+                public void run() {
+                    Toast.makeText(getBaseContext(), "Game Over", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
 
         this.finish();
     }
@@ -85,6 +106,10 @@ public class GameActivity extends Activity implements GameView.GameViewListener,
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
+    }
+
+    public static Context getAppContext() {
+        return GameActivity.context;
     }
 }
 
