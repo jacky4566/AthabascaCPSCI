@@ -1,16 +1,17 @@
 package com.sandris;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.view.Display;
 
 public class GameActivity extends Activity {
     // This is where the "Play" button from HomeActivity sends us
-
+    static volatile boolean playing = false;
     private GameView gameView;
-
-
+    private int difficulty;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,7 +23,13 @@ public class GameActivity extends Activity {
         Point size = new Point();
         display.getSize(size);
 
-        gameView = new GameView(this, size.x, size.y);
+        //Get Difficulty
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            difficulty = extras.getInt("difficulty");
+        }
+
+        gameView = new GameView(this, size.x, size.y, difficulty);
 
         // Make the gameView the view for the Activity
         setContentView(gameView);

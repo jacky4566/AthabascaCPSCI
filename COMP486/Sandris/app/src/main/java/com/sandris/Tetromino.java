@@ -21,46 +21,66 @@ public class Tetromino {
     public Paint tetraColor = new Paint();
     public int tetraScale;
 
-    public Tetromino(int x, int y, int scale){
-        Random rand = new Random();
-        type = TetraType.values()[rand.nextInt(TetraType.values().length)];
-        //type = TetraType.I;
+    public Tetromino(int x, int y, int scale, int color){
+        type = TetraType.values()[color];
         location = new Point(x,y);
         tetraScale = scale;
+        tetraColor = getColor(type);
         switch (type){
             case I:
-                tetraColor.setColor(CONSTANTS.Tetra_Color_I); // Teal
                 shapeGrid = new boolean[][]{{false, true, false, false}, {false, true, false, false}, {false, true, false, false}, {false, true, false, false}};
                 break;
             case J:
-                tetraColor.setColor(CONSTANTS.Tetra_Color_J); // Dark Blue
                 shapeGrid = new boolean[][]{{false, false, true, false}, {true, true, true, false}, {false, false, false, false}, {false, false, false, false}};
                 break;
             case L:
-                tetraColor.setColor(CONSTANTS.Tetra_Color_L); // Dark Orange
                 shapeGrid = new boolean[][]{{false, false, false, false}, {true, true, true, false}, {false, false, true, false}, {false, false, false, false}};
                 break;
             case O:
-                tetraColor.setColor(CONSTANTS.Tetra_Color_O); // Yellow
                 shapeGrid = new boolean[][]{{false, false, false, false}, {false, true, true, false}, {false, true, true, false}, {false, false, false, false}};
                 break;
             case S:
-                tetraColor.setColor(CONSTANTS.Tetra_Color_S); // Red
                 shapeGrid = new boolean[][]{{false, false, false, false}, {false, true, true, false}, {true, true, false, false}, {false, false, false, false}};
                 break;
             case Z:
-                tetraColor.setColor(CONSTANTS.Tetra_Color_Z); // Green
                 shapeGrid = new boolean[][]{{false, false, false, false}, {true, true, false, false}, {false, true, true, false}, {false, false, false, false}};
                 break;
             case T:
-                tetraColor.setColor(CONSTANTS.Tetra_Color_T); // Purple
                 shapeGrid = new boolean[][]{{false, false, true, false}, {false, true, true, false}, {false, false, true, false}, {false, false, false, false}};
                 break;
         }
     }
 
+    public static Paint getColor(TetraType type){
+        Paint pain = new Paint();
+        switch (type){
+            case I:
+                pain.setColor(CONSTANTS.Tetra_Color_I);
+                return pain;
+            case J:
+                pain.setColor(CONSTANTS.Tetra_Color_J);
+                return pain;
+            case L:
+                pain.setColor(CONSTANTS.Tetra_Color_L);
+                return pain;
+            case O:
+                pain.setColor(CONSTANTS.Tetra_Color_O);
+                return pain;
+            case S:
+                pain.setColor(CONSTANTS.Tetra_Color_S);
+                return pain;
+            case Z:
+                pain.setColor(CONSTANTS.Tetra_Color_Z);
+                return pain;
+            case T:
+                pain.setColor(CONSTANTS.Tetra_Color_T);
+                return pain;
+        }
+        return pain;
+    }
+
     public void moveDown(){
-        location.offset(0,CONSTANTS.sandScale);
+        location.offset(0,CONSTANTS.blockScale);
     }
     public void rotate(){
         //Right rotate 90 degrees

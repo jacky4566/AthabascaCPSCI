@@ -1,35 +1,32 @@
 package com.sandris;
 
-import android.graphics.Rect;
+import android.graphics.Point;
+import android.util.Log;
 
-public class Sand implements Runnable {
-    public TetraType[][] sandArray;
-    private long threadStart;
-    public int sandTopLevel; // Optimization: Keeps track of the top level of our sand for checking
+import java.util.LinkedList;
+import java.util.Stack;
+
+public class Sand {
+    public volatile TetraType[][] sandArray;
+    private long lastRun;
     public Sand(int width, int height ) {
         sandArray = new TetraType[width][height];
     }
 
-    @Override
-    public void run() {
-        while(true) {
-            threadStart = System.nanoTime();
-            moveSand();
-
-            while ((System.nanoTime() - threadStart) < 100000000) {
-                Thread.yield();
-            }
+    public void sandphysics() {
+        if (System.nanoTime() <= lastRun + 50000000){
+            return;
         }
+        lastRun = System.nanoTime();
+        moveSand();
+        checkClearLine();
     }
     private void moveSand(){
         //Moves all the sand particles bottom to top
-        boolean keepProcessing;
         int leftRight = 0; //used to generate sudo random left right choices.
         for(int y = sandArray[0].length - 2; y>=0; y--) {
-            keepProcessing = false;
             for (int x =0; x< sandArray.length; x++){
                 if (sandArray[x][y] != null) {
-                    keepProcessing = true;
                     //For each entity that is affected by gravity
                     //If there’s an empty space below it, move it down.
                     //If there’s an empty space down and to the left, move it down and to the left.
@@ -40,7 +37,7 @@ public class Sand implements Runnable {
                         sandArray[x][y] = null;
                     } else if (leftRight % 2 == 0) {
                         //Try Left
-                        if ((x - 1 > 0) &&
+                        if ((x - 1 >= 0) &&
                                 (sandArray[x - 1][y + 1] == null)) {
                             //We are not at the wall and we can move diagonal left
                             sandArray[x - 1][y + 1] = sandArray[x][y];
@@ -58,7 +55,7 @@ public class Sand implements Runnable {
                             //We are not at the wall and we can move diagonal right
                                 sandArray[x + 1][y + 1] = sandArray[x][y];
                                 sandArray[x][y] = null;
-                        } else if ((x - 1 > 0) &&
+                        } else if ((x - 1 >= 0) &&
                                 (sandArray[x - 1][y + 1] == null)) {
                             //We are not at the wall and we can move diagonal left
                             sandArray[x - 1][y + 1] = sandArray[x][y];
@@ -68,15 +65,118 @@ public class Sand implements Runnable {
                 }
                 leftRight++;
             }
-            if (!keepProcessing) {
-                sandTopLevel = y; //Update the new top level
+        }
+    }
+
+    private void checkClearLine(){
+        //Look for a continous trail of sand left to right.
+        for(int y = sandArray[0].length - 1; y>=0; y--) {
+            TetraType searchType = sandArray[0][y];
+            if (searchType == null)
+                break;//Nothing to check from this start
+            Point startP = new Point(0,y);
+            if (pathChecker(startP, searchType)){
+                Log.d("pathChecker", "Path found");
+                GameView.score = GameView.score + pathDestoryer(startP, searchType);
                 return;
             }
         }
     }
 
-    private static void checkContinous(){
-        //Checks for a continuous line
+    private boolean pathChecker(Point currentpos, TetraType searchType){
+        //Use a Breadth first search (BFS) algorithm to find a complete path
+        boolean[][] visited = new boolean[sandArray.length ][sandArray[0].length];
+        LinkedList<Point> queue = new LinkedList<>();
+        queue.offer(currentpos);
+        //Mark cell visited
+        visited[currentpos.x][currentpos.y] = true;
 
+        while(!queue.isEmpty()){
+            Point current = queue.pop();
+
+            // Check if we reached the right edge
+            if (current.x + 1 >= sandArray.length) {
+                return true;
+            }
+
+            //Mark cell visited
+            visited[current.x][current.y] = true;
+
+            Point next = new Point(current.x +1 ,current.y);
+            if ((sandArray[next.x][next.y] == searchType) && !visited[next.x][next.y]){
+                //If right position is our search type and unvisited
+                queue.add(next);
+                visited[next.x][next.y] = true;
+            }
+
+            next = new Point(current.x ,current.y-1);
+            if ((next.y >=0) && !visited[next.x][next.y]){
+                //If upper position is our search type and unvisited
+                if (sandArray[next.x][next.y] == searchType) {
+                    queue.add(next);
+                    visited[next.x][next.y] = true;
+                }
+            }
+
+            next = new Point(current.x,current.y+1);
+            if ((next.y < sandArray[0].length) && !visited[next.x][next.y]){
+                if (sandArray[next.x][next.y] == searchType) {
+                    //If lower position is our search type and unvisited
+                    queue.add(next);
+                    visited[next.x][next.y] = true;
+                }
+            }
+        }
+        // No valid path from left edge to right edge
+        return false;
+    }
+
+    private int pathDestoryer(Point searchP, TetraType searchType){
+        int score = 0; //Keep track of cells destroyed for score
+        //Use a Breadth first recursive search to remove elements of the target type
+        boolean[][] visited = new boolean[sandArray.length ][sandArray[0].length];
+        LinkedList<Point> queue = new LinkedList<>();
+        queue.offer(searchP);
+        //Mark cell visited
+        visited[searchP.x][searchP.y] = true;
+
+        while(!queue.isEmpty()){
+            Point current = queue.pop();
+
+            //Destroy the sand piece
+            sandArray[current.x][current.y] = null;
+            score++;
+
+            //Add neighbours
+            Point next = new Point(current.x +1 ,current.y);
+            if ((next.x < sandArray.length) && (sandArray[next.x][next.y] == searchType) && !visited[next.x][next.y]){
+                //If right position is our search type and unvisited
+                queue.offer(next);
+                //Mark cell visited
+                visited[next.x][next.y] = true;
+            }
+
+            next = new Point(current.x ,current.y-1);
+            if ((next.y >=0) && !visited[next.x][next.y]){
+                if(sandArray[next.x][next.y] == searchType) {
+                    //If upper position is our search type and unvisited
+                    queue.offer(next);
+                    //Mark cell visited
+                    visited[next.x][next.y] = true;
+                }
+            }
+
+            next = new Point(current.x,current.y+1);
+            if ((next.y < sandArray[0].length) && !visited[next.x][next.y]){
+                //If lower position is our search type and unvisited
+                if(sandArray[next.x][next.y] == searchType) {
+                    //If upper position is our search type and unvisited
+                    queue.offer(next);
+                    //Mark cell visited
+                    visited[next.x][next.y] = true;
+                }
+            }
+        }
+        return score;
     }
 }

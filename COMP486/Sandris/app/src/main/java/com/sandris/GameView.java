@@ -1,12 +1,11 @@
 package com.sandris;
 
-import static android.app.PendingIntent.getActivity;
-
-import android.app.AlertDialog;
+import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.ColorFilter;
+import android.graphics.LightingColorFilter;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
@@ -16,21 +15,23 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import java.util.Calendar;
+import java.util.Random;
 
 public class GameView extends SurfaceView implements Runnable{
-    static volatile boolean playing = false;
-    private Context context;
+    public static int score = 0;
     private Canvas canvas;
     Thread gameThread = null;
-    Thread sandThread = null;
     private SurfaceHolder ourHolder;
 
     private Tetromino onScreenTetromino;
 
-    private static float marginRight = 0.20F;
-    private static float marginLeft = 0.05F;
-    private static float marginTop = 0.05F;
-    private static float marginBottom = 0.05F;
+    private long logicTimer;
+
+
+    private static float marginRight = 0.04F;
+    private static float marginLeft = 0.04F;
+    private static float marginTop = 0.08F;
+    private static float marginBottom = 0.00F;
 
     private int drawScaling; //How much do we scale our Tetromino
 
@@ -41,11 +42,13 @@ public class GameView extends SurfaceView implements Runnable{
     private static final int MAX_CLICK_DURATION = 300;
     private static final int MIN_CLICK_DURATION = 30;
     private long startClickTime;
+    private int touchXStart;
+    private int difficulty;
+    private int nextColor;
 
-
-    public GameView(Context context, int screenX, int screenY){
+    public GameView(Context context, int screenX, int screenY, int diff){
         super(context);
-        this.context = context;
+        difficulty = diff;
 
 //Setup the Game area
         Rect potentialPlayArea = new Rect((int)(screenX * marginLeft),(int)(screenY * marginTop),(int)(screenX * (1.0-marginRight)),(int)(screenY * (1.0-marginBottom))); //Play area minus margins
@@ -58,12 +61,12 @@ public class GameView extends SurfaceView implements Runnable{
 
         if (potentialWidth / aspectRatio <= potentialHeight) {
             // The width is the limiting factor
-            gameWidth = (int) (potentialPlayArea.width());
-            gameHeight = (int) (potentialPlayArea.width() / aspectRatio);
+            gameWidth = (int) potentialWidth;
+            gameHeight = (int) (potentialWidth / aspectRatio);
         } else {
             // The height is the limiting factor
-            gameHeight = (int) (potentialPlayArea.height());
-            gameWidth = (int) (potentialPlayArea.height() * aspectRatio);
+            gameWidth = (int) (potentialHeight * aspectRatio);;
+            gameHeight = (int) potentialHeight;
         }
 
         playArea = new Rect(
@@ -75,31 +78,31 @@ public class GameView extends SurfaceView implements Runnable{
 
         drawScaling = gameWidth/CONSTANTS.gameWidth;
 
-        sand = new Sand(CONSTANTS.gameWidth * CONSTANTS.sandScale, CONSTANTS.gameHeight * CONSTANTS.sandScale);
-        sandThread = new Thread(sand);
-        sandThread.start();
+        sand = new Sand(CONSTANTS.gameWidth, CONSTANTS.gameHeight);
 
         ourHolder = getHolder();
     }
     @Override
     public void run() {
-        while (playing) {
+        while (GameActivity.playing) {
             logic();
+            sand.sandphysics();
             draw();
-            try {
-                Thread.sleep(10);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
         }
         gameOver();
     }
 
     private void logic() {
         //Does all game logic
+        if (System.nanoTime() <= logicTimer + 15000000){
+            return;
+        }
+        logicTimer = System.nanoTime();
         if (onScreenTetromino == null) {
             //Create new Tetromino
-            onScreenTetromino = new Tetromino(playArea.centerX(), playArea.top - (drawScaling * 2), drawScaling);
+            onScreenTetromino = new Tetromino(playArea.centerX(), 0 - (drawScaling * CONSTANTS.blockScale * 2), drawScaling * CONSTANTS.blockScale, nextColor);
+            Random rand = new Random();
+            nextColor = rand.nextInt(difficulty);
         } else{
             //Move tetra
             onScreenTetromino.moveDown();
@@ -126,6 +129,9 @@ public class GameView extends SurfaceView implements Runnable{
             //Draw Sand
             drawSand();
 
+            //Draw Score
+            drawScoreboard();
+
             ourHolder.unlockCanvasAndPost(canvas);
         }
     }
@@ -139,12 +145,55 @@ public class GameView extends SurfaceView implements Runnable{
         //Draw Play area
         paint.setColor(Color.DKGRAY); // Set the color of the pixel
         canvas.drawRect(playArea, paint);
+
+        Paint border = new Paint();
+        border.setColor(Color.WHITE);
+        border.setStyle(Paint.Style.STROKE);
+        border.setStrokeWidth(drawScaling);
+        canvas.drawRect(
+                playArea.left - drawScaling,
+                playArea.top -  drawScaling,
+                playArea.right +  drawScaling,
+                playArea.bottom +  drawScaling,
+                border);
     }
 
+    private void drawScoreboard(){
+        Paint tetraColor = new Paint();
+        tetraColor = Tetromino.getColor(TetraType.values()[nextColor]);
+        int tetraScale =  drawScaling * CONSTANTS.blockScale;
+        Point location = new Point(playArea.left,(playArea.top / 2));
 
+        //draw block
+        canvas.drawRect(location.x , location.y , location.x + tetraScale, location.y + tetraScale, tetraColor);
+        //draw border
+        Paint border = new Paint(tetraColor);
+        border.setStyle(Paint.Style.STROKE);
+        ColorFilter filter = new LightingColorFilter(0xFFFFFFFF, 0x00222222);
+        border.setColorFilter(filter);
+        int strokeWidth = tetraScale / 10;
+        border.setStrokeWidth(strokeWidth);
+        canvas.drawRect(
+                location.x + strokeWidth,
+                location.y +  strokeWidth,
+                location.x +  tetraScale-strokeWidth,
+                location.y +  tetraScale -strokeWidth,
+                border);
+
+        //Write some text
+        //Next block
+        Paint textPaint = new Paint();
+        textPaint.setColor(Color.WHITE);
+        textPaint.setTextSize(tetraScale/2);
+        canvas.drawText("Next Block", (int)(location.x + ((float)tetraScale * 1.2)), location.y+tetraScale, textPaint);
+
+        //Score
+        canvas.drawText(String.valueOf(GameView.score), (int)(playArea.right - ((float)tetraScale * 1.2)), location.y+tetraScale, textPaint);
+
+    }
     // Clean up our thread if the game is interrupted or the player quits
     public void pause(){
-        playing = false;
+        GameActivity.playing = false;
         try {
             gameThread.join();
         }
@@ -155,7 +204,8 @@ public class GameView extends SurfaceView implements Runnable{
 
     // Make a new thread and start it
     public void resume() {
-        playing = true;
+        score = 0;
+        GameActivity.playing = true;
         gameThread = new Thread(this);
         gameThread.start();
     }
@@ -166,8 +216,16 @@ public class GameView extends SurfaceView implements Runnable{
             return true; //Nothing to move
         }
         switch (motionEvent.getAction()) {
+            case MotionEvent.ACTION_MOVE: {
+                int deltaX = (int) motionEvent.getX() - touchXStart;
+                touchXStart = (int) motionEvent.getX();
+                onScreenTetromino.location = new Point(onScreenTetromino.location.x + deltaX, onScreenTetromino.location.y);
+                checkTetrominoWalls(onScreenTetromino);
+                return true;
+            }
             case MotionEvent.ACTION_DOWN:{
                 startClickTime = Calendar.getInstance().getTimeInMillis();
+                touchXStart = (int)motionEvent.getX();
             }
             case MotionEvent.ACTION_UP:{
                 long clickDuration = Calendar.getInstance().getTimeInMillis() - startClickTime;
@@ -178,21 +236,6 @@ public class GameView extends SurfaceView implements Runnable{
                     checkTetrominoWalls(onScreenTetromino); //This will catch out of bounds from rotation
                 }
             }
-            case MotionEvent.ACTION_MOVE: {
-                int newX =(int)motionEvent.getX();
-                    //Check for wall collision with new point
-
-                //Range check to avoid glitchs caused by clicking off play area
-                if (newX < playArea.left)
-                    newX = playArea.left;
-                if (newX > playArea.right)
-                    newX = playArea.right;
-
-                onScreenTetromino.location = new Point(newX, onScreenTetromino.location.y);
-                checkTetrominoWalls(onScreenTetromino);
-
-                return true;
-            }
         }
 
         return true;
@@ -200,13 +243,14 @@ public class GameView extends SurfaceView implements Runnable{
 
     public boolean checkTetrominoBottom(Tetromino checkPiece){
         //checks for tetra outside play boundries returns true for collision
+        int blockOffset = drawScaling * CONSTANTS.blockScale;
         for (int x =0; x< 4; x++){
             for(int y = 3; y >= 0; y--) {
                 if (checkPiece.shapeGrid[x][y]) {
-                    if ((checkPiece.location.y+(drawScaling * (y+2))+drawScaling) > playArea.bottom) {
+                    if ((checkPiece.location.y + (blockOffset * (y+2))+blockOffset-drawScaling ) >= playArea.bottom) {
                         // Collision detected!
                         //Snap to floor
-                        checkPiece.location = new Point(checkPiece.location.x, playArea.bottom - (drawScaling*(y+3)) - 1 );
+                        checkPiece.location = new Point(checkPiece.location.x, playArea.bottom - (blockOffset * (y+3)));
                         Log.d(this.getClass().getSimpleName(),"Bottom Collision");
                         return true;
                     }
@@ -224,10 +268,10 @@ public class GameView extends SurfaceView implements Runnable{
             for(int y = 0; y<4; y++) {
                 if (checkPiece.shapeGrid[x][y]) {
                     //Left Wall
-                    if (checkPiece.location.x + (drawScaling * (x - 2)) < playArea.left) {
+                    if (checkPiece.location.x + (drawScaling * CONSTANTS.blockScale * (x - 2)) < playArea.left) {
                         //Left wall collision detected!
                         //Snap to wall
-                        checkPiece.location = new Point(playArea.left + (drawScaling * (2- x)), checkPiece.location.y);
+                        checkPiece.location = new Point(playArea.left + (drawScaling  * CONSTANTS.blockScale * (2- x)), checkPiece.location.y);
                         Log.d(this.getClass().getSimpleName(),"Wall Collision");
                         return true;
 
@@ -242,10 +286,10 @@ public class GameView extends SurfaceView implements Runnable{
             for(int y = 3; y >= 0; y--) {
                 if (checkPiece.shapeGrid[x][y]) {
                     //Right Wall
-                    if (checkPiece.location.x + drawScaling + (drawScaling * (x - 2)) > playArea.right) {
+                    if (checkPiece.location.x + (drawScaling * CONSTANTS.blockScale) + (drawScaling * CONSTANTS.blockScale * (x - 2)) > playArea.right) {
                         //Right Wall collision detected!
                         //Snap to wall
-                        checkPiece.location = new Point(playArea.right + (drawScaling * (1-x)) -1, checkPiece.location.y);
+                        checkPiece.location = new Point(playArea.right + (drawScaling * CONSTANTS.blockScale * (1-x)) -1, checkPiece.location.y);
                         Log.d(this.getClass().getSimpleName(),"Wall Collision");
                         return true;
                     }
@@ -257,19 +301,19 @@ public class GameView extends SurfaceView implements Runnable{
 
     public boolean checkTetrominoSand(Tetromino checkPiece){
         //Check if Tetromino is below top level
-        int checkPieceBottom = (checkPiece.location.y + (checkPiece.tetraScale * (6)) +checkPiece.tetraScale- playArea.top ) / (drawScaling / CONSTANTS.sandScale) - 2;
-        if (checkPieceBottom < sand.sandTopLevel)
+        int checkPieceBottom = (checkPiece.location.y + (checkPiece.tetraScale * (6)) +checkPiece.tetraScale- playArea.top ) / (drawScaling) - 2;
+        if (checkPieceBottom < 0)
             return false;
-        //Check for contact with existing sand
 
+        //Check for contact with existing sand
         for (int x =0; x< 4; x++){
             for(int y = 0; y<4; y++) {
                 if (checkPiece.shapeGrid[x][y]) {
                     Rect tetraBoundBox = new Rect(
-                            (checkPiece.location.x + (checkPiece.tetraScale * (x-2)) - playArea.left) / (drawScaling / CONSTANTS.sandScale),
-                            (checkPiece.location.y + (checkPiece.tetraScale * (y+2)) - playArea.top ) / (drawScaling / CONSTANTS.sandScale) - 2,
-                            (checkPiece.location.x + (checkPiece.tetraScale * (x-2)) + checkPiece.tetraScale- playArea.left) / (drawScaling / CONSTANTS.sandScale),
-                            (checkPiece.location.y + (checkPiece.tetraScale * (y+2)) +checkPiece.tetraScale- playArea.top ) / (drawScaling / CONSTANTS.sandScale) - 2);
+                            (checkPiece.location.x + (checkPiece.tetraScale * (x-2)) - playArea.left) / (drawScaling ),
+                            (checkPiece.location.y + (checkPiece.tetraScale * (y+2)) - playArea.top ) / (drawScaling ) ,
+                            (checkPiece.location.x + (checkPiece.tetraScale * (x-2)) + checkPiece.tetraScale- playArea.left) / (drawScaling ),
+                            (checkPiece.location.y + (checkPiece.tetraScale * (y+2)) +checkPiece.tetraScale- playArea.top ) / (drawScaling ) );
                     for (int sandx = 0; sandx< sand.sandArray.length; sandx++){
                         for(int sandy = 0; sandy<sand.sandArray[0].length; sandy++) {
                             // Collision
@@ -294,31 +338,27 @@ public class GameView extends SurfaceView implements Runnable{
             for(int y = 0; y<4; y++) {
                 if (tetra.shapeGrid[x][y]) {
                     //Add to sand grid
-                    int sandX = (tetra.location.x + (tetra.tetraScale * (x-2)) - playArea.left) / (drawScaling / CONSTANTS.sandScale);
-                    int sandY = (tetra.location.y + (tetra.tetraScale * (y+2)) - playArea.top ) / (drawScaling / CONSTANTS.sandScale) - 2;
-                    for (int drawx = sandX;  drawx < (sandX + CONSTANTS.sandScale); drawx++) {
-                        for (int drawy = sandY;  drawy < (sandY + CONSTANTS.sandScale); drawy++) {
-                            if (drawy <0) {
-                                GameView.playing = false;
+                    int sandX = (tetra.location.x + (tetra.tetraScale * (x - 2)) - playArea.left) / drawScaling;
+                    int sandY = ((tetra.location.y + (tetra.tetraScale * (y + 2)) - playArea.top ) / drawScaling)-1;
+                    for (int drawx = sandX;  drawx < (sandX + CONSTANTS.blockScale); drawx++) {
+                        for (int drawy = sandY;  drawy < (sandY + CONSTANTS.blockScale); drawy++) {
+                            if (drawy < 0) {
+                                GameActivity.playing = false;
                                 return;
                             }
                             sand.sandArray[drawx][drawy] = tetra.type;
-                            if (drawy<sand.sandTopLevel)
-                                sand.sandTopLevel = drawy;
                         }
                     }
                 }
             }
         }
-        return;
     }
 
     public void drawSand(){
         //Draw the sand Array into the target canvas
         Paint paint = new Paint();
-        int sandScale = drawScaling/CONSTANTS.sandScale;
         for (int x =0; x< sand.sandArray.length; x++){
-            for(int y = 0; y<sand.sandArray[0].length; y++) {
+            for(int y = sand.sandArray[0].length - 1; y>=0; y--) {
                 if (sand.sandArray[x][y] != null){
                     switch (sand.sandArray[x][y]){
                         case I:
@@ -344,10 +384,10 @@ public class GameView extends SurfaceView implements Runnable{
                             break;
                     }
                     Rect sandPixel = new Rect(
-                            (x*sandScale)+playArea.left,
-                            ((y+1)*sandScale)+playArea.top,
-                            ((x+1)*sandScale)+sandScale+playArea.left,
-                            ((y+1)*sandScale)+sandScale+playArea.top);
+                            (x*drawScaling)+playArea.left,
+                            (y*drawScaling)+playArea.top,
+                            (x*drawScaling)+drawScaling+playArea.left,
+                            (y*drawScaling)+drawScaling+playArea.top);
                     canvas.drawRect(sandPixel,paint);
                 }
             }
@@ -356,5 +396,7 @@ public class GameView extends SurfaceView implements Runnable{
 
     private void gameOver(){
         Log.d(this.getClass().getSimpleName(),"Game Over");
+        Activity activity = (Activity)getContext();
+        activity.finish();
     }
 }

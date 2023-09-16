@@ -5,4 +5,14 @@
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="dialog_game_over">Game Over</string>
     <string name="dialog_restart">Restart</string>
+    <string name="high_score">High Score: </string>
+    <string-array name="Difficulty">
+        <item>"Not even a game"</item>
+        <item>"I'm Too Young to Die"</item>
+        <item>"ELORG know where you are"</item>
+        <item>"Average Nintendo player"</item>
+        <item>"Nightmare"</item>
+        <item>"Bullet Proof"</item>
+        <item>"Alexey would be proud"</item>
+    </string-array>
 </resources>

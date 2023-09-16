@@ -13,8 +13,8 @@ public interface CONSTANTS {
     public static final int Tetra_Color_T = Color.parseColor("#800080");
 
     //Physics and Drawing
-    public static final int sandScale = 10; //ratio of sand pixel to tetromino size
-    public static final int gameWidth = 10; //Size of game area in tetromino block units
-    public static final int gameHeight = 20; //Size of game area in tetromino block units
+    public static final int blockScale = 10; //Scale of Tetromino block to sand
+    public static final int gameWidth = blockScale * 10; //Size of game area in sand units
+    public static final int gameHeight = blockScale * 20; //Size of game area in sand units
 
 }
