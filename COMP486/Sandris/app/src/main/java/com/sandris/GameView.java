@@ -29,11 +29,9 @@ public class GameView extends SurfaceView implements Runnable {
     private Tetromino onScreenTetromino;
 
     private long logicTimer;
-
-
     private static float marginRight = 0.02F;
     private static float marginLeft = 0.02F;
-    private static float marginTop = 0.08F;
+    private static float marginTop = 0.15F;
     private static float marginBottom = 0.00F;
 
     private int drawScaling; //How much do we scale our Tetromino
@@ -42,8 +40,8 @@ public class GameView extends SurfaceView implements Runnable {
 
     private Sand sand;
 
-    private static final int MAX_CLICK_DURATION = 300;
-    private static final int MIN_CLICK_DURATION = 30;
+    private static final int MAX_CLICK_DURATION = 250;
+    private static final int MIN_CLICK_DURATION = 25;
     private long startClickTime;
     private int touchXStart;
     private int difficulty;
@@ -111,9 +109,9 @@ public class GameView extends SurfaceView implements Runnable {
         } else{
             //Move tetra
             if (useMotion)
-                onScreenTetromino.moveMotion(phoneAngle, phoneZAngle);
+                onScreenTetromino.moveMotion(phoneAngle, phoneZAngle, playspeed());
             else
-                onScreenTetromino.moveDown();
+                onScreenTetromino.moveDown(playspeed());
             checkTetrominoWalls(onScreenTetromino);
             //check for collision with sand or walls
             if (checkTetrominoBottom(onScreenTetromino) || checkTetrominoSand(onScreenTetromino)){
@@ -361,6 +359,21 @@ public class GameView extends SurfaceView implements Runnable {
                 }
             }
         }
+    }
+
+    private int playspeed(){
+        final int speedMultiplier = 8;
+        if (score > 500){
+            return speedMultiplier;
+        }else if (score > 10000)
+            return speedMultiplier * 2;
+        else if (score > 10000)
+            return speedMultiplier * 3;
+        else if (score > 50000)
+            return speedMultiplier * 4;
+        else if (score > 100000)
+            return speedMultiplier * 5;
+        return speedMultiplier;
     }
 
     public void drawSand(){

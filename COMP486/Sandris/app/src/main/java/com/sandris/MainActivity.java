@@ -26,7 +26,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button playGame;
     private Switch diffSwitch;
     private Switch musicSwitch;
-    MediaPlayer mediaPlayer;
     private SharedPreferences sharedPreferences;
 
     @Override
@@ -74,48 +73,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         tx = (TextView) findViewById(R.id.textcredits);
         tx.setText(getResources().getString(R.string.text_credits) );
-
-        //Start music
-        if (musicSwitch.isChecked()){
-            startMusic();
-        }else{
-            stopMusic();
-        }
-    }
-
-    private void startMusic(){
-        mediaPlayer = new MediaPlayer();
-        try {
-            mediaPlayer.setDataSource(this, Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.popcorn));
-            mediaPlayer.prepareAsync();
-            mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                @Override
-                public void onPrepared(MediaPlayer mp) {
-                    mp.start();
-                }
-            });
-
-            mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                @Override
-                public void onCompletion(MediaPlayer mp) {
-                    // Playback completed
-                    mp.start(); //Loop forever!!
-                }
-            });
-
-            mediaPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
-                @Override
-                public boolean onError(MediaPlayer mp, int what, int extra) {
-                    // Handle errors here
-                    return false;
-                }
-            });
-        } catch (IOException e) {
-        }
-    }
-    private void stopMusic(){
-        mediaPlayer.stop();
-        mediaPlayer.release();
     }
 
     @Override
@@ -130,7 +87,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onPause() {
         super.onPause();
-        mediaPlayer.pause();
     }
 
     @Override
@@ -143,6 +99,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             //Pass in our variables
             i.putExtra("difficulty", difficulty);
             i.putExtra("motion", diffSwitch.isChecked());
+            i.putExtra("music", musicSwitch.isChecked());
 
             // Start the GameActivity class via the Intent
             startActivity(i);
@@ -154,11 +111,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putBoolean("music", musicSwitch.isChecked());
             editor.commit();
-            if (musicSwitch.isChecked()){
-                startMusic();
-            }else{
-                stopMusic();
-            }
         }
     }
 }

@@ -10,7 +10,6 @@ import android.graphics.ColorFilter;
 import android.graphics.LightingColorFilter;
 import android.graphics.Paint;
 import android.graphics.Point;
-import android.util.Log;
 
 import java.util.Random;
 
@@ -77,13 +76,13 @@ public class Tetromino {
         return 0;
     }
 
-    public void moveDown(){
+    public void moveDown(int playspeed){
         //Basic function that moves down for testing
-        location.offset(0,CONSTANTS.blockScale);
+        location.offset(0,playspeed);
     }
-    public void moveMotion(double phoneAngle, double phoneZAngle) {
+    public void moveMotion(double phoneAngle, double phoneZAngle, int playspeed) {
         //Moves Tetromino according to phone angle
-        double distance = Math.abs(Math.sin(phoneZAngle)) * 30.0;
+        double distance = Math.abs(Math.sin(phoneZAngle)) * playspeed * 2;
         int deltaX = -(int)(Math.floor(Math.cos(phoneAngle) * distance));
         int deltaY = (int)(Math.sin(phoneAngle) * distance);
         location.offset(deltaX,deltaY);

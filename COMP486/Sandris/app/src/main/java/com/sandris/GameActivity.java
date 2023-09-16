@@ -8,9 +8,14 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.Display;
 import android.widget.Toast;
+
+import java.io.IOException;
 
 public class GameActivity extends Activity implements GameView.GameViewListener, SensorEventListener {
     // This is where the "Play" button from HomeActivity sends us
@@ -23,6 +28,9 @@ public class GameActivity extends Activity implements GameView.GameViewListener,
     private SharedPreferences sharedPreferences;
     public static String PACKAGE_NAME;
     private static Context context;
+    private static boolean confirmExit = false;
+    private MediaPlayer musicPlayer = new MediaPlayer();
+    private boolean playMusic;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +52,7 @@ public class GameActivity extends Activity implements GameView.GameViewListener,
         if (extras != null) {
             difficulty = extras.getInt("difficulty");
             useMotion = extras.getBoolean("motion");
+            playMusic = extras.getBoolean("music");
         }
 
         gameView = new GameView(this, size.x, size.y, difficulty, useMotion);
@@ -59,6 +68,7 @@ public class GameActivity extends Activity implements GameView.GameViewListener,
         super.onPause();
         gameView.pause();
         mSensorManager.unregisterListener(this);
+        stopMusic();
     }
 
     // If the Activity is resumed, make sure to resume the thread
@@ -68,6 +78,43 @@ public class GameActivity extends Activity implements GameView.GameViewListener,
         gameView.resume();
         new SoundEngine(SoundEffect.gamestart);
         mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+        if (playMusic)
+            startMusic();
+    }
+
+    private void startMusic(){
+        musicPlayer = new MediaPlayer();
+        try {
+            musicPlayer.setDataSource(this, Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.popcorn));
+            musicPlayer.prepareAsync();
+            musicPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mp) {
+                    mp.start();
+                }
+            });
+
+            musicPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mp) {
+                    // Playback completed
+                    mp.start(); //Loop forever!!
+                }
+            });
+
+            musicPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+                @Override
+                public boolean onError(MediaPlayer mp, int what, int extra) {
+                    // Handle errors here
+                    return false;
+                }
+            });
+        } catch (IOException e) {
+        }
+    }
+    private void stopMusic(){
+        musicPlayer.stop();
+        musicPlayer.release();
     }
 
     @Override
@@ -106,6 +153,20 @@ public class GameActivity extends Activity implements GameView.GameViewListener,
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (confirmExit)
+            finish();
+        this.runOnUiThread(new Runnable() {
+            public void run() {
+                Toast.makeText(getBaseContext(), "Back Again to Exit", Toast.LENGTH_SHORT).show();
+            }
+        });
+        confirmExit = true;
+        //Execute your code here
+        finish();
     }
 
     public static Context getAppContext() {
