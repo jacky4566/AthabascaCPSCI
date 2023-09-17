@@ -25,33 +25,23 @@ public class GameView extends SurfaceView implements Runnable {
     private Canvas canvas;
     Thread gameThread = null;
     private SurfaceHolder ourHolder;
-
     private Tetromino onScreenTetromino;
-
     private long logicTimer;
     private static float marginRight = 0.02F;
     private static float marginLeft = 0.02F;
     private static float marginTop = 0.15F;
     private static float marginBottom = 0.00F;
-
     private int drawScaling; //How much do we scale our Tetromino
-
     private  Rect playArea; //Defines play area in screen coordinates
-
     private Sand sand;
-
     private static final int MAX_CLICK_DURATION = 250;
     private static final int MIN_CLICK_DURATION = 25;
     private long startClickTime;
     private int touchXStart;
-    private int difficulty;
     private int nextColor;
-    private boolean useMotion;
 
-    public GameView(Context context, int screenX, int screenY, int diff, Boolean mMotion){
+    public GameView(Context context, int screenX, int screenY){
         super(context);
-        difficulty = diff;
-        useMotion = mMotion;
 
 //Setup the Game area
         Rect potentialPlayArea = new Rect((int)(screenX * marginLeft),(int)(screenY * marginTop),(int)(screenX * (1.0-marginRight)),(int)(screenY * (1.0-marginBottom))); //Play area minus margins
@@ -105,10 +95,10 @@ public class GameView extends SurfaceView implements Runnable {
             //Create new Tetromino
             onScreenTetromino = new Tetromino(playArea.centerX(), 0 - (drawScaling * CONSTANTS.blockScale * 2), drawScaling * CONSTANTS.blockScale, nextColor);
             Random rand = new Random();
-            nextColor = rand.nextInt(difficulty);
+            nextColor = rand.nextInt(MainActivity.difficulty);
         } else{
             //Move tetra
-            if (useMotion)
+            if (MainActivity.useMotion)
                 onScreenTetromino.moveMotion(phoneAngle, phoneZAngle, playspeed());
             else
                 onScreenTetromino.moveDown(playspeed());
@@ -224,7 +214,7 @@ public class GameView extends SurfaceView implements Runnable {
         }
         switch (motionEvent.getAction()) {
             case MotionEvent.ACTION_MOVE: {
-                if (!useMotion) {
+                if (!MainActivity.useMotion) {
                     int deltaX = (int) motionEvent.getX() - touchXStart;
                     touchXStart = (int) motionEvent.getX();
                     onScreenTetromino.location = new Point(onScreenTetromino.location.x + deltaX, onScreenTetromino.location.y);
@@ -247,7 +237,6 @@ public class GameView extends SurfaceView implements Runnable {
                 }
             }
         }
-
         return true;
     }
 
@@ -362,18 +351,18 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     private int playspeed(){
-        final int speedMultiplier = 8;
-        if (score > 500){
-            return speedMultiplier;
+        final double speedMultiplier = 8;
+        if (score > 5000){
+            return (int)(speedMultiplier * 1.5);
         }else if (score > 10000)
-            return speedMultiplier * 2;
-        else if (score > 10000)
-            return speedMultiplier * 3;
+            return (int)(speedMultiplier * 2);
+        else if (score > 20000)
+            return (int)(speedMultiplier * 3);
         else if (score > 50000)
-            return speedMultiplier * 4;
+            return (int)(speedMultiplier * 4);
         else if (score > 100000)
-            return speedMultiplier * 5;
-        return speedMultiplier;
+            return (int)(speedMultiplier * 5);
+        return (int)speedMultiplier;
     }
 
     public void drawSand(){

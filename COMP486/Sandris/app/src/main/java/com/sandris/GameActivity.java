@@ -23,8 +23,6 @@ public class GameActivity extends Activity implements GameView.GameViewListener,
     private Sensor mAccelerometer;
     static volatile boolean playing = false;
     private GameView gameView;
-    private int difficulty;
-    private boolean useMotion;
     private SharedPreferences sharedPreferences;
     public static String PACKAGE_NAME;
     private static Context context;
@@ -47,15 +45,13 @@ public class GameActivity extends Activity implements GameView.GameViewListener,
         Point size = new Point();
         display.getSize(size);
 
-        //Get Difficulty
+        //Get options passed in
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            difficulty = extras.getInt("difficulty");
-            useMotion = extras.getBoolean("motion");
             playMusic = extras.getBoolean("music");
         }
 
-        gameView = new GameView(this, size.x, size.y, difficulty, useMotion);
+        gameView = new GameView(this, size.x, size.y);
         gameView.setGameViewListener(this);
 
         // Make the gameView the view for the Activity
@@ -119,9 +115,8 @@ public class GameActivity extends Activity implements GameView.GameViewListener,
 
     @Override
     public void gameViewCallback(int newScore) {
-        sharedPreferences = getSharedPreferences("gamePrefs", MODE_PRIVATE);
-        int currentHighScore = sharedPreferences.getInt("highScore", 0);
-        if (newScore > currentHighScore) {
+        if (newScore > MainActivity.highScore ) {
+            MainActivity.highScore = newScore;
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putInt("highScore", newScore);
             editor.commit();
@@ -165,8 +160,6 @@ public class GameActivity extends Activity implements GameView.GameViewListener,
             }
         });
         confirmExit = true;
-        //Execute your code here
-        finish();
     }
 
     public static Context getAppContext() {

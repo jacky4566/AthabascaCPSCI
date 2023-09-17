@@ -10,7 +10,7 @@ public class Sand {
     public volatile int[][] sandArray;
     private long lastRun;
     private long resolveTimer;
-    private int resolveCounter;
+    private int resolveCounter = 1;
     public Sand(int width, int height ) {
         resolveCounter = 1;
         sandArray = new int[width][height];
@@ -81,14 +81,14 @@ public class Sand {
             if (pathChecker(startP, searchType)){
                 Log.d("pathChecker", "Path found");
                 if ((System.currentTimeMillis() - resolveTimer) < 5000){
-                    if (resolveCounter < 9)
+                    if (resolveCounter < 10)
                         resolveCounter++;
                 }else{
-                    resolveCounter = 0;
+                    resolveCounter = 1;
                 }
                 resolveTimer = System.currentTimeMillis();
-                new SoundEngine(SoundEffect.values()[SoundEffect.resolve_1.ordinal() + resolveCounter]);
-                GameView.score = GameView.score + pathDestoryer(startP, searchType);
+                new SoundEngine(SoundEffect.values()[SoundEffect.resolve_1.ordinal() + resolveCounter -1]);
+                GameView.score = GameView.score + (pathDestoryer(startP, searchType) * resolveCounter);
                 return;
             }
         }
