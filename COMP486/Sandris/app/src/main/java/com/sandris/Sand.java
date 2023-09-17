@@ -4,7 +4,6 @@ import android.graphics.Point;
 import android.util.Log;
 
 import java.util.LinkedList;
-import java.util.Stack;
 
 public class Sand {
     public volatile int[][] sandArray;
@@ -15,9 +14,8 @@ public class Sand {
         resolveCounter = 1;
         sandArray = new int[width][height];
     }
-
     public void sandphysics() {
-        if (System.currentTimeMillis() <= lastRun + 35){
+        if (System.currentTimeMillis() <= lastRun + CONSTANTS.sandLoopDuration){
             return;
         }
         lastRun = System.currentTimeMillis();
@@ -158,7 +156,7 @@ public class Sand {
             sandArray[current.x][current.y] = 0;
             score++;
 
-            //Add neighbours
+            //Add neighbours in 4 directions, Check for valid search and matches target
             Point next = new Point(current.x +1 ,current.y);
             if ((next.x < sandArray.length) && (sandArray[next.x][next.y] == searchType) && !visited[next.x][next.y]){
                 //If right position is our search type and unvisited

@@ -1,5 +1,17 @@
 package com.sandris;
 
+/*
+Jackson Wiebe 3519635
+22/09/2023
+
+Class: GameView
+
+Constructor:  GameView(Context context, int screenX, int screenY)
+Create a new instance of the game with given screen dimensions
+
+
+ */
+
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -18,33 +30,32 @@ import android.view.SurfaceView;
 import java.util.Calendar;
 import java.util.Random;
 
+
 public class GameView extends SurfaceView implements Runnable {
+    //Touch and interface Objects
     static double phoneAngle, phoneZAngle; //In Radians
+    private long startClickTime;
+    private int touchXStart;
+    //Logic Objects
     private GameViewListener gvListener;
     public static int score = 0;
-    private Canvas canvas;
     Thread gameThread = null;
+    private int nextColor;
+    //Drawing Objects
+    private Canvas canvas;
+    private int drawScaling; //How much do we scale our Tetromino
+    private  Rect playArea; //Defines play area in screen coordinates
     private SurfaceHolder ourHolder;
     private Tetromino onScreenTetromino;
     private long logicTimer;
-    private static float marginRight = 0.02F;
-    private static float marginLeft = 0.02F;
-    private static float marginTop = 0.15F;
-    private static float marginBottom = 0.00F;
-    private int drawScaling; //How much do we scale our Tetromino
-    private  Rect playArea; //Defines play area in screen coordinates
+    //Physics
     private Sand sand;
-    private static final int MAX_CLICK_DURATION = 250;
-    private static final int MIN_CLICK_DURATION = 25;
-    private long startClickTime;
-    private int touchXStart;
-    private int nextColor;
 
     public GameView(Context context, int screenX, int screenY){
         super(context);
 
 //Setup the Game area
-        Rect potentialPlayArea = new Rect((int)(screenX * marginLeft),(int)(screenY * marginTop),(int)(screenX * (1.0-marginRight)),(int)(screenY * (1.0-marginBottom))); //Play area minus margins
+        Rect potentialPlayArea = new Rect((int)(screenX * CONSTANTS.marginLeft),(int)(screenY * CONSTANTS.marginTop),(int)(screenX * (1.0-CONSTANTS.marginRight)),(int)(screenY * (1.0-CONSTANTS.marginBottom))); //Play area minus margins
         double potentialWidth = potentialPlayArea.width() - (potentialPlayArea.width() % CONSTANTS.gameWidth);     //Maximum possible game width considering game ratio
         double potentialHeight = potentialPlayArea.height() - (potentialPlayArea.height() % CONSTANTS.gameHeight); //Maximum possible game height considering game ratio
         double aspectRatio =  (double) CONSTANTS.gameWidth / (double) CONSTANTS.gameHeight;
@@ -157,6 +168,7 @@ public class GameView extends SurfaceView implements Runnable {
 
     private void drawScoreboard(){
         Paint tetraColor = new Paint();
+        //Draw next Tetra
         tetraColor.setColor(Tetromino.getColor(nextColor));
         int tetraScale =  drawScaling * CONSTANTS.blockScale;
         Point location = new Point(playArea.left,(playArea.top / 2));
@@ -209,6 +221,7 @@ public class GameView extends SurfaceView implements Runnable {
 
     @Override
     public boolean onTouchEvent(MotionEvent motionEvent) {
+        //Called from andiord on touch events
         if (onScreenTetromino == null) {
             return true; //Nothing to move
         }
@@ -228,8 +241,8 @@ public class GameView extends SurfaceView implements Runnable {
             }
             case MotionEvent.ACTION_UP:{
                 long clickDuration = Calendar.getInstance().getTimeInMillis() - startClickTime;
-                if(clickDuration < MAX_CLICK_DURATION &&
-                        clickDuration > MIN_CLICK_DURATION ) {
+                if(clickDuration < CONSTANTS.MAX_CLICK_DURATION &&
+                        clickDuration > CONSTANTS.MIN_CLICK_DURATION ) {
                     //click event has occurred
                     onScreenTetromino.rotate();
                     new SoundEngine(SoundEffect.tetromino_rotate);
@@ -351,6 +364,7 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     private int playspeed(){
+        //Returns a new speed for tetormino drops based on current score
         final double speedMultiplier = 8;
         if (score > 5000){
             return (int)(speedMultiplier * 1.5);
@@ -384,19 +398,20 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     public static void updateSensorData(SensorEvent event){
+        // Passes in new sensor data from the Activity
         if (event.sensor.getType()==Sensor.TYPE_ACCELEROMETER){
             double ax=event.values[0];
             double ay=event.values[1];
             double az=event.values[2];
 
+            // Normalize the data
             double norm_Of_g = Math.sqrt(ax * ax + ay * ay + az * az);
-
             ax = ax / norm_Of_g;
             ay = ay / norm_Of_g;
             az = az / norm_Of_g;
 
-            phoneAngle = Math.acos(ax);
-            phoneZAngle = Math.acos(az);
+            phoneAngle = Math.acos(ax);     //Angle of phone in XY plane
+            phoneZAngle = Math.acos(az);    //Angle of phone in ZY plane
         }
     }
 
@@ -408,6 +423,7 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     public interface GameViewListener {
+        //Callback listener
         void gameViewCallback(int score);
     }
 

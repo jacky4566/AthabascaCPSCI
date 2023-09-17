@@ -16,5 +16,14 @@ public interface CONSTANTS {
     public static final int blockScale = 10; //Scale of Tetromino block to sand
     public static final int gameWidth = blockScale * 10; //Size of game area in sand units
     public static final int gameHeight = blockScale * 20; //Size of game area in sand units
+    public static final int sandLoopDuration = 35; //Defines how fast to run the sand physics calculations in Milliseconds
+    //Display Constants
+    public static final float marginRight = 0.02F;
+    public static final float marginLeft = 0.02F;
+    public static final float marginTop = 0.15F;
+    public static final float marginBottom = 0.00F;
+    //Touch interface
+    public static final int MAX_CLICK_DURATION = 250;
+    public static final int MIN_CLICK_DURATION = 25;
 
 }
