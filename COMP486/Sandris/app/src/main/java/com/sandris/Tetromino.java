@@ -18,6 +18,7 @@ public class Tetromino {
     public boolean[][] shapeGrid = new boolean[4][4]; //Used to define for drawing and collision
     public int tetraColor;
     public int tetraScale;
+    public boolean fastDrop = false;
 
     public Tetromino(int x, int y, int scale, int diff){
         location = new Point(x,y);

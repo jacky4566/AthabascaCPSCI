@@ -50,7 +50,6 @@ public class GameView extends SurfaceView implements Runnable {
     private long logicTimer;
     //Physics
     private Sand sand;
-    private boolean fastDrop;
 
     public GameView(Context context, int screenX, int screenY){
         super(context);
@@ -86,6 +85,9 @@ public class GameView extends SurfaceView implements Runnable {
         sand = new Sand(CONSTANTS.gameWidth, CONSTANTS.gameHeight);
 
         ourHolder = getHolder();
+
+        gameThread = new Thread(this);
+        gameThread.start();
     }
     @Override
     public void run() {
@@ -111,7 +113,7 @@ public class GameView extends SurfaceView implements Runnable {
             onScreenTetromino = new Tetromino(playArea.centerX(), 0 - (drawScaling * CONSTANTS.blockScale * 2), drawScaling * CONSTANTS.blockScale, nextColor);
             Random rand = new Random();
             nextColor = rand.nextInt(MainActivity.difficulty);
-            fastDrop = false;// Reset fast drop request
+            onScreenTetromino.fastDrop = false;// Reset fast drop request
         } else{
             //Move tetra
             if (MainActivity.useMotion)
@@ -255,12 +257,10 @@ public class GameView extends SurfaceView implements Runnable {
         }
     }
 
-    // Make a new thread and start it
     public void resume() {
-        GameActivity.gameScore = 0;
-        GameActivity.gameDisplay = true;
         gameThread = new Thread(this);
         gameThread.start();
+        GameActivity.gameDisplay = true;
     }
 
     @Override
@@ -276,7 +276,7 @@ public class GameView extends SurfaceView implements Runnable {
                 if (!MainActivity.useMotion) {
                     if (deltaY > 500){
                         //Quick Drop
-                        fastDrop = true;
+                        onScreenTetromino.fastDrop = true;
                     } else{
                         //Move Piece
                         touchXStart = (int) motionEvent.getX();
@@ -429,7 +429,7 @@ public class GameView extends SurfaceView implements Runnable {
         //Returns a new speed for tetormino drops based on current score
         final double speedMultiplier = 8;
         //User requested a fast drop
-        if (fastDrop)
+        if (onScreenTetromino.fastDrop)
             return (int)(speedMultiplier * 5);
 
         if (GameActivity.gameScore > 5000){

@@ -11,6 +11,7 @@ import android.hardware.SensorManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Display;
 import android.widget.Toast;
 
@@ -63,20 +64,22 @@ public class GameActivity extends Activity implements GameView.GameViewListener,
     @Override
     protected void onPause() {
         super.onPause();
-        gameView.pause();
+        Log.d("GameAct","pause");
         mSensorManager.unregisterListener(this);
         stopMusic();
+        gameView.pause();
     }
 
     // If the Activity is resumed, make sure to resume the thread
     @Override
     protected void onResume() {
+        Log.d("GameAct","resume");
         super.onResume();
-        gameView.resume();
         new SoundEngine(SoundEffect.gamestart);
         mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
         if (playMusic)
             startMusic();
+        gameView.resume();
     }
 
     private void startMusic(){
