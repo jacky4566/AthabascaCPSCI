@@ -101,6 +101,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             i.putExtra("music", musicSwitch.isChecked());
 
             // Start the GameActivity class via the Intent
+            GameActivity.gameDisplay = true;
+            GameActivity.gamePause = false;
+            GameActivity.gameScore = 0;
             startActivity(i);
         } else if (id == R.id.switchMotion) {
             //Change the motion setting

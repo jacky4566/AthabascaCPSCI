@@ -86,7 +86,7 @@ public class Sand {
                 }
                 resolveTimer = System.currentTimeMillis();
                 new SoundEngine(SoundEffect.values()[SoundEffect.resolve_1.ordinal() + resolveCounter -1]);
-                GameView.score = GameView.score + (pathDestoryer(startP, searchType) * resolveCounter);
+                GameActivity.gameScore = GameActivity.gameScore + (pathDestoryer(startP, searchType) * resolveCounter);
                 return;
             }
         }

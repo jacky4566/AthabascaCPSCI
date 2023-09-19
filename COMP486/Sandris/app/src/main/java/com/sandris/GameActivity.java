@@ -11,7 +11,6 @@ import android.hardware.SensorManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.view.Display;
 import android.widget.Toast;
 
@@ -21,14 +20,16 @@ public class GameActivity extends Activity implements GameView.GameViewListener,
     // This is where the "Play" button from HomeActivity sends us
     private SensorManager mSensorManager;
     private Sensor mAccelerometer;
-    static volatile boolean playing = false;
+    static volatile boolean gameDisplay = false;
+    static volatile boolean gamePause = false;
     private GameView gameView;
     private SharedPreferences sharedPreferences;
     public static String PACKAGE_NAME;
-    private static Context context;
+    public static Context context;
     private static boolean confirmExit = false;
     private MediaPlayer musicPlayer = new MediaPlayer();
     private boolean playMusic;
+    public static int gameScore = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -114,11 +115,11 @@ public class GameActivity extends Activity implements GameView.GameViewListener,
     }
 
     @Override
-    public void gameViewCallback(int newScore) {
-        if (newScore > MainActivity.highScore ) {
-            MainActivity.highScore = newScore;
+    public void gameViewCallbackEnd() {
+        if (GameActivity.gameScore > MainActivity.highScore ) {
+            MainActivity.highScore = GameActivity.gameScore;
             SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putInt("highScore", newScore);
+            editor.putInt("highScore", GameActivity.gameScore);
             editor.commit();
             new SoundEngine(SoundEffect.gameoverHighScore);
             this.runOnUiThread(new Runnable() {
@@ -152,14 +153,12 @@ public class GameActivity extends Activity implements GameView.GameViewListener,
 
     @Override
     public void onBackPressed() {
-        if (confirmExit)
-            finish();
-        this.runOnUiThread(new Runnable() {
-            public void run() {
-                Toast.makeText(getBaseContext(), "Back Again to Exit", Toast.LENGTH_SHORT).show();
-            }
-        });
-        confirmExit = true;
+        if (!GameActivity.gamePause)
+            GameActivity.gamePause = true;
+        else {
+            GameActivity.gameDisplay = false;
+            gameViewCallbackEnd();
+        }
     }
 
     public static Context getAppContext() {

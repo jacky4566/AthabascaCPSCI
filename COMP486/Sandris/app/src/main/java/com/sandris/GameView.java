@@ -35,21 +35,22 @@ public class GameView extends SurfaceView implements Runnable {
     //Touch and interface Objects
     static double phoneAngle, phoneZAngle; //In Radians
     private long startClickTime;
-    private int touchXStart;
+    private int touchXStart, touchYStart;
     //Logic Objects
     private GameViewListener gvListener;
-    public static int score = 0;
     Thread gameThread = null;
     private int nextColor;
     //Drawing Objects
     private Canvas canvas;
     private int drawScaling; //How much do we scale our Tetromino
     private  Rect playArea; //Defines play area in screen coordinates
+    private Rect pauseButton; //If user clicks in this area
     private SurfaceHolder ourHolder;
     private Tetromino onScreenTetromino;
     private long logicTimer;
     //Physics
     private Sand sand;
+    private boolean fastDrop;
 
     public GameView(Context context, int screenX, int screenY){
         super(context);
@@ -88,12 +89,15 @@ public class GameView extends SurfaceView implements Runnable {
     }
     @Override
     public void run() {
-        while (GameActivity.playing) {
-            logic();
-            sand.sandphysics();
-            draw();
+        while(GameActivity.gameDisplay) {
+            if (GameActivity.gamePause) {
+                drawPause();
+            }else{
+                logic();
+                sand.sandphysics();
+                drawGame();
+            }
         }
-        gameOver();
     }
 
     private void logic() {
@@ -107,6 +111,7 @@ public class GameView extends SurfaceView implements Runnable {
             onScreenTetromino = new Tetromino(playArea.centerX(), 0 - (drawScaling * CONSTANTS.blockScale * 2), drawScaling * CONSTANTS.blockScale, nextColor);
             Random rand = new Random();
             nextColor = rand.nextInt(MainActivity.difficulty);
+            fastDrop = false;// Reset fast drop request
         } else{
             //Move tetra
             if (MainActivity.useMotion)
@@ -122,7 +127,7 @@ public class GameView extends SurfaceView implements Runnable {
         }
     }
 
-    private void draw() {
+    private void drawGame() {
         if (ourHolder.getSurface().isValid()) {
             canvas = ourHolder.lockCanvas();
 
@@ -171,7 +176,7 @@ public class GameView extends SurfaceView implements Runnable {
         //Draw next Tetra
         tetraColor.setColor(Tetromino.getColor(nextColor));
         int tetraScale =  drawScaling * CONSTANTS.blockScale;
-        Point location = new Point(playArea.left,(playArea.top / 2));
+        Point location = new Point(playArea.left,(playArea.top / 2) - tetraScale);
 
         //draw block
         canvas.drawRect(location.x , location.y , location.x + tetraScale, location.y + tetraScale, tetraColor);
@@ -194,15 +199,54 @@ public class GameView extends SurfaceView implements Runnable {
         Paint textPaint = new Paint();
         textPaint.setColor(Color.WHITE);
         textPaint.setTextSize(tetraScale/2);
-        canvas.drawText("Next Colour", (int)(location.x + ((float)tetraScale * 1.2)), location.y+tetraScale, textPaint);
+        canvas.drawText(" Next Colour", (int)location.x + tetraScale, (int)(location.y + tetraScale), textPaint);
 
         //Score
-        canvas.drawText(String.valueOf(GameView.score), (int)(playArea.right - ((float)tetraScale * 1.2)), location.y+tetraScale, textPaint);
+        textPaint.setTextSize(tetraScale);
+        canvas.drawText(String.valueOf(GameActivity.gameScore), location.x, (int)(location.y + tetraScale + (textPaint.getTextSize())), textPaint);
 
+        //Pause Button
+        //Draw box
+        Paint pausePainter = new Paint();
+        pausePainter.setColor(Color.LTGRAY);
+        pauseButton = new Rect(playArea.right - (playArea.width() / 3), playArea.top - (playArea.width() / 3) , playArea.right, playArea.top - 50);
+        canvas.drawRect(pauseButton, pausePainter);
+        pausePainter.setStyle(Paint.Style.STROKE);
+        pausePainter.setColor(Color.WHITE);
+        pausePainter.setStrokeWidth(strokeWidth);
+        canvas.drawRect(pauseButton, pausePainter);
+        //Write Text
+        textPaint.setColor(Color.BLACK);
+        textPaint.setTextSize(pauseButton.height() / 4);
+        canvas.drawText("PAUSE", pauseButton.centerX() - (textPaint.measureText("PAUSE")/2), pauseButton.centerY() + (textPaint.getTextSize() /3), textPaint);
     }
+
+    private void drawPause(){
+        if (ourHolder.getSurface().isValid()) {
+            canvas = ourHolder.lockCanvas();
+
+            //Pause
+            //Draw box
+            Paint pausePainter = new Paint();
+            pausePainter.setColor(Color.LTGRAY);
+            Rect pauseArea = new Rect(playArea.left, playArea.top, playArea.right, playArea.bottom);
+            canvas.drawRect(pauseArea, pausePainter);
+            pausePainter.setStyle(Paint.Style.STROKE);
+            pausePainter.setColor(Color.WHITE);
+            pausePainter.setStrokeWidth(10);
+            canvas.drawRect(pauseArea, pausePainter);
+            //Write Text
+            pausePainter.setColor(Color.BLACK);
+            pausePainter.setTextSize(pauseArea.width() / 10);
+            canvas.drawText("PAUSE", playArea.centerX() - (pausePainter.measureText("PAUSE")/2), playArea.centerY() + (pausePainter.getTextSize() /3), pausePainter);
+
+            ourHolder.unlockCanvasAndPost(canvas);
+        }
+    }
+
     // Clean up our thread if the game is interrupted or the player quits
     public void pause(){
-        GameActivity.playing = false;
+        GameActivity.gameDisplay = false;
         try {
             gameThread.join();
         }
@@ -213,8 +257,8 @@ public class GameView extends SurfaceView implements Runnable {
 
     // Make a new thread and start it
     public void resume() {
-        score = 0;
-        GameActivity.playing = true;
+        GameActivity.gameScore = 0;
+        GameActivity.gameDisplay = true;
         gameThread = new Thread(this);
         gameThread.start();
     }
@@ -225,25 +269,44 @@ public class GameView extends SurfaceView implements Runnable {
         if (onScreenTetromino == null) {
             return true; //Nothing to move
         }
+        int deltaX = (int) motionEvent.getX() - touchXStart;
+        int deltaY = (int) motionEvent.getY() - touchYStart;
         switch (motionEvent.getAction()) {
             case MotionEvent.ACTION_MOVE: {
                 if (!MainActivity.useMotion) {
-                    int deltaX = (int) motionEvent.getX() - touchXStart;
-                    touchXStart = (int) motionEvent.getX();
-                    onScreenTetromino.location = new Point(onScreenTetromino.location.x + deltaX, onScreenTetromino.location.y);
+                    if (deltaY > 500){
+                        //Quick Drop
+                        fastDrop = true;
+                    } else{
+                        //Move Piece
+                        touchXStart = (int) motionEvent.getX();
+                        onScreenTetromino.location = new Point(onScreenTetromino.location.x + deltaX, onScreenTetromino.location.y);
+                    }
                     checkTetrominoWalls(onScreenTetromino);
+                    if (checkTetrominoSand(onScreenTetromino)){
+                        explodeTetromino(onScreenTetromino);
+                        onScreenTetromino = null;
+                    }
                 }
                 return true;
             }
             case MotionEvent.ACTION_DOWN:{
                 startClickTime = Calendar.getInstance().getTimeInMillis();
                 touchXStart = (int)motionEvent.getX();
+                touchYStart = (int)motionEvent.getY();
             }
             case MotionEvent.ACTION_UP:{
                 long clickDuration = Calendar.getInstance().getTimeInMillis() - startClickTime;
                 if(clickDuration < CONSTANTS.MAX_CLICK_DURATION &&
                         clickDuration > CONSTANTS.MIN_CLICK_DURATION ) {
-                    //click event has occurred
+                    //click event has occurred within our restraints
+                    if (pauseButton.contains((int)motionEvent.getX(), (int)motionEvent.getY())){
+                        //User clicked the pause button
+                        GameActivity.gamePause = !GameActivity.gamePause;
+                        return true;
+                    }
+                    if (deltaX > 50 || deltaY > 50) //User moved too much, ignore rotation requests
+                        return true;
                     onScreenTetromino.rotate();
                     new SoundEngine(SoundEffect.tetromino_rotate);
                     checkTetrominoWalls(onScreenTetromino); //This will catch out of bounds from rotation
@@ -284,7 +347,6 @@ public class GameView extends SurfaceView implements Runnable {
                         //Snap to wall
                         checkPiece.location = new Point(playArea.left + (drawScaling  * CONSTANTS.blockScale * (2- x)), checkPiece.location.y);
                         return true;
-
                     }
                 }
             }
@@ -352,7 +414,7 @@ public class GameView extends SurfaceView implements Runnable {
                     for (int drawx = sandX;  drawx < (sandX + CONSTANTS.blockScale); drawx++) {
                         for (int drawy = sandY;  drawy < (sandY + CONSTANTS.blockScale); drawy++) {
                             if (drawy < 0) {
-                                GameActivity.playing = false;
+                                gameOver();
                                 return;
                             }
                             sand.sandArray[drawx][drawy] = tetra.tetraColor;
@@ -366,15 +428,19 @@ public class GameView extends SurfaceView implements Runnable {
     private int playspeed(){
         //Returns a new speed for tetormino drops based on current score
         final double speedMultiplier = 8;
-        if (score > 5000){
+        //User requested a fast drop
+        if (fastDrop)
+            return (int)(speedMultiplier * 5);
+
+        if (GameActivity.gameScore > 5000){
             return (int)(speedMultiplier * 1.5);
-        }else if (score > 10000)
+        }else if (GameActivity.gameScore > 10000)
             return (int)(speedMultiplier * 2);
-        else if (score > 20000)
+        else if (GameActivity.gameScore > 20000)
             return (int)(speedMultiplier * 3);
-        else if (score > 50000)
+        else if (GameActivity.gameScore > 50000)
             return (int)(speedMultiplier * 4);
-        else if (score > 100000)
+        else if (GameActivity.gameScore > 100000)
             return (int)(speedMultiplier * 5);
         return (int)speedMultiplier;
     }
@@ -418,13 +484,13 @@ public class GameView extends SurfaceView implements Runnable {
     private void gameOver(){
         Log.d(this.getClass().getSimpleName(),"Game Over");
         if (gvListener != null) {
-            gvListener.gameViewCallback(score);
+            gvListener.gameViewCallbackEnd();
         }
     }
 
     public interface GameViewListener {
         //Callback listener
-        void gameViewCallback(int score);
+        void gameViewCallbackEnd();
     }
 
     public void setGameViewListener(GameViewListener listener) {
