@@ -64,7 +64,6 @@ public class GameActivity extends Activity implements GameView.GameViewListener,
     @Override
     protected void onPause() {
         super.onPause();
-        Log.d("GameAct","pause");
         mSensorManager.unregisterListener(this);
         stopMusic();
         gameView.pause();
@@ -73,7 +72,6 @@ public class GameActivity extends Activity implements GameView.GameViewListener,
     // If the Activity is resumed, make sure to resume the thread
     @Override
     protected void onResume() {
-        Log.d("GameAct","resume");
         super.onResume();
         new SoundEngine(SoundEffect.gamestart);
         mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
@@ -119,8 +117,15 @@ public class GameActivity extends Activity implements GameView.GameViewListener,
 
     @Override
     public void gameViewCallbackEnd() {
+        /*
+        Callback from Game end
+        Compute if high score exceed and save to sharedPreferences
+        Play sound effects
+        Finish acivity so we return to main acitivty
+         */
         if (GameActivity.gameScore > MainActivity.highScore ) {
             MainActivity.highScore = GameActivity.gameScore;
+            sharedPreferences = getSharedPreferences("gamePrefs", MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putInt("highScore", GameActivity.gameScore);
             editor.commit();

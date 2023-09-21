@@ -43,7 +43,7 @@ public class GameView extends SurfaceView implements Runnable {
     //Drawing Objects
     private Canvas canvas;
     private int drawScaling; //How much do we scale our Tetromino
-    private  Rect playArea; //Defines play area in screen coordinates
+    private Rect playArea; //Defines play area in screen coordinates
     private Rect pauseButton; //If user clicks in this area
     private SurfaceHolder ourHolder;
     private Tetromino onScreenTetromino;
@@ -85,21 +85,34 @@ public class GameView extends SurfaceView implements Runnable {
         sand = new Sand(CONSTANTS.gameWidth, CONSTANTS.gameHeight);
 
         ourHolder = getHolder();
-
-        gameThread = new Thread(this);
-        gameThread.start();
     }
     @Override
     public void run() {
-        while(GameActivity.gameDisplay) {
+        while (GameActivity.gameDisplay) {
             if (GameActivity.gamePause) {
                 drawPause();
-            }else{
+            } else {
                 logic();
                 sand.sandphysics();
                 drawGame();
             }
         }
+    }
+    // Clean up our thread if the game is interrupted or the player quits
+    public void pause(){
+        GameActivity.gameDisplay = false;
+        try {
+            gameThread.join();
+        }
+        catch (InterruptedException e) {
+            // do something
+        }
+    }
+
+    public void resume() {
+        gameThread = new Thread(this);
+        gameThread.start();
+        GameActivity.gameDisplay = true;
     }
 
     private void logic() {
@@ -111,8 +124,7 @@ public class GameView extends SurfaceView implements Runnable {
         if (onScreenTetromino == null) {
             //Create new Tetromino
             onScreenTetromino = new Tetromino(playArea.centerX(), 0 - (drawScaling * CONSTANTS.blockScale * 2), drawScaling * CONSTANTS.blockScale, nextColor);
-            Random rand = new Random();
-            nextColor = rand.nextInt(MainActivity.difficulty);
+            nextColor = new Random().nextInt(MainActivity.difficulty);
             onScreenTetromino.fastDrop = false;// Reset fast drop request
         } else{
             //Move tetra
@@ -244,23 +256,6 @@ public class GameView extends SurfaceView implements Runnable {
 
             ourHolder.unlockCanvasAndPost(canvas);
         }
-    }
-
-    // Clean up our thread if the game is interrupted or the player quits
-    public void pause(){
-        GameActivity.gameDisplay = false;
-        try {
-            gameThread.join();
-        }
-        catch (InterruptedException e) {
-            // do something
-        }
-    }
-
-    public void resume() {
-        gameThread = new Thread(this);
-        gameThread.start();
-        GameActivity.gameDisplay = true;
     }
 
     @Override
@@ -404,20 +399,27 @@ public class GameView extends SurfaceView implements Runnable {
 
     public void explodeTetromino(Tetromino tetra){
         //Explodes the Tetra into sand particles
-        new SoundEngine(SoundEffect.tetromino_drop);
+        new SoundEngine(SoundEffect.tetromino_drop); //Play sound effect
+        //Check every Tetromino block in its 4x4 grid
         for (int x =0; x< 4; x++){
             for(int y = 0; y<4; y++) {
                 if (tetra.shapeGrid[x][y]) {
                     //Add to sand grid
-                    int sandX = (tetra.location.x + (tetra.tetraScale * (x - 2)) - playArea.left) / drawScaling;
-                    int sandY = ((tetra.location.y + (tetra.tetraScale * (y + 2)) - playArea.top ) / drawScaling)-1;
-                    for (int drawx = sandX;  drawx < (sandX + CONSTANTS.blockScale); drawx++) {
-                        for (int drawy = sandY;  drawy < (sandY + CONSTANTS.blockScale); drawy++) {
+                    int sandStartX = (tetra.location.x + (tetra.tetraScale * (x - 2)) - playArea.left) / drawScaling;
+                    int sandStartY = ((tetra.location.y + (tetra.tetraScale * (y + 2)) - playArea.top ) / drawScaling)-1;
+                    //Each Tetromino block will decompose into a X x Y sand block of blockScale x blockScale
+                    for (int drawx = sandStartX;  drawx <= (sandStartX + CONSTANTS.blockScale); drawx++) {
+                        for (int drawy = sandStartY;  drawy <= (sandStartY + CONSTANTS.blockScale); drawy++) {
                             if (drawy < 0) {
+                                //If we are trying to draw above the top of the play area its game over
                                 gameOver();
                                 return;
                             }
-                            sand.sandArray[drawx][drawy] = tetra.tetraColor;
+                            try {
+                                sand.sandArray[drawx][drawy] = tetra.tetraColor;
+                            }catch (ArrayIndexOutOfBoundsException e) {
+                                //Attempted to draw out of bounds
+                            }
                         }
                     }
                 }
@@ -448,8 +450,8 @@ public class GameView extends SurfaceView implements Runnable {
     public void drawSand(){
         //Draw the sand Array into the target canvas
         Paint paint = new Paint();
-        for (int x =0; x< sand.sandArray.length; x++){
-            for(int y = sand.sandArray[0].length - 1; y>=0; y--) {
+        for(int y = sand.sandArray[0].length - 1; y>=0; y--) {
+                for (int x =0; x< sand.sandArray.length; x++){
                 if (sand.sandArray[x][y] != 0){
                     paint.setColor(sand.sandArray[x][y]);
                     Rect sandPixel = new Rect(
