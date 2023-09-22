@@ -6,6 +6,14 @@ import android.util.Log;
 
 import java.io.IOException;
 
+/*
+Jackson Wiebe 3519635
+SoundEngine used for playing sounds.
+A new Media player is generated on each call to play the sound. input type is based on enum for sound effects.
+Files are stored in game resources.
+When playing is done class should destroy itself.
+ */
+
 public class SoundEngine {
     MediaPlayer mp =  new MediaPlayer();
     public SoundEngine(SoundEffect sound){
@@ -70,7 +78,7 @@ public class SoundEngine {
             mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer mp) {
-                    // Playback completed
+                    // Playback completed, release resources
                     mp.reset();
                     mp.release();
                 }

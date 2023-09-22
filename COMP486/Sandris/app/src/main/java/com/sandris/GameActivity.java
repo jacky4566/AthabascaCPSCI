@@ -17,20 +17,24 @@ import android.widget.Toast;
 
 import java.io.IOException;
 
+
+/*
+Jackson Wiebe 3519635
+This activity is launched with the Play button
+ */
+
 public class GameActivity extends Activity implements GameView.GameViewListener, SensorEventListener {
     // This is where the "Play" button from HomeActivity sends us
-    private SensorManager mSensorManager;
+    private SensorManager mSensorManager; //Get instance of sensor manager for mAccelerometer
     private Sensor mAccelerometer;
-    static volatile boolean gameDisplay = false;
-    static volatile boolean gamePause = false;
-    private GameView gameView;
-    private SharedPreferences sharedPreferences;
-    public static String PACKAGE_NAME;
-    public static Context context;
-    private static boolean confirmExit = false;
-    private MediaPlayer musicPlayer = new MediaPlayer();
-    private boolean playMusic;
-    public static int gameScore = 0;
+    static volatile boolean gameDisplay = false; //Should we draw the display
+    static volatile boolean gamePause = false;  //Is the game paused
+    private GameView gameView;  //instance of game view for drawing
+    public static String PACKAGE_NAME; //Pass through package name for static calling
+    public static Context context;  //pass through context for static calling
+    private MediaPlayer musicPlayer = new MediaPlayer(); //Media player instance for music
+    private boolean playMusic;  //Are we playing music
+    public static int gameScore = 0; //Current game score
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,10 +58,10 @@ public class GameActivity extends Activity implements GameView.GameViewListener,
             playMusic = extras.getBoolean("music");
         }
 
+        //Create a new game view for this activity
         gameView = new GameView(this, size.x, size.y);
         gameView.setGameViewListener(this);
-
-        // Make the gameView the view for the Activity
+        // Make the gameView active
         setContentView(gameView);
     }
 
@@ -82,6 +86,7 @@ public class GameActivity extends Activity implements GameView.GameViewListener,
     }
 
     private void startMusic() {
+        //Play the music
         musicPlayer = new MediaPlayer();
         try {
             musicPlayer.setDataSource(this, Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.popcorn));
@@ -127,7 +132,7 @@ public class GameActivity extends Activity implements GameView.GameViewListener,
          */
         if (GameActivity.gameScore > MainActivity.highScore) {
             MainActivity.highScore = GameActivity.gameScore;
-            sharedPreferences = getSharedPreferences("gamePrefs", MODE_PRIVATE);
+            SharedPreferences sharedPreferences = getSharedPreferences("gamePrefs", MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putInt("highScore", GameActivity.gameScore);
             editor.commit();

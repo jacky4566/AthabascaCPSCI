@@ -1,5 +1,11 @@
 package com.sandris;
 
+
+/*
+Jackson Wiebe 3519635
+Holds all our sound effect types
+ */
+
 public enum SoundEffect {
     gamestart,
     gameover,

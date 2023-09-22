@@ -1,8 +1,9 @@
 package com.sandris;
 
 /*
+Jackson Wiebe 3519635
 This class constitutes a "Tetris Block" AKA tetromino. Which gets later melted down into sand.
-
+Has basic functions to maipulate the blocks
 */
 
 import android.graphics.Canvas;
@@ -14,18 +15,21 @@ import android.graphics.Point;
 import java.util.Random;
 
 public class Tetromino {
-    public Point location;
+    public Point location; //Where on screen is this tetromino
     public boolean[][] shapeGrid = new boolean[4][4]; //Used to define for drawing and collision
-    public int tetraColor;
-    public int tetraScale;
-    public boolean fastDrop = false;
+    public int tetraColor;//What color is it?
+    public int tetraScale;//What is our scale to draw it
+    public boolean fastDrop = false; //Is this block falling quickly at user request?
 
-    public Tetromino(int x, int y, int scale, int diff) {
+    public Tetromino(int x, int y, int scale, int colour) {
+        /*Inialitze new block at point xy
+            scale is used for drawing later
+            Include what color this block should be
+         */
         location = new Point(x, y);
         tetraScale = scale;
-        tetraColor = getColor(diff);
-        Random rand = new Random();
-        switch (rand.nextInt(6)) {
+        tetraColor = getColor(colour);
+        switch (new Random().nextInt(6)) { //Randomly chose a shape for this tetra
             case 0:
                 // I Shape
                 shapeGrid = new boolean[][]{{false, true, false, false}, {false, true, false, false}, {false, true, false, false}, {false, true, false, false}};
@@ -58,6 +62,7 @@ public class Tetromino {
     }
 
     public static int getColor(int type) {
+        //Returns a color type to draw this unit
         switch (type) {
             case 0:
                 return CONSTANTS.Tetra_Color_I;
@@ -86,6 +91,7 @@ public class Tetromino {
 
     public void moveMotion(double phoneAngle, double phoneZAngle, int playspeed) {
         //Moves Tetromino according to phone angle
+        //Gravity is set by XY plane, Speed is set by YZ plane
         double distance = Math.abs(Math.sin(phoneZAngle)) * playspeed * 2;
         int deltaX = -(int) (Math.floor(Math.cos(phoneAngle) * distance));
         int deltaY = (int) (Math.sin(phoneAngle) * distance);

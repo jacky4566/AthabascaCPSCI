@@ -8,8 +8,6 @@ Class: GameView
 
 Constructor:  GameView(Context context, int screenX, int screenY)
 Create a new instance of the game with given screen dimensions
-
-
  */
 
 import android.content.Context;
@@ -17,12 +15,9 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.LightingColorFilter;
-import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
-import android.graphics.Shader;
-import android.graphics.SweepGradient;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.util.Log;
@@ -114,6 +109,8 @@ public class GameView extends SurfaceView implements Runnable {
         }
     }
 
+    //Start new instance of our game
+    //TODO: need to fix this for when user leaves app
     public void resume() {
         gameThread = new Thread(this);
         gameThread.start();
@@ -123,6 +120,7 @@ public class GameView extends SurfaceView implements Runnable {
     private void logic() {
         //Does all game logic
         if (System.currentTimeMillis() <= logicTimer + 15) {
+            //Only run logic loop on time
             return;
         }
         logicTimer = System.currentTimeMillis();
@@ -147,6 +145,7 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     private void drawGame() {
+        //Draw game as fast as we can
         if (ourHolder.getSurface().isValid()) {
             canvas = ourHolder.lockCanvas();
 
@@ -494,6 +493,7 @@ public class GameView extends SurfaceView implements Runnable {
         }
     }
 
+    //Game over when sand touches the top of the screen
     private void gameOver() {
         Log.d(this.getClass().getSimpleName(), "Game Over");
         if (gvListener != null) {

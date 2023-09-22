@@ -13,18 +13,23 @@ import android.widget.TextView;
 
 import com.google.android.material.slider.Slider;
 
+
+/*
+Jackson Wiebe 3519635
+Main activity launched from app
+ */
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     //Saved Settings
-    private SharedPreferences sharedPreferences;
-    public static int difficulty = 1;
-    public static int highScore = 0;
-    public static boolean useMotion = false;
+    private SharedPreferences sharedPreferences; //Gets our saved preferences
+    public static int difficulty = 1; //What difficulty did the user select
+    public static int highScore = 0; //Current high score from preferences
+    public static boolean useMotion = false; //Does the user want motion controls?
     //Interactive objects
-    private Button playGame;
-    private Switch diffSwitch;
-    private Switch musicSwitch;
-    private Slider diffSlider;
+    private Switch motionSwitch; //Does the user want motion controls?
+    private Switch musicSwitch; //Does the user want music
+    private Slider diffSlider;  //Get the control input for difficultury slider
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,12 +37,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         // Get a reference to the button in the layout
-        playGame = (Button) findViewById(R.id.buttonPlay);
-        diffSwitch = (Switch) findViewById(R.id.switchMotion);
+        Button playGame = (Button) findViewById(R.id.buttonPlay);
+        motionSwitch = (Switch) findViewById(R.id.switchMotion);
         musicSwitch = (Switch) findViewById(R.id.switchMusic);
         // Listen for clicks
         playGame.setOnClickListener(this);
-        diffSwitch.setOnClickListener(this);
+        motionSwitch.setOnClickListener(this);
         musicSwitch.setOnClickListener(this);
         //Load Preferences
         sharedPreferences = getSharedPreferences("gamePrefs", MODE_PRIVATE);
@@ -45,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         highScore = sharedPreferences.getInt("highScore", 0);
         useMotion = sharedPreferences.getBoolean("motion", false);
         musicSwitch.setChecked(useMotion);
-        diffSwitch.setChecked(sharedPreferences.getBoolean("motion", false));
+        motionSwitch.setChecked(sharedPreferences.getBoolean("motion", false));
 
         //Connect slider
         diffSlider = findViewById(R.id.diffslider);
@@ -109,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else if (id == R.id.switchMotion) {
             //Change the motion setting
             SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putBoolean("motion", diffSwitch.isChecked());
+            editor.putBoolean("motion", motionSwitch.isChecked());
             editor.commit();
         } else if (id == R.id.switchMusic) {
             //Change the Music setting

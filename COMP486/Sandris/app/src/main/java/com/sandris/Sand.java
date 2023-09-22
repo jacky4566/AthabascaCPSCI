@@ -16,8 +16,9 @@ public class Sand {
     private int resolveCounter; //Keeps track of how many resolves the player has had
 
     public Sand(int width, int height) {
-        resolveCounter = 1;
+        //Create a new sand array of x y size.
         sandArray = new int[width][height];
+        resolveCounter = 1; //Reset the resolve counter to 1
     }
 
     public void sandphysics(double v) {
@@ -84,7 +85,9 @@ public class Sand {
     }
 
     private void checkClearLine() {
-        //Look for a continous trail of sand left to right.
+        /*Look for a continous trail of sand left to right using helper functions.
+        If we find a trail of sand, clear it, play sound effect, record score, reset resolve timers
+         */
         for (int y = sandArray[0].length - 1; y >= 0; y--) {
             int searchType = sandArray[0][y];
             if (searchType == 0)

@@ -1,6 +1,10 @@
 package com.sandris;
 
 import android.graphics.Color;
+/*
+Jackson Wiebe 3519635
+Holds public constants for use by the game
+ */
 
 public interface CONSTANTS {
     //Colors
