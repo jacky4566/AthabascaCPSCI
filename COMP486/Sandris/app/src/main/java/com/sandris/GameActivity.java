@@ -31,13 +31,14 @@ public class GameActivity extends Activity implements GameView.GameViewListener,
     private MediaPlayer musicPlayer = new MediaPlayer();
     private boolean playMusic;
     public static int gameScore = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         PACKAGE_NAME = getApplicationContext().getPackageName();
         GameActivity.context = getApplicationContext();
 
-        mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
+        mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
         // Get a Display object to access screen details
@@ -80,7 +81,7 @@ public class GameActivity extends Activity implements GameView.GameViewListener,
         gameView.resume();
     }
 
-    private void startMusic(){
+    private void startMusic() {
         musicPlayer = new MediaPlayer();
         try {
             musicPlayer.setDataSource(this, Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.popcorn));
@@ -110,7 +111,8 @@ public class GameActivity extends Activity implements GameView.GameViewListener,
         } catch (IOException e) {
         }
     }
-    private void stopMusic(){
+
+    private void stopMusic() {
         musicPlayer.stop();
         musicPlayer.release();
     }
@@ -123,7 +125,7 @@ public class GameActivity extends Activity implements GameView.GameViewListener,
         Play sound effects
         Finish acivity so we return to main acitivty
          */
-        if (GameActivity.gameScore > MainActivity.highScore ) {
+        if (GameActivity.gameScore > MainActivity.highScore) {
             MainActivity.highScore = GameActivity.gameScore;
             sharedPreferences = getSharedPreferences("gamePrefs", MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -135,7 +137,7 @@ public class GameActivity extends Activity implements GameView.GameViewListener,
                     Toast.makeText(getBaseContext(), "New High Score!", Toast.LENGTH_SHORT).show();
                 }
             });
-        }else{
+        } else {
             new SoundEngine(SoundEffect.gameover);
             this.runOnUiThread(new Runnable() {
                 public void run() {
@@ -149,7 +151,7 @@ public class GameActivity extends Activity implements GameView.GameViewListener,
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        if (event.sensor.getType()==Sensor.TYPE_ACCELEROMETER){
+        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
             GameView.updateSensorData(event);
         }
     }

@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.google.android.material.slider.Slider;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     //Saved Settings
     private SharedPreferences sharedPreferences;
@@ -25,15 +25,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Switch diffSwitch;
     private Switch musicSwitch;
     private Slider diffSlider;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         // Get a reference to the button in the layout
-        playGame = (Button)findViewById(R.id.buttonPlay);
-        diffSwitch = (Switch)findViewById(R.id.switchMotion);
-        musicSwitch = (Switch)findViewById(R.id.switchMusic);
+        playGame = (Button) findViewById(R.id.buttonPlay);
+        diffSwitch = (Switch) findViewById(R.id.switchMotion);
+        musicSwitch = (Switch) findViewById(R.id.switchMusic);
         // Listen for clicks
         playGame.setOnClickListener(this);
         diffSwitch.setOnClickListener(this);
@@ -52,9 +53,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             //Set a custom listener for OnValue Change
             @Override
             public void onValueChange(Slider slider, float value, boolean fromUser) {
-                difficulty = (int)value; //Get value from slider
+                difficulty = (int) value; //Get value from slider
                 TextView tx = (TextView) findViewById(R.id.textViewDiff); //Get handle to the text object
-                tx.setText(getResources().getStringArray(R.array.Difficulty)[difficulty-1]); //Update text with new diff setting
+                tx.setText(getResources().getStringArray(R.array.Difficulty)[difficulty - 1]); //Update text with new diff setting
                 //Save to memory
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putInt("diff", difficulty);
@@ -64,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         //Display init text
         TextView tx = (TextView) findViewById(R.id.textViewDiff);
-        tx.setText(getResources().getStringArray(R.array.Difficulty)[difficulty-1]);
+        tx.setText(getResources().getStringArray(R.array.Difficulty)[difficulty - 1]);
         diffSlider.setValue(difficulty);
 
         tx = (TextView) findViewById(R.id.textViewHighScore);
@@ -72,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tx.setText(HS);
 
         tx = (TextView) findViewById(R.id.textcredits);
-        tx.setText(getResources().getString(R.string.text_credits) );
+        tx.setText(getResources().getString(R.string.text_credits));
     }
 
     @Override
@@ -91,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    public void onClick(View v){
+    public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.buttonPlay) {// must be the Play button.
             // Create a new Intent object
@@ -110,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putBoolean("motion", diffSwitch.isChecked());
             editor.commit();
-        }else if (id == R.id.switchMusic) {
+        } else if (id == R.id.switchMusic) {
             //Change the Music setting
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putBoolean("music", musicSwitch.isChecked());

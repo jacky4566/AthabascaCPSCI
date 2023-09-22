@@ -20,12 +20,12 @@ public class Tetromino {
     public int tetraScale;
     public boolean fastDrop = false;
 
-    public Tetromino(int x, int y, int scale, int diff){
-        location = new Point(x,y);
+    public Tetromino(int x, int y, int scale, int diff) {
+        location = new Point(x, y);
         tetraScale = scale;
         tetraColor = getColor(diff);
         Random rand = new Random();
-        switch (rand.nextInt(6)){
+        switch (rand.nextInt(6)) {
             case 0:
                 // I Shape
                 shapeGrid = new boolean[][]{{false, true, false, false}, {false, true, false, false}, {false, true, false, false}, {false, true, false, false}};
@@ -57,8 +57,8 @@ public class Tetromino {
         }
     }
 
-    public static int getColor(int type){
-        switch (type){
+    public static int getColor(int type) {
+        switch (type) {
             case 0:
                 return CONSTANTS.Tetra_Color_I;
             case 1:
@@ -77,32 +77,36 @@ public class Tetromino {
         return 0;
     }
 
-    public void moveDown(int playspeed){
+    public void moveDown(int playspeed) {
         //Basic function that moves down for testing
-        location.offset(0,playspeed);
+        if (fastDrop)
+            location.offset(0, (int) CONSTANTS.MAX_PLAY_SPEED);
+        location.offset(0, playspeed);
     }
+
     public void moveMotion(double phoneAngle, double phoneZAngle, int playspeed) {
         //Moves Tetromino according to phone angle
         double distance = Math.abs(Math.sin(phoneZAngle)) * playspeed * 2;
-        int deltaX = -(int)(Math.floor(Math.cos(phoneAngle) * distance));
-        int deltaY = (int)(Math.sin(phoneAngle) * distance);
-        location.offset(deltaX,deltaY);
+        int deltaX = -(int) (Math.floor(Math.cos(phoneAngle) * distance));
+        int deltaY = (int) (Math.sin(phoneAngle) * distance);
+        location.offset(deltaX, deltaY);
     }
-    public void rotate(){
+
+    public void rotate() {
         //Right rotate 90 degrees
         boolean[][] temp = new boolean[4][4];
 
-        for (int i=0;i<4;i++)
-            for (int j=0;j<4;j++)
-                temp[i][j] = shapeGrid[4-1-j][i];
+        for (int i = 0; i < 4; i++)
+            for (int j = 0; j < 4; j++)
+                temp[i][j] = shapeGrid[4 - 1 - j][i];
 
         shapeGrid = temp;
     }
 
-    public void draw(Canvas canvas){
+    public void draw(Canvas canvas) {
         //Draw itself onto the target canvas
-        for (int x =0; x< 4; x++){
-            for(int y = 0; y<4; y++) {
+        for (int x = 0; x < 4; x++) {
+            for (int y = 0; y < 4; y++) {
                 if (shapeGrid[x][y]) {
                     //draw block
                     Paint paint = new Paint();
@@ -116,10 +120,10 @@ public class Tetromino {
                     int strokeWidth = tetraScale / 10;
                     border.setStrokeWidth(strokeWidth);
                     canvas.drawRect(
-                            location.x + (tetraScale * (x - 2))+ strokeWidth,
-                            location.y + (tetraScale * (y + 2))+ strokeWidth,
-                            location.x + (tetraScale * (x - 2)) + tetraScale-strokeWidth,
-                            location.y + (tetraScale * (y + 2)) + tetraScale -strokeWidth,
+                            location.x + (tetraScale * (x - 2)) + strokeWidth,
+                            location.y + (tetraScale * (y + 2)) + strokeWidth,
+                            location.x + (tetraScale * (x - 2)) + tetraScale - strokeWidth,
+                            location.y + (tetraScale * (y + 2)) + tetraScale - strokeWidth,
                             border);
                 }
             }
