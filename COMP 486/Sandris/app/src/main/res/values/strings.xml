@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">Sandris</string>
+    <string name="title_activity_game">GameActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="dialog_game_over">Game Over</string>
+    <string name="dialog_restart">Restart</string>
+    <string name="high_score">High Score: </string>
+    <string name="text_credits">Connect Sand colors from Left to Right to clear.\nControls: Tap to spin, Drag to move Tetromino, or enable motion mode to use you phones motion sensor\n\nMusic from Royalty Free UppBeat.io\nTitle screen Generate with AI Love</string>
+
+    <string-array name="Difficulty">
+        <item>"Not even a game"</item>
+        <item>"I'm Too Young to Die"</item>
+        <item>"ELORG know where you are"</item>
+        <item>"Average Nintendo player"</item>
+        <item>"Nightmare"</item>
+        <item>"Bullet Proof"</item>
+        <item>"Alexey would be proud"</item>
+    </string-array>
+</resources>
