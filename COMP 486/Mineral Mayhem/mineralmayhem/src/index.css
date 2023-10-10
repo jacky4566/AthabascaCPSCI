@@ -1,0 +1,69 @@
+body {
+  box-sizing: border-box;
+}
+
+:root {
+  --game-cell-size: 16px;         /* How big is each cell*/
+  --game-viewport-width: calc(16 * 16px);   /* Number of Game pixels wide*/
+  --game-viewport-height: calc(24 * 16px);  /* Number of Game pixels high*/
+  --pixel-size: 1;                /* Multiplier used for the pixels*/
+}
+
+html, body {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  margin: 0;
+}
+
+canvas {
+  /*Apply some tags to help rendering look crisp and clean*/
+  image-rendering: -moz-crisp-edges;
+  image-rendering: -webkit-crisp-edges;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+ /* Scale up game art if we can fit it. 2x */
+ @media(min-width: 512px) and (min-height: 768px) {
+  :root {
+      --pixel-size: 2;
+  }
+}
+ /* 3x */
+ @media(min-width: 768px) and (min-height: 1152px) {
+  :root {
+      --pixel-size: 3;
+  }
+}
+ /* 4x */
+ @media(min-width: 1024px) and (min-height: 1536px) {
+  :root {
+      --pixel-size: 4;
+  }
+}
+ /* 5x */
+ @media(min-width: 1280px) and (min-height: 1920px) {
+  :root {
+      --pixel-size: 5;
+  }
+}
+ /* 6x */
+ @media(min-width: 1536px) and (min-height: 2304px) {
+  :root {
+      --pixel-size: 6;
+  }
+}
+ /* 7x */
+ @media(min-width: 1792px) and (min-height: 2688px) {
+  :root {
+      --pixel-size: 7;
+  }
+}
+ /* 8x */
+ @media(min-width: 2048px) and (min-height: 3072px) {
+  :root {
+      --pixel-size: 8;
+  }
+}

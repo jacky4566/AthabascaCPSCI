@@ -1,0 +1,25 @@
+/*
+A css module to control game level design.
+Modules allow us to import those into the JS and apply them case by case
+
+Jackson Wiebe 
+3519635
+09/10/2023
+*/
+
+.fullScreenContainer {
+    /* absolute position of our game, we want to use the whole area centred*/
+    align-items: center;
+    display: flex;
+    inset: 0;
+    justify-content: center;
+    position: absolute;
+}
+
+.gameScreen {
+    width: var(--game-viewport-width);
+    height: var(--game-viewport-height);
+    transform: scale(var(--pixel-size)); /* Allows us to scale the game into the div*/
+
+   /* outline: 2px solid red; /*Debug tool to see play outline*/
+}
