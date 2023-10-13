@@ -6,12 +6,14 @@ Jackson Wiebe
 09/10/2023
 */
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { SPRITE_SHEET_SRC } from "./helpers/consts";
 import RenderLevel from "./components/level-layout/RenderLevel";
+import { useRecoilState } from "recoil";
+import { spriteSheetImageAtom } from "./atoms/spriteSheetImageAtom";
 
 function App() {
-  const [spriteSheetImage, setSpriteSheetImage] = useState(null);
+  const [spriteSheetImage, setSpriteSheetImage] = useRecoilState(spriteSheetImageAtom);
 
   useEffect(() => {
     const image = new Image();    //Create new image constant
@@ -19,14 +21,14 @@ function App() {
     image.onload = () => {        //When the image loads
       setSpriteSheetImage(image); //apply it to the variable
     };
-  }, []);
+  }, [setSpriteSheetImage]);
 
   if (!spriteSheetImage) {
     //If Sprite sheet failed return an error
     return (<p>Sprite Sheet Failed!</p>);
   }
 
-  return <RenderLevel spriteSheetImage={spriteSheetImage} />;
+  return <RenderLevel />;
 }
 
 export default App;

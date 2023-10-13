@@ -1,30 +1,32 @@
 import styles from "./RenderLevel.module.css";  //Use these styles
-import Sprite from "../object-graphics/Sprite"; //Grab our sprite sheet
-import {
-  CELL_SIZE,
-  LEVEL_THEMES,
-  THEME_BACKGROUNDS,
-} from "../../helpers/consts";
+import { THEME_BACKGROUNDS } from "../../helpers/consts";
 import LevelBackgroundTilesLayer from "./LevelBackgroundTilesLayer";
+import LevelPlacementsLayer from "./LevelPlacementsLayer";
+import { useEffect, useState } from "react";
+import { LevelState } from "../../classes/LevelState";
+import FlourCount from "../hud/FlourCount";
 
-export default function RenderLevel({ spriteSheetImage }) {
-  const level = {
-    theme: LEVEL_THEMES.YELLOW,
-    tilesWidth: 8,
-    tilesHeight: 8,
+export default function RenderLevel() {
+  const [level, setLevel] = useState(null);
 
-    placements: [
-      //Level '2'
-      { id: 0, x: 1, y: 1, frameCoord: "0x2" },
-      { id: 1, x: 3, y: 1, frameCoord: "0x2" },
-      { id: 2, x: 5, y: 1, frameCoord: "0x2" },
-      { id: 3, x: 7, y: 1, frameCoord: "0x2" },
-      { id: 4, x: 9, y: 1, frameCoord: "0x2" },
-      { id: 5, x: 11, y: 1, frameCoord: "0x2" },
-      { id: 6, x: 13, y: 1, frameCoord: "0x2" },
-      { id: 7, x: 15, y: 1, frameCoord: "0x2" },
-    ],
-  };
+  useEffect(() => {
+    // Create and subscribe to state changes
+    const levelState = new LevelState("1-1", (newState) => {
+      setLevel(newState);
+    });
+
+    //Get initial state
+    setLevel(levelState.getState());
+
+    //Destroy method when this component unmounts for cleanup
+    return () => {
+      levelState.destroy();
+    };
+  }, []);
+
+  if (!level) {
+    return null;
+  }
 
   return (
     <div
@@ -34,26 +36,10 @@ export default function RenderLevel({ spriteSheetImage }) {
       }}
     >
       <div className={styles.gameScreen}>
-      <LevelBackgroundTilesLayer level={level} image={spriteSheetImage} />
-        {level.placements.map((placement) => {
-          // Wrap each Sprite in a positioned div
-          const x = placement.x * CELL_SIZE + "px";
-          const y = placement.y * CELL_SIZE + "px";
-          const style = {//Create an inline style to apply to the div
-            position: "absolute",
-            transform: `translate3d(${x}, ${y}, 0)`,
-          };
-
-          return (
-            <div key={placement.id} style={style}>
-              <Sprite
-                image={spriteSheetImage}
-                frameCoord={placement.frameCoord}
-              />
-            </div>
-          );
-        })}
+        <LevelBackgroundTilesLayer level={level} />
+        <LevelPlacementsLayer level={level} />
       </div>
+      <FlourCount level={level} />
     </div>
   );
 }

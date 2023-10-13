@@ -1,5 +1,38 @@
 export const CELL_SIZE = 16;
+export const Z_INDEX_LAYER_SIZE = 10;
 export const SPRITE_SHEET_SRC = "/mm-sprites.png"
+
+export const PLACEMENT_TYPE_HERO = "HERO";
+export const PLACEMENT_TYPE_GOAL = "GOAL";
+export const PLACEMENT_TYPE_WALL = "WALL";
+export const PLACEMENT_TYPE_FLOUR = "FLOUR";
+export const PLACEMENT_TYPE_CELEBRATION = "CELEBRATION";
+
+export const DIRECTION_LEFT = "LEFT";
+export const DIRECTION_RIGHT = "RIGHT";
+export const DIRECTION_UP = "UP";
+export const DIRECTION_DOWN = "DOWN";
+
+export const directionUpdateMap = {
+  [DIRECTION_LEFT]: { x: -1, y: 0 },
+  [DIRECTION_RIGHT]: { x: 1, y: 0 },
+  [DIRECTION_UP]: { x: 0, y: -1 },
+  [DIRECTION_DOWN]: { x: 0, y: 1 },
+};
+
+export const BODY_SKINS = {
+  NORMAL: "NORMAL",
+  WATER: "WATER",
+  ICE: "ICE",
+  CONVEYOR: "CONVEYOR",
+  FIRE: "FIRE",
+  TELEPORT: "TELEPORT",
+  SCARED: "SCARED",
+};
+
+export const HERO_RUN_1 = "HERO_RUN_1";
+export const HERO_RUN_2 = "HERO_RUN_2";
+
 export const LEVEL_THEMES = {
     YELLOW: "YELLOW",
     BLUE: "BLUE",
