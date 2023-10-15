@@ -11,11 +11,13 @@ import { SPRITE_SHEET_SRC } from "./helpers/consts";
 import RenderLevel from "./components/level-layout/RenderLevel";
 import { useRecoilState } from "recoil";
 import { spriteSheetImageAtom } from "./atoms/spriteSheetImageAtom";
+import soundsManager from "./classes/Sounds";
 
 function App() {
   const [spriteSheetImage, setSpriteSheetImage] = useRecoilState(spriteSheetImageAtom);
 
   useEffect(() => {
+    soundsManager.init();
     const image = new Image();    //Create new image constant
     image.src = SPRITE_SHEET_SRC; //Get referecne from global constants
     image.onload = () => {        //When the image loads

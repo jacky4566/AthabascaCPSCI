@@ -3,6 +3,9 @@ import { placementFactory } from "./PlacementFactory";
 import { GameLoop } from "./GameLoop";
 import { DirectionControls } from "./DirectionControls";
 import LevelsMap from "../levels/LevelsMap";
+import { Inventory } from "./Inventory";
+import { Camera } from "./Camera";
+import LevelRNG from "../components/level-layout/LevelRNG";
 
 export class LevelState {
   constructor(levelId, onEmit) {
@@ -15,22 +18,39 @@ export class LevelState {
   }
 
   start() {
+    /* Default level stuff */
     this.isCompleted = false;
-    
+    this.deathOutcome = null;
     const levelData = LevelsMap[this.id];
 
+    /* Fill in map with RNG */
+    this.placements = LevelRNG(levelData);
+
+    /* Copy rest of level data */
     this.theme = levelData.theme;
     this.tilesWidth = levelData.tilesWidth;
     this.tilesHeight = levelData.tilesHeight;
-    this.placements = levelData.placements.map((config) => {
+
+    /* Generate Placements */
+    this.placements = this.placements.map((config) => {
       return placementFactory.createPlacement(config, this);
     });
+
+    // Create a fresh inventory
+    this.inventory = new Inventory();
 
     // Cache a reference to the hero
     this.heroRef = this.placements.find((p) => p.type === PLACEMENT_TYPE_HERO);
 
+    // Create a camera
+    this.camera = new Camera(this);
 
     this.startGameLoop();
+  }
+
+  setDeathOutcome(causeOfDeath) {
+    this.deathOutcome = causeOfDeath;
+    this.gameLoop.stop();
   }
 
   startGameLoop() {
@@ -61,6 +81,9 @@ export class LevelState {
       placement.tick();
     });
 
+    // Update the camera
+    this.camera.tick();
+
     //Emit any changes to React
     this.onEmit(this.getState());
   }
@@ -85,7 +108,14 @@ export class LevelState {
       tilesWidth: this.tilesWidth,
       tilesHeight: this.tilesHeight,
       placements: this.placements,
+      deathOutcome: this.deathOutcome,
       isCompleted: this.isCompleted,
+      cameraTransformX: this.camera.transformX,
+      cameraTransformY: this.camera.transformY,
+      inventory: this.inventory,
+      restart: () => {
+        this.start();
+      },
     };
   }
 

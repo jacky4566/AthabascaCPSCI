@@ -4,7 +4,9 @@ import {
   CELL_SIZE,
   DIRECTION_LEFT,
   DIRECTION_UP,
+  BODY_SKINS,
 } from "../helpers/consts";
+import soundsManager, { SFX } from "../classes/Sounds";
 
 export class Placement {
   constructor(properties, level) {
@@ -14,6 +16,7 @@ export class Placement {
     this.y = properties.y;
     this.level = level;
 
+    this.skin = BODY_SKINS.NORMAL;
     this.travelPixelsPerFrame = 1.5;
     this.movingPixelsRemaining = 0;
     this.movingPixelDirection = DIRECTION_RIGHT;
@@ -26,6 +29,8 @@ export class Placement {
   tick() { }
 
   collect() {
+    soundsManager.playSfx(SFX.COLLECT);
+    this.level.inventory.add(this.addsItemToInventoryOnCollide());
     this.hasBeenCollected = true;
   }
 
@@ -47,6 +52,14 @@ export class Placement {
     return [x, y];
   }
 
+  changesHeroSkinOnCollide() {
+    return null;
+  }
+
+  damagesBodyOnCollide(_body) {
+    return null;
+  }
+
   completesLevelOnCollide() {
     return false;
   }
@@ -65,6 +78,10 @@ export class Placement {
       case DIRECTION_DOWN:
         return [x, y + progressPixels];
     }
+  }
+
+  canBeUnlocked() {
+    return false;
   }
 
   zIndex() {

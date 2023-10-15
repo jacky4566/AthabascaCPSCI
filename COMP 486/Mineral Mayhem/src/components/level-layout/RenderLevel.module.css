@@ -20,6 +20,4 @@ Jackson Wiebe
     width: var(--game-viewport-width);
     height: var(--game-viewport-height);
     transform: scale(var(--pixel-size)); /* Allows us to scale the game into the div*/
-
-   outline: 2px solid red; /*Debug tool to see play outline*/
 }
