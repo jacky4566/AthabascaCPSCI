@@ -16,15 +16,14 @@ export class Camera {
     const [heroX, heroY] = this.level.heroRef.displayXY();
     this.cameraX = heroX;
     this.cameraY = heroY;
-    this.transformOffset = -5.5 * CELL_SIZE;
   }
 
-  get transformX() {
-    return -this.cameraX - this.transformOffset + "px";
-  }
+  get transform() {
+    this.pixelSize = getComputedStyle(document.documentElement).getPropertyValue('--pixel-size');
 
-  get transformY() {
-    return -this.cameraY - this.transformOffset + "px";
+    this.transformOffsetX = (window.innerWidth / 2);
+    this.transformOffsetY = (window.innerHeight / 2) - (CELL_SIZE * 4);
+    return [this.cameraX, this.cameraY, this.transformOffsetX, this.transformOffsetY]
   }
 
   static lerp(currentValue, destinationValue, time) {

@@ -5,7 +5,7 @@ import { DirectionControls } from "./DirectionControls";
 import LevelsMap from "../levels/LevelsMap";
 import { Inventory } from "./Inventory";
 import { Camera } from "./Camera";
-import LevelRNG from "../components/level-layout/LevelRNG";
+import LevelGenerator from "../components/level-layout/LevelGenerator";
 
 export class LevelState {
   constructor(levelId, onEmit) {
@@ -23,8 +23,8 @@ export class LevelState {
     this.deathOutcome = null;
     const levelData = LevelsMap[this.id];
 
-    /* Fill in map with RNG */
-    this.placements = LevelRNG(levelData);
+    /* Fill in map with RNG and Background */
+    this.placements = LevelGenerator(levelData);
 
     /* Copy rest of level data */
     this.theme = levelData.theme;
@@ -110,8 +110,7 @@ export class LevelState {
       placements: this.placements,
       deathOutcome: this.deathOutcome,
       isCompleted: this.isCompleted,
-      cameraTransformX: this.camera.transformX,
-      cameraTransformY: this.camera.transformY,
+      cameraTransform: this.camera.transform,
       inventory: this.inventory,
       restart: () => {
         this.start();

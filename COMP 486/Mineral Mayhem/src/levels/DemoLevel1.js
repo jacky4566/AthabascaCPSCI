@@ -8,10 +8,12 @@ import {
 } from "../helpers/consts";
 
 const level = {
-  theme: LEVEL_THEMES.GREEN,
-  tilesWidth: 16,
-  tilesHeight: 16,
-  depthStart: 0,
+  theme: LEVEL_THEMES.GREEN,  // Theme of level sets background
+  tilesWidth: 24,             // Size of Level
+  tilesHeight: 100,           // Size of Level         
+  RNG:[                       // Variable for the RNG to fill in our map
+    {depthStart: 2, depthEnd: 16, odds: 20, type: PLACEMENT_TYPE_WATER},
+  ],
   placements: [
     { x: 1, y: 1, type: PLACEMENT_TYPE_HERO },
     { x: 6, y: 4, type: PLACEMENT_TYPE_GOAL },

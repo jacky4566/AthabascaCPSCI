@@ -3,14 +3,14 @@ body {
 }
 
 :root {
-  --game-cell-size: 16px;         /* How big is each cell*/
-  --game-viewport-width: calc(16 * 16px);   /* Number of Game pixels wide*/
-  --game-viewport-height: calc(16 * 16px);  /* Number of Game pixels high*/
-  --pixel-size: 1;                /* Multiplier used for the pixels*/
-  --ui-popup-z-index: 500;
+    /* How big is each cell*/
+  --game-cell-size: 16px;
+  /* Multiplier used for the pixels*/
+  --pixel-size: 1;
 }
 
-html, body {
+html,
+body {
   position: relative;
   width: 100vw;
   height: 100vh;
@@ -25,10 +25,37 @@ canvas {
   image-rendering: pixelated;
   image-rendering: crisp-edges;
 }
+/*2x*/
+@media(min-width: 256px) {
+  :root {
+    --pixel-size: 2;
+  }
+}
 
-  /*4x*/
-  @media(min-width: 720px) {
-    :root {
-        --pixel-size: 4;
-    }
+/*3x*/
+@media(min-width: 512px) {
+  :root {
+    --pixel-size: 3;
+  }
+}
+
+ /* 4x */
+ @media(min-width: 768px) {
+  :root {
+      --pixel-size: 4;
+  }
+}
+
+ /* 5x */
+ @media(min-width: 1024px) {
+  :root {
+      --pixel-size: 5;
+  }
+}
+
+ /* 6x */
+ @media(min-width: 1280px) {
+  :root {
+      --pixel-size: 6;
+  }
 }

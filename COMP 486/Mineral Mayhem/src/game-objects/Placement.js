@@ -85,7 +85,7 @@ export class Placement {
   }
 
   zIndex() {
-    return 1;
+    return this.y;
   }
 
   renderComponent() {

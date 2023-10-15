@@ -27,13 +27,13 @@ export default function RenderLevel() {
     return () => {
       levelState.destroy();
     };
-}, [currentLevelId]);
+  }, [currentLevelId]);
 
   if (!level) {
     return null;
   }
 
-  const cameraTranslate = `translate3d(${level.cameraTransformX}, ${level.cameraTransformY}, 0)`;
+  const cameraTranslate = `translate3d(${(-level.cameraTransform[0]+level.cameraTransform[2]) + 'px'}, ${(-level.cameraTransform[1]+level.cameraTransform[3]) + 'px'}, 0)`;
 
   return (
     <div
@@ -43,16 +43,16 @@ export default function RenderLevel() {
       }}
     >
       <div className={styles.gameScreen}>
-      <div
-           style={{
-             transform: cameraTranslate,
-           }}
-         >
-           <LevelBackgroundTilesLayer level={level} />
-           <LevelPlacementsLayer level={level} />
-         </div>
-         {level.isCompleted && <LevelCompleteMessage />}
-         {level.deathOutcome && <DeathMessage level={level} />}
+        <div
+          style={{
+            transform: cameraTranslate,
+          }}
+        >
+          <LevelBackgroundTilesLayer level={level} cameraXY={level.cameraTransform} />
+          <LevelPlacementsLayer level={level} />
+        </div>
+        {level.isCompleted && <LevelCompleteMessage />}
+        {level.deathOutcome && <DeathMessage level={level} />}
       </div>
       <TopHud level={level} />
     </div>

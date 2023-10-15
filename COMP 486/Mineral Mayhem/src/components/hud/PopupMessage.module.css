@@ -1,7 +1,7 @@
 .outerContainer {
     position: absolute;
     inset: 0;
-    z-index: var(--ui-popup-z-index);
+    z-index: 500;
     display: flex;
     align-items: center;
     justify-content: center;

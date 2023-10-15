@@ -1,9 +1,14 @@
 import MapCell from "./MapCell";
-import { THEME_TILES_MAP } from "../../helpers/consts";
+import { THEME_TILES_MAP, CELL_SIZE, } from "../../helpers/consts";
 
-export default function LevelBackgroundTilesLayer({ level }) {
+export default function LevelBackgroundTilesLayer({ level, cameraXY }) {
+  const pixelSize = getComputedStyle(document.documentElement).getPropertyValue('--pixel-size');
   const widthWithWalls = level.tilesWidth + 1;
   const heightWithWalls = level.tilesHeight + 1;
+  const cameraLefttile = Math.max(0, Math.floor((cameraXY[0] - (window.innerWidth / 2 / pixelSize)) / CELL_SIZE));
+  const cameraRighttile = Math.min(widthWithWalls, Math.ceil((cameraXY[0] + (window.innerWidth / 2 / pixelSize)) / CELL_SIZE));
+  const cameraTopttile = Math.max(0, Math.floor((cameraXY[1] - (window.innerHeight / 2 / pixelSize)) / CELL_SIZE));
+  const cameraBottomttile = Math.min(heightWithWalls, Math.ceil((cameraXY[1] + (window.innerHeight / pixelSize)) / CELL_SIZE));
   const tiles = THEME_TILES_MAP[level.theme];
 
   function getBackgroundTile(x, y) {
@@ -23,8 +28,8 @@ export default function LevelBackgroundTilesLayer({ level }) {
   }
 
   let canvases = [];
-  for (let y = 0; y <= heightWithWalls; y++) {
-    for (let x = 0; x <= widthWithWalls; x++) {
+  for (let y = cameraTopttile; y <= cameraBottomttile; y++) {
+    for (let x = cameraLefttile; x <= cameraRighttile; x++) {
       // Skip Bottom Left and Bottom Right for intentional blank tiles in those corners
       if (y === heightWithWalls) {
         if (x === 0 || x === widthWithWalls) {
