@@ -16,7 +16,7 @@ const level = {
   ],
   placements: [
     { x: 1, y: 1, type: PLACEMENT_TYPE_HERO },
-    { x: 6, y: 4, type: PLACEMENT_TYPE_GOAL },
+    { x: 24, y: 1, type: PLACEMENT_TYPE_GOAL },
     { x: 3, y: 4, type: PLACEMENT_TYPE_WATER },
     { x: 4, y: 5, type: PLACEMENT_TYPE_WATER },
     { x: 3, y: 5, type: PLACEMENT_TYPE_WATER },

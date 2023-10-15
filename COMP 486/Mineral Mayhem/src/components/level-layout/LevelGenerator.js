@@ -31,5 +31,6 @@ export default function LevelGenerator(level) {
         }
     });
 
+
     return level.placements;
 }
