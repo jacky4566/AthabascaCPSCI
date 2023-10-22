@@ -1,4 +1,5 @@
 import { Placement } from "./Placement";
+import soundsManager, { SFX } from "../classes/Sounds";
 import Sprite from "../components/object-graphics/Sprite";
 import { TILES } from "../helpers/tiles";
 import { MINERAL_HEALTH } from "../helpers/consts";
@@ -6,6 +7,7 @@ import { MINERAL_HEALTH } from "../helpers/consts";
 export class MineralPlacement extends Placement {
   constructor(properties, level) {
     super(properties, level);
+    this.damageNextTick = 0;
     switch (properties.type) {
       case "MINERAL_DIRT":
         this.health = MINERAL_HEALTH.DIRT;
@@ -38,8 +40,36 @@ export class MineralPlacement extends Placement {
     }
   }
 
+  addsItemToInventoryOnCollide() {
+    return this.type;
+  }
+
   isSolidForBody(_body) {
-    return true;
+    return !!(this.health);
+  }
+
+  isMinable() {
+    return !!(this.health);
+  }
+
+  mine(_body) {
+    this.damageNextTick = 1;
+    return null;
+  }
+  
+  tick() {
+    if (this.hasBeenCollected)
+      return;
+    if (this.damageNextTick) {
+      this.health = this.health - this.damageNextTick;
+      this.damageNextTick = 0;
+      if (this.health <= 0) {
+        soundsManager.playSfx(SFX.COLLECT);
+        this.level.inventory.add(this.type);
+        this.hasBeenCollected = true;
+        this.health = 0;
+      }
+    }
   }
 
   renderComponent() {

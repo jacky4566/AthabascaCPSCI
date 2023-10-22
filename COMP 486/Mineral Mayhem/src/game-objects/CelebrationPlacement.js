@@ -10,7 +10,7 @@ export class CelebrationPlacement extends Placement {
   }
 
   tick() {
-    if (this.frame <= 8) {
+    if (this.frame <= 4) {
       this.frame += 0.5;
       return;
     }

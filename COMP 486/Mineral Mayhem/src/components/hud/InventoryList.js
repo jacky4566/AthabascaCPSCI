@@ -5,16 +5,28 @@ import PixelNumber from "../object-graphics/PixelNumber";
 
 const showInventory = [
   {
-    key: "TOPSOIL",
-    tile: TILES.MINERAL_DIRT,
+    key: "MINERAL_COPPER",
+    tile: TILES.MINERAL_COPPER,
   },
   {
-    key: "KEY_BLUE",
-    tile: TILES.BLUE_KEY,
+    key: "MINERAL_ZINC",
+    tile: TILES.MINERAL_ZINC,
   },
   {
-    key: "KEY_GREEN",
-    tile: TILES.GREEN_KEY,
+    key: "MINERAL_GOLD",
+    tile: TILES.MINERAL_GOLD,
+  },
+  {
+    key: "MINERAL_LITHIUM",
+    tile: TILES.MINERAL_LITHIUM,
+  },
+  {
+    key: "MINERAL_NEODYMIUM",
+    tile: TILES.MINERAL_NEODYMIUM,
+  },
+  {
+    key: "MINERAL_YTTRIUM",
+    tile: TILES.MINERAL_YTTRIUM,
   },
 ];
 

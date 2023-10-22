@@ -4,6 +4,12 @@
 
 .heroBody {
     position: absolute;
-    left: -16px;
-    top: -38px;
+    left: -14px;
+    top: -30px;
+}
+
+.drillBody {
+    position: absolute;
+    left: -14px;
+    top: -10px;
 }

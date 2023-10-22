@@ -24,7 +24,6 @@ export class TopsoilPlacement extends Placement {
 
   mine(_body) {
     this.damageNextTick = 1;
-    console.log("mining")
     return null;
   }
 
@@ -36,7 +35,6 @@ export class TopsoilPlacement extends Placement {
       this.damageNextTick = 0;
       if (this.health <= 0) {
         soundsManager.playSfx(SFX.COLLECT);
-        console.log(this.health)
         this.level.inventory.add(this.type);
         this.hasBeenCollected = true;
         this.health = 0;

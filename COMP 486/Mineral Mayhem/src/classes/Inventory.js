@@ -19,6 +19,5 @@ export class Inventory {
     }else{
       this.inventoryMap.set(key, 1);
     }
-    console.log(this.inventoryMap);
   }
 }

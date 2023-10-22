@@ -2,18 +2,34 @@ import Sprite from "./Sprite";
 import { TILES } from "../../helpers/tiles";
 import styles from "./Hero.module.css";
 
-export default function Hero({ frameCoord, yTranslate, showShadow }) {
+const heroOptions = [
+  {
+    key: "DRILL_1_RIGHT",
+    tile: TILES.DRILL_1_RIGHT,
+  },
+];
+
+export default function Hero({ frameCoord, xMirror, drill, engine }) {
   return (
     <div className={styles.hero}>
-      <div>{showShadow && <Sprite frameCoord={TILES.SHADOW} />}</div>
       <div
-         className={styles.heroBody}
-         style={{
-           transform: `translateY(${yTranslate}px)`,
-         }}
-       >
-         <Sprite frameCoord={frameCoord} size={64} />
+        className={styles.heroBody}
+        style={{
+          transform: `scaleX(${xMirror})`,
+        }}
+      >
+        <Sprite frameCoord={frameCoord} size={64} />
       </div>
+      <div
+        className={styles.drillBody}
+        style={{
+          transform: `scaleX(${xMirror})`,
+        }}
+      >
+        <Sprite frameCoord={heroOptions.find(option => option.key === drill).tile} size={64}/>
+      </div>
+
     </div>
   );
 }
+
