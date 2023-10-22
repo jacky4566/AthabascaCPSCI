@@ -3,8 +3,6 @@ body {
 }
 
 :root {
-    /* How big is each cell*/
-  --game-cell-size: 16px;
   /* Multiplier used for the pixels*/
   --pixel-size: 1;
 }
@@ -26,36 +24,15 @@ canvas {
   image-rendering: crisp-edges;
 }
 /*2x*/
-@media(min-width: 256px) {
+@media(min-width: 1024px) {
   :root {
     --pixel-size: 2;
   }
 }
 
-/*3x*/
-@media(min-width: 512px) {
+/*4x*/
+@media(min-width: 2048px) {
   :root {
-    --pixel-size: 3;
-  }
-}
-
- /* 4x */
- @media(min-width: 768px) {
-  :root {
-      --pixel-size: 4;
-  }
-}
-
- /* 5x */
- @media(min-width: 1024px) {
-  :root {
-      --pixel-size: 5;
-  }
-}
-
- /* 6x */
- @media(min-width: 1280px) {
-  :root {
-      --pixel-size: 6;
+    --pixel-size: 4;
   }
 }

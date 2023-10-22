@@ -18,13 +18,12 @@ export class LevelState {
   }
 
   start() {
+    console.log("Start")
+
     /* Default level stuff */
     this.isCompleted = false;
     this.deathOutcome = null;
     const levelData = LevelsMap[this.id];
-
-    /* Fill in map with RNG and Background */
-    this.placements = LevelGenerator(levelData);
 
     /* Copy rest of level data */
     this.theme = levelData.theme;
@@ -32,8 +31,10 @@ export class LevelState {
     this.tilesHeight = levelData.tilesHeight;
 
     /* Generate Placements */
-    this.placements = this.placements.map((config) => {
-      return placementFactory.createPlacement(config, this);
+    const levelPlacements = levelData.placements.concat(LevelGenerator(levelData));
+
+    this.placements = levelPlacements.map((item) => {
+      return placementFactory.createPlacement(item, this);
     });
 
     // Create a fresh inventory
@@ -91,7 +92,7 @@ export class LevelState {
   isPositionOutOfBounds(x, y) {
     return (
       x === 0 ||
-      y === 0 ||
+      y < 0 ||
       x >= this.tilesWidth + 1 ||
       y >= this.tilesHeight + 1
     );

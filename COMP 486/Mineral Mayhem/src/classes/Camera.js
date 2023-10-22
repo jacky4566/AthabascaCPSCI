@@ -22,7 +22,7 @@ export class Camera {
     this.pixelSize = getComputedStyle(document.documentElement).getPropertyValue('--pixel-size');
 
     this.transformOffsetX = (window.innerWidth / 2);
-    this.transformOffsetY = (window.innerHeight / 2) - (CELL_SIZE * 4);
+    this.transformOffsetY = (window.innerHeight / 2) - (CELL_SIZE * 2);
     return [this.cameraX, this.cameraY, this.transformOffsetX, this.transformOffsetY]
   }
 

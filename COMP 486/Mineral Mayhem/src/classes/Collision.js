@@ -36,6 +36,11 @@ export class Collision {
     });
   }
 
+  withMinable(){
+    return this.placementsAtPosition.find((p) => {
+      return p.isMinable() && p.addsItemToInventoryOnCollide(this.forBody);
+    });
+  }
 
   withLock() {
     return this.placementsAtPosition.find((p) => {

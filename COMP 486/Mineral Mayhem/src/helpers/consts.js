@@ -1,6 +1,6 @@
-export const CELL_SIZE = 16;
+export const CELL_SIZE = 32;
 export const Z_INDEX_LAYER_SIZE = 10;
-export const SPRITE_SHEET_SRC = "/mm-sprites.png"
+export const SPRITE_SHEET_SRC = "/mineral-mayhem-sprites.png"
 
 export const PLACEMENT_TYPE_HERO = "HERO";
 export const PLACEMENT_TYPE_GOAL = "GOAL";
@@ -11,6 +11,14 @@ export const PLACEMENT_TYPE_LOCK = "LOCK";
 export const PLACEMENT_TYPE_KEY = "KEY";
 export const PLACEMENT_TYPE_WATER = "WATER";
 export const PLACEMENT_TYPE_WATER_PICKUP = "WATER_PICKUP";
+export const PLACEMENT_TYPE_TOPSOIL = "TOPSOIL";
+export const PLACEMENT_TYPE_MINERAL_DIRT = "MINERAL_DIRT";
+export const PLACEMENT_TYPE_MINERAL_COPPER = "MINERAL_COPPER";
+export const PLACEMENT_TYPE_MINERAL_ZINC = "MINERAL_ZINC";
+export const PLACEMENT_TYPE_MINERAL_GOLD = "MINERAL_GOLD";
+export const PLACEMENT_TYPE_MINERAL_LITHIUM = "MINERAL_LITHIUM";
+export const PLACEMENT_TYPE_MINERAL_NEODYMIUM = "MINERAL_NEODYMIUM";
+export const PLACEMENT_TYPE_MINERAL_YTTRIUM = "MINERAL_YTTRIUM";
 
 export const DIRECTION_LEFT = "LEFT";
 export const DIRECTION_RIGHT = "RIGHT";
@@ -44,61 +52,66 @@ export const LOCK_KEY_COLORS = {
   GREEN: "GREEN",
 };
 
+export const MINERAL_HEALTH = {
+  TOPSOIL: 1,
+  DIRT: 1,
+  COPPER: 5,
+  ZINC: 10,
+  GOLD: 20,
+  LITHIUM: 50,
+  NEODYMIUM: 100,
+  YTTRIUM: 200,
+}
+
+export const MINERAL_VALUE = {
+  TOPSOIL: 0,
+  DIRT: 0,
+  COPPER: 5,
+  ZINC: 10,
+  GOLD: 20,
+  LITHIUM: 50,
+  NEODYMIUM: 100,
+  YTTRIUM: 200,
+}
+
 export const LEVEL_THEMES = {
-    YELLOW: "YELLOW",
-    BLUE: "BLUE",
-    GREEN: "GREEN",
-    PINK: "PINK",
-    GRAY: "GRAY",
-  };
-  
-  export const THEME_BACKGROUNDS = {
-    [LEVEL_THEMES.YELLOW]: "#2f2808",
-    [LEVEL_THEMES.BLUE]: "#3d4c67",
-    [LEVEL_THEMES.GREEN]: "#2f2808",
-    [LEVEL_THEMES.PINK]: "#673d5e",
-    [LEVEL_THEMES.GRAY]: "#96a1c7",
-  };
-  
-  export const THEME_TILES_MAP = {
-    [LEVEL_THEMES.YELLOW]: {
-      FLOOR: "1x1",
-      TOP: "1x0",
-      LEFT: "0x1",
-      RIGHT: "2x1",
-      BOTTOM: "1x2",
-      WALL: "0x2",
-    },
-    [LEVEL_THEMES.BLUE]: {
-      FLOOR: "4x1",
-      TOP: "4x0",
-      LEFT: "3x1",
-      RIGHT: "5x1",
-      BOTTOM: "4x2",
-      WALL: "3x2",
-    },
-    [LEVEL_THEMES.GREEN]: {
-      FLOOR: "7x1",
-      TOP: "7x0",
-      LEFT: "6x1",
-      RIGHT: "8x1",
-      BOTTOM: "7x2",
-      WALL: "6x2",
-    },
-    [LEVEL_THEMES.PINK]: {
-      FLOOR: "10x1",
-      TOP: "10x0",
-      LEFT: "9x1",
-      RIGHT: "11x1",
-      BOTTOM: "10x2",
-      WALL: "9x2",
-    },
-    [LEVEL_THEMES.GRAY]: {
-      FLOOR: "13x1",
-      TOP: "13x0",
-      LEFT: "12x1",
-      RIGHT: "14x1",
-      BOTTOM: "13x2",
-      WALL: "12x2",
-    },
-  };
+  UNDERGROUND: "EARTH",
+  ICECAVE: "ICECAVE",
+  EARTH: "UNDERGROUND",
+};
+
+export const THEME_BACKGROUNDS = {
+  [LEVEL_THEMES.UNDERGROUND]: "#2f2808",
+  [LEVEL_THEMES.ICECAVE]: "#3d4c67",
+  [LEVEL_THEMES.EARTH]: "#2f2808",
+};
+
+export const THEME_TILES_MAP = {
+  [LEVEL_THEMES.UNDERGROUND]: {
+    FLOOR: "1x1",
+    TOP: "1x0",
+    SKY: "1x0",
+    LEFT: "0x1",
+    RIGHT: "2x1",
+    BOTTOM: "1x2",
+    WALL: "0x2",
+  },
+  [LEVEL_THEMES.ICECAVE]: {
+    FLOOR: "4x1",
+    TOP: "4x0",
+    SKY: "4x0",
+    LEFT: "3x1",
+    RIGHT: "5x1",
+    BOTTOM: "4x2",
+    WALL: "3x2",
+  },
+  [LEVEL_THEMES.EARTH]: {
+    FLOOR: "7x1",
+    TOP: "7x0",
+    SKY: "6x0",
+    LEFT: "6x1",
+    RIGHT: "8x1",
+    BOTTOM: "7x2",
+    WALL: "6x2",
+  },
+};

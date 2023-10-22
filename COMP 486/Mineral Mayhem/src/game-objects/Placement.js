@@ -15,6 +15,7 @@ export class Placement {
     this.x = properties.x;
     this.y = properties.y;
     this.level = level;
+    this.heath = 1;
 
     this.skin = BODY_SKINS.NORMAL;
     this.travelPixelsPerFrame = 1.5;
@@ -36,6 +37,14 @@ export class Placement {
 
   isSolidForBody(_body) {
     return false;
+  }
+
+  isMinable(){
+    return false;
+  }
+
+  mine(){
+    return null;
   }
 
   addsItemToInventoryOnCollide() {

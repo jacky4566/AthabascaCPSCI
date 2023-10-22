@@ -19,7 +19,7 @@ export default function LevelBackgroundTilesLayer({ level, cameraXY }) {
       return tiles.RIGHT;
     }
     if (y === 0) {
-      return tiles.TOP;
+      return tiles.SKY;
     }
     if (y === heightWithWalls) {
       return tiles.BOTTOM;

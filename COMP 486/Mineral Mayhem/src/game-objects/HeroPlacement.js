@@ -9,6 +9,7 @@ import {
   HERO_RUN_2,
   Z_INDEX_LAYER_SIZE,
   PLACEMENT_TYPE_CELEBRATION,
+  CELL_SIZE,
 } from "../helpers/consts";
 import { TILES } from "../helpers/tiles";
 import { Collision } from "../classes/Collision";
@@ -35,19 +36,35 @@ export class HeroPlacement extends Placement {
       return;
     }
 
+    /* Get potential collision */
+    const collision = this.getCollisionAtNextPosition(direction);
+
+    /* Mine object if possible */
+    if (collision.withMinable()) {
+      const collideWithMinable= collision.withPlacementAddsToInventory();
+      if (collideWithMinable) {
+        collideWithMinable.mine();
+        this.level.addPlacement({
+          type: PLACEMENT_TYPE_CELEBRATION,
+          x: this.x,
+          y: this.y,
+        });
+      }
+      console.log("Minable")
+    }
+
     //Make sure the next space is available
     if (this.isSolidAtNextPosition(direction)) {
       return;
     }
 
     // Maybe hop out of non-normal skin
-    const collision = this.getCollisionAtNextPosition(direction);
     if (!collision.withChangesHeroSkin()) {
       this.skin = BODY_SKINS.NORMAL;
     }
 
     //Start the move
-    this.movingPixelsRemaining = 16;
+    this.movingPixelsRemaining = CELL_SIZE;
     this.movingPixelDirection = direction;
     this.updateFacingDirection();
     this.updateWalkFrame();
@@ -164,7 +181,7 @@ export class HeroPlacement extends Placement {
     const PIXELS_FROM_END = 2;
     if (
       this.movingPixelsRemaining < PIXELS_FROM_END ||
-      this.movingPixelsRemaining > 16 - PIXELS_FROM_END
+      this.movingPixelsRemaining > CELL_SIZE - PIXELS_FROM_END
     ) {
       return -1;
     }

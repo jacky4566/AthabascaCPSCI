@@ -12,7 +12,7 @@ export default function Hero({ frameCoord, yTranslate, showShadow }) {
            transform: `translateY(${yTranslate}px)`,
          }}
        >
-         <Sprite frameCoord={frameCoord} size={32} />
+         <Sprite frameCoord={frameCoord} size={64} />
       </div>
     </div>
   );

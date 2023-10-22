@@ -16,6 +16,15 @@ export const TILES = {
     MAP_BUTTON: "11x3",
     CLOCK: "12x3",
     SETTINGS: "13x3",
+
+    //Minerals
+    MINERAL_DIRT: "0x9",
+    MINERAL_COPPER: "1x9",
+    MINERAL_ZINC: "2x9",
+    MINERAL_GOLD: "3x9",
+    MINERAL_LITHIUM: "4x9",
+    MINERAL_NEODYMIUM: "5x9",
+    MINERAL_YTTRIUM: "6x9",
   
     // Locks and Keys
     BLUE_LOCK: "0x4",

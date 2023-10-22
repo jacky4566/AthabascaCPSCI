@@ -13,7 +13,7 @@ import { useRecoilValue } from "recoil";
 import { spriteSheetImageAtom } from "../../atoms/spriteSheetImageAtom";
 import { CELL_SIZE } from "../../helpers/consts";
 
-function Sprite({ frameCoord, size = 16 }) {
+function Sprite({ frameCoord, size = 32 }) {
     const spriteSheetImage = useRecoilValue(spriteSheetImageAtom);
 
     const canvasRef = useRef();

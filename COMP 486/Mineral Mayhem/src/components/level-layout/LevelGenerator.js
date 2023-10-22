@@ -5,6 +5,8 @@ import {
     PLACEMENT_TYPE_HERO,
     PLACEMENT_TYPE_WATER,
     PLACEMENT_TYPE_WATER_PICKUP,
+    PLACEMENT_TYPE_TOPSOIL,
+    PLACEMENT_TYPE_MINERAL,
 } from "../../helpers/consts";
 
 function getRandom(odds) {
@@ -17,6 +19,14 @@ function isItemExistsAtPosition(placements, x, y) {
 }
 
 export default function LevelGenerator(level) {
+    const placeItems = [];
+
+    /* Add Top Soil */
+    for (let x = 1; x <= level.tilesWidth; x++) {
+        const newPlacement = { x: x, y: 1, type: PLACEMENT_TYPE_TOPSOIL };
+        placeItems.push(newPlacement);
+    };
+
     /* Add RNG items to level */
     level.RNG.forEach((item) => {
         for (let y = item.depthStart; y <= item.depthEnd; y++) {
@@ -25,12 +35,12 @@ export default function LevelGenerator(level) {
                 if (!isItemExistsAtPosition(level.placements, x, y) && getRandom(item.odds)) {
                     /* Do random number fill */
                     const newPlacement = { x: x, y: y, type: item.type };
-                    level.placements.push(newPlacement);
+                    placeItems.push(newPlacement);
                 }
             }
         }
     });
 
 
-    return level.placements;
+    return placeItems;
 }
