@@ -15,6 +15,7 @@ const showDeathType = (deathType) => {
     case DEATH_TYPE_CLOCK:
       return <Sprite frameCoord={TILES.CLOCK} />;
     default:
+      console.error("Unknown Death")
       return null;
   }
 };

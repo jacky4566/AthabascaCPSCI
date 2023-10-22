@@ -7,6 +7,10 @@ const heroOptions = [
     key: "DRILL_1_RIGHT",
     tile: TILES.DRILL_1_RIGHT,
   },
+  {
+    key: "DRILL_1_DOWN",
+    tile: TILES.DRILL_1_DOWN,
+  },
 ];
 
 export default function Hero({ frameCoord, xMirror, drill, engine }) {
@@ -20,15 +24,15 @@ export default function Hero({ frameCoord, xMirror, drill, engine }) {
       >
         <Sprite frameCoord={frameCoord} size={64} />
       </div>
-      <div
-        className={styles.drillBody}
-        style={{
-          transform: `scaleX(${xMirror})`,
-        }}
-      >
-        <Sprite frameCoord={heroOptions.find(option => option.key === drill).tile} size={64}/>
-      </div>
-
+      {drill ? (
+        <div
+          className={styles.drillBody}
+          style={{
+            transform: `scaleX(${xMirror})`,
+          }}
+        >
+          <Sprite frameCoord={heroOptions.find(option => option.key === drill).tile} size={64} />
+        </div>) : (null)}
     </div>
   );
 }

@@ -9,30 +9,28 @@ import {
   HERO_RUN_2,
   Z_INDEX_LAYER_SIZE,
   PLACEMENT_TYPE_CELEBRATION,
+  PLACEMENT_TYPE_ENGINE_SMOKE,
   CELL_SIZE,
+  DIRECTION_DOWN,
+  DIRECTION_UP,
 } from "../helpers/consts";
 import { TILES } from "../helpers/tiles";
 import { Collision } from "../classes/Collision";
 
 const heroSkinMap = {
   [BODY_SKINS.NORMAL]: TILES.HERO_RIGHT,
-  [BODY_SKINS.WATER]:TILES.HERO_WATER_RIGHT,
   [HERO_RUN_1]: TILES.HERO_RUN_1_RIGHT,
   [HERO_RUN_2]: TILES.HERO_RUN_2_RIGHT,
-  [BODY_SKINS.DEATH]: TILES.HERO_DEATH_RIGHT,
 };
 
 export class HeroPlacement extends Placement {
   controllerMoveRequested(direction) {
-    //Attempt to start moving
-    if (this.movingPixelsRemaining > 0) {
-      return;
-    }
+    //Reset Drill
+    this.mining = false;
+    this.drillDirection = direction;
 
-    // Check for lock at next position
-    const possibleLock = this.getLockAtNextPosition(direction);
-    if (possibleLock) {
-      possibleLock.unlock();
+    //Hero is already moving
+    if (this.movingPixelsRemaining > 0) {
       return;
     }
 
@@ -40,15 +38,11 @@ export class HeroPlacement extends Placement {
     const collision = this.getCollisionAtNextPosition(direction);
 
     /* Mine object if possible */
-    if (collision.withMinable()) {
+    if (collision.withMinable() && direction != DIRECTION_UP) {
       const collideWithMinable = collision.withPlacementAddsToInventory();
       if (collideWithMinable) {
         collideWithMinable.mine();
-        this.level.addPlacement({
-          type: PLACEMENT_TYPE_CELEBRATION,
-          x: this.x,
-          y: this.y,
-        });
+        this.mining = true;
       }
     }
 
@@ -60,6 +54,33 @@ export class HeroPlacement extends Placement {
     //Start the move
     this.movingPixelsRemaining = CELL_SIZE;
     this.movingPixelDirection = direction;
+    this.updateFacingDirection();
+    this.updateWalkFrame();
+
+    //Add smoke
+    this.level.addPlacement({
+      type: PLACEMENT_TYPE_ENGINE_SMOKE,
+      x: this.x,
+      y: this.y,
+    });
+  }
+
+  gravityMoveRequested() {
+    //Called if no user move was requested
+
+    //Hero is already moving
+    if (this.movingPixelsRemaining > 0) {
+      return;
+    }
+
+    //Make sure the next space is available
+    if (this.isSolidAtNextPosition(DIRECTION_DOWN)) {
+      return;
+    }
+
+    //Start the move
+    this.movingPixelsRemaining = CELL_SIZE;
+    this.movingPixelDirection = DIRECTION_DOWN;
     this.updateFacingDirection();
     this.updateWalkFrame();
   }
@@ -149,9 +170,10 @@ export class HeroPlacement extends Placement {
 
   getFrame() {
     // If dead, show the dead skin
+    /*TODO
     if (this.level.deathOutcome) {
       return heroSkinMap[BODY_SKINS.DEATH];
-    }
+    }*/
 
     //Use correct walking frame per direction
     if (this.movingPixelsRemaining > 0 && this.skin === BODY_SKINS.NORMAL) {
@@ -182,7 +204,19 @@ export class HeroPlacement extends Placement {
   }
 
   getDrill() {
-    return "DRILL_1_RIGHT"
+    if (this.mining) {
+      switch (this.drillDirection) {
+        case DIRECTION_RIGHT:
+        case DIRECTION_LEFT:
+          return "DRILL_1_RIGHT"
+        case DIRECTION_DOWN:
+          return "DRILL_1_DOWN"
+        case DIRECTION_UP:
+          return null;
+      }
+    }
+    else
+      return null
   }
 
   getEngine() {

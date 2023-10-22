@@ -2,7 +2,8 @@ import { Placement } from "./Placement";
 import soundsManager, { SFX } from "../classes/Sounds";
 import Sprite from "../components/object-graphics/Sprite";
 import { TILES } from "../helpers/tiles";
-import { MINERAL_HEALTH } from "../helpers/consts";
+import { MINERAL_HEALTH,
+  PLACEMENT_TYPE_CELEBRATION, } from "../helpers/consts";
 
 export class MineralPlacement extends Placement {
   constructor(properties, level) {
@@ -63,6 +64,11 @@ export class MineralPlacement extends Placement {
     if (this.damageNextTick) {
       this.health = this.health - this.damageNextTick;
       this.damageNextTick = 0;
+      this.level.addPlacement({
+        type: PLACEMENT_TYPE_CELEBRATION,
+        x: this.x,
+        y: this.y,
+      });
       if (this.health <= 0) {
         soundsManager.playSfx(SFX.COLLECT);
         this.level.inventory.add(this.type);

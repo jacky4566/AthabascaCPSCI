@@ -21,6 +21,11 @@ function isItemExistsAtPosition(placements, x, y) {
 export default function LevelGenerator(level) {
     const placeItems = [];
 
+    /* Add static items */
+    level.placements.forEach((item) => {
+        placeItems.push(item);
+    })
+
     /* Add Top Soil */
     for (let x = 1; x <= level.tilesWidth; x++) {
         const newPlacement = { x: x, y: 1, type: PLACEMENT_TYPE_TOPSOIL };
@@ -32,7 +37,7 @@ export default function LevelGenerator(level) {
         for (let y = item.depthStart; y <= item.depthEnd; y++) {
             for (let x = 1; x <= level.tilesWidth; x++) {
                 /* Check if space is already taken and the odds say we can place */
-                if (!isItemExistsAtPosition(level.placements, x, y) && getRandom(item.odds)) {
+                if (!isItemExistsAtPosition(placeItems, x, y) && getRandom(item.odds)) {
                     /* Do random number fill */
                     const newPlacement = { x: x, y: y, type: item.type };
                     placeItems.push(newPlacement);

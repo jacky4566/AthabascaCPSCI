@@ -12,6 +12,7 @@ export class LevelState {
     this.id = levelId;
     this.onEmit = onEmit;
     this.directionControls = new DirectionControls();
+    this.leveldata = [];
 
     //Start the level!
     this.start();
@@ -23,15 +24,15 @@ export class LevelState {
     /* Default level stuff */
     this.isCompleted = false;
     this.deathOutcome = null;
-    const levelData = LevelsMap[this.id];
+    this.levelData = LevelsMap[this.id];
 
     /* Copy rest of level data */
-    this.theme = levelData.theme;
-    this.tilesWidth = levelData.tilesWidth;
-    this.tilesHeight = levelData.tilesHeight;
+    this.theme = this.levelData.theme;
+    this.tilesWidth = this.levelData.tilesWidth;
+    this.tilesHeight = this.levelData.tilesHeight;
 
     /* Generate Placements */
-    const levelPlacements = levelData.placements.concat(LevelGenerator(levelData));
+    const levelPlacements = LevelGenerator(this.levelData);
 
     this.placements = levelPlacements.map((item) => {
       return placementFactory.createPlacement(item, this);
@@ -75,6 +76,8 @@ export class LevelState {
     // Check for movement here...
     if (this.directionControls.direction) {
       this.heroRef.controllerMoveRequested(this.directionControls.direction);
+    }else{
+      this.heroRef.gravityMoveRequested();
     }
 
     // Call 'tick' on any Placement that wants to update
@@ -88,7 +91,7 @@ export class LevelState {
     //Emit any changes to React
     this.onEmit(this.getState());
   }
-
+0
   isPositionOutOfBounds(x, y) {
     return (
       x === 0 ||
@@ -113,6 +116,7 @@ export class LevelState {
       isCompleted: this.isCompleted,
       cameraTransform: this.camera.transform,
       inventory: this.inventory,
+      finishGoals: this.levelData.finishGoals,
       restart: () => {
         this.start();
       },

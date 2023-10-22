@@ -7,14 +7,20 @@ Jackson Wiebe
 3519635
 09/10/2023
 */
-import  React from "react";
+import React from "react";
 import { useEffect, useRef } from "react";
 import { useRecoilValue } from "recoil";
 import { spriteSheetImageAtom } from "../../atoms/spriteSheetImageAtom";
 import { CELL_SIZE } from "../../helpers/consts";
+import { TILES } from "../../helpers/tiles";
 
 function Sprite({ frameCoord, size = 32 }) {
     const spriteSheetImage = useRecoilValue(spriteSheetImageAtom);
+
+    if (!frameCoord){
+        frameCoord = TILES.BLANK;
+        size = 32;
+    }
 
     const canvasRef = useRef();
     useEffect(() => {

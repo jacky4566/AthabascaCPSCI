@@ -8,10 +8,6 @@ import {
 } from "../helpers/consts";
 
 export class WaterPlacement extends Placement {
-  changesHeroSkinOnCollide() {
-    return BODY_SKINS.WATER;
-  }
-
   damagesBodyOnCollide(body) {
      const { inventory } = this.level;
      return (
