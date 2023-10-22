@@ -1,15 +1,12 @@
 import styles from "./InventoryList.module.css";
-import {
-  PLACEMENT_TYPE_WATER_PICKUP,
-} from "../../helpers/consts";
 import { TILES } from "../../helpers/tiles";
 import Sprite from "../object-graphics/Sprite";
+import PixelNumber from "../object-graphics/PixelNumber";
 
 const showInventory = [
-
   {
-    key: PLACEMENT_TYPE_WATER_PICKUP,
-    tile: TILES.WATER_PICKUP,
+    key: "TOPSOIL",
+    tile: TILES.MINERAL_DIRT,
   },
   {
     key: "KEY_BLUE",
@@ -29,9 +26,12 @@ export default function InventoryList({ level }) {
           return level.inventory.has(i.key);
         })
         .map((i) => {
+          const count = level.inventory.inventoryMap.get(i.key);
           return (
+            
             <div key={i.key} className={styles.inventoryEntry}>
               <Sprite frameCoord={i.tile} />
+              <PixelNumber number={count} />
             </div>
           );
         })}

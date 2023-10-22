@@ -37,7 +37,7 @@ export class TopsoilPlacement extends Placement {
       if (this.health <= 0) {
         soundsManager.playSfx(SFX.COLLECT);
         console.log(this.health)
-        this.level.inventory.add(this);
+        this.level.inventory.add(this.type);
         this.hasBeenCollected = true;
         this.health = 0;
       }

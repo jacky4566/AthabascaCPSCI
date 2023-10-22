@@ -1,8 +1,10 @@
 .inventory {
     display: flex;
+    align-items: center;
 }
 
 .inventoryEntry {
     display: flex;
-    gap: 1px;
+    align-items: center;
+    padding-right: 2px;
 }
