@@ -1,9 +1,10 @@
 .inventory {
     display: flex;
-    align-items: center;
+    align-items: start;
 }
 
 .inventoryEntry {
+    flex-direction: column;
     display: flex;
     align-items: center;
     padding-right: 2px;

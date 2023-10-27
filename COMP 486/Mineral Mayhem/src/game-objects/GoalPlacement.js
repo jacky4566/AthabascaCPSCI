@@ -1,25 +1,33 @@
 import { Placement } from "./Placement";
 import Sprite from "../components/object-graphics/Sprite";
 import { TILES } from "../helpers/tiles";
-import { PLACEMENT_TYPE_FLOUR } from "../helpers/consts";
+import soundsManager, { SFX } from "../classes/Sounds";
 
 export class GoalPlacement extends Placement {
   get isDisabled() {
-    const nonCollectedFlour = this.level.placements.find((p) => {
-      return p.type === PLACEMENT_TYPE_FLOUR && !p.hasBeenCollected;
-    });
-    return Boolean(nonCollectedFlour);
+    for (const goal of this.level.levelData.finishGoals) {
+      if (goal.amount) {
+        const amountCollected = this.level.inventory.inventoryMap.get(goal.key) ?? 0;
+        const count = Math.max(goal.amount - amountCollected, 0);
+        if (count > 0)
+          return true;
+      }
+    }
+    //Goal is enabled
+    return false;
   }
 
   completesLevelOnCollide() {
+    if (!this.isDisabled)
+      soundsManager.playSfx(SFX.WIN);
     return !this.isDisabled;
   }
 
   renderComponent() {
-     return (
-       <Sprite
-         frameCoord={this.isDisabled ? TILES.GOAL_DISABLED : TILES.GOAL_ENABLED}
-       />
-     );
+    return (
+      <Sprite
+        frameCoord={this.isDisabled ? TILES.GOAL_DISABLED : TILES.GOAL_ENABLED}
+      />
+    );
   }
 }

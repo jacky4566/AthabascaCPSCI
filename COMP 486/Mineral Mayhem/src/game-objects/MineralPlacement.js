@@ -64,6 +64,7 @@ export class MineralPlacement extends Placement {
     if (this.damageNextTick) {
       this.health = this.health - this.damageNextTick;
       this.damageNextTick = 0;
+      soundsManager.playSfx(SFX.DRILL);
       this.level.addPlacement({
         type: PLACEMENT_TYPE_CELEBRATION,
         x: this.x,

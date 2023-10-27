@@ -71,8 +71,8 @@ export const TILES = {
   CIABATTA_SPAWN: "14x8",
 
   //Goal
-  GOAL_DISABLED: "0x9",
-  GOAL_ENABLED: "1x9",
+  GOAL_DISABLED: "2x5",
+  GOAL_ENABLED: "3x5",
 
   //Particle Dusty explosion
   PARTICLE_1: "0x10",

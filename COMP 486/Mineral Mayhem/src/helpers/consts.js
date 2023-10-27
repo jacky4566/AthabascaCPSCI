@@ -11,6 +11,7 @@ export const PLACEMENT_TYPE_ENGINE_SMOKE = "ENGINES_SMOKE";
 export const PLACEMENT_TYPE_LOCK = "LOCK";
 export const PLACEMENT_TYPE_KEY = "KEY";
 export const PLACEMENT_TYPE_WATER = "WATER";
+export const PLACEMENT_TYPE_FIRE = "FIRE";
 export const PLACEMENT_TYPE_WATER_PICKUP = "WATER_PICKUP";
 export const PLACEMENT_TYPE_TOPSOIL = "TOPSOIL";
 export const PLACEMENT_TYPE_MINERAL_DIRT = "MINERAL_DIRT";
@@ -20,13 +21,16 @@ export const PLACEMENT_TYPE_MINERAL_GOLD = "MINERAL_GOLD";
 export const PLACEMENT_TYPE_MINERAL_LITHIUM = "MINERAL_LITHIUM";
 export const PLACEMENT_TYPE_MINERAL_NEODYMIUM = "MINERAL_NEODYMIUM";
 export const PLACEMENT_TYPE_MINERAL_YTTRIUM = "MINERAL_YTTRIUM";
+export const PLACEMENT_TYPE_TUTORIAL = "TUTORIAL";
+export const PLACEMENT_TYPE_ENDGAME = "ENDGAME";
 
 export const DIRECTION_LEFT = "LEFT";
 export const DIRECTION_RIGHT = "RIGHT";
 export const DIRECTION_UP = "UP";
 export const DIRECTION_DOWN = "DOWN";
+export const DIRECTION_IDLE = "IDLE";
 
-export const DEATH_TYPE_CLOCK = "CLOCK";
+export const DEATH_TYPE_FUEL = "FUEL";
 
 export const directionUpdateMap = {
   [DIRECTION_LEFT]: { x: -1, y: 0 },
@@ -55,7 +59,7 @@ export const LOCK_KEY_COLORS = {
 
 export const MINERAL_HEALTH = {
   TOPSOIL: 1,
-  DIRT: 1,
+  DIRT: 5,
   COPPER: 5,
   ZINC: 10,
   GOLD: 20,

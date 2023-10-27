@@ -21,8 +21,18 @@ export class Camera {
   get transform() {
     this.pixelSize = getComputedStyle(document.documentElement).getPropertyValue('--pixel-size');
 
+    //Get X offset
     this.transformOffsetX = (window.innerWidth / 2);
-    this.transformOffsetY = (window.innerHeight / 2) - (CELL_SIZE * 2);
+    const heroY = this.level.heroRef.displayXY()[1];
+
+    // Move camera down with user
+    let yOffset = 0;
+    if (heroY !== null && (heroY / CELL_SIZE) < 4) {
+      yOffset = -(CELL_SIZE * (4 - (heroY / CELL_SIZE)));
+    }
+    //Apply Transformation
+    this.transformOffsetY = (window.innerHeight / 2) + yOffset;
+
     return [this.cameraX, this.cameraY, this.transformOffsetX, this.transformOffsetY]
   }
 
@@ -50,6 +60,7 @@ export class Camera {
       }
     }
 
+    //Apply some camera smoothing
     if (USE_SMOOTH_CAMERA) {
       this.cameraX = Camera.lerp(
         this.cameraX,

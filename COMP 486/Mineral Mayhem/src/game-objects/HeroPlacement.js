@@ -1,5 +1,6 @@
 import { Placement } from "./Placement";
 import Hero from "../components/object-graphics/Hero";
+import soundsManager, { SFX } from "../classes/Sounds";
 import {
   DIRECTION_LEFT,
   DIRECTION_RIGHT,
@@ -38,7 +39,7 @@ export class HeroPlacement extends Placement {
     const collision = this.getCollisionAtNextPosition(direction);
 
     /* Mine object if possible */
-    if (collision.withMinable() && direction != DIRECTION_UP) {
+    if (collision.withMinable() && direction !== DIRECTION_UP) {
       const collideWithMinable = collision.withPlacementAddsToInventory();
       if (collideWithMinable) {
         collideWithMinable.mine();
@@ -56,6 +57,10 @@ export class HeroPlacement extends Placement {
     this.movingPixelDirection = direction;
     this.updateFacingDirection();
     this.updateWalkFrame();
+    this.level.fuel.consumeFuel(direction);
+
+    //Play sound
+    soundsManager.playSfx(SFX.DRIVING);
 
     //Add smoke
     this.level.addPlacement({
@@ -127,6 +132,7 @@ export class HeroPlacement extends Placement {
 
   tick() {
     this.tickMovingPixelProgress();
+    this.level.fuel.consumeFuel("IDLE");
   }
 
   onDoneMoving() {
@@ -170,7 +176,7 @@ export class HeroPlacement extends Placement {
 
   getFrame() {
     // If dead, show the dead skin
-    /*TODO
+    /* TODO
     if (this.level.deathOutcome) {
       return heroSkinMap[BODY_SKINS.DEATH];
     }*/

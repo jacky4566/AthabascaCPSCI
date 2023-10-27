@@ -5,7 +5,9 @@ import { DirectionControls } from "./DirectionControls";
 import LevelsMap from "../levels/LevelsMap";
 import { Inventory } from "./Inventory";
 import { Camera } from "./Camera";
+import { LevelAnimatedFrames } from "./LevelAnimatedFrames";
 import LevelGenerator from "../components/level-layout/LevelGenerator";
+import { Fuel } from "./Fuel";
 
 export class LevelState {
   constructor(levelId, onEmit) {
@@ -40,6 +42,12 @@ export class LevelState {
 
     // Create a fresh inventory
     this.inventory = new Inventory();
+
+    // Fill fuel tank
+    this.fuel = new Fuel(this);
+
+    // Create a frame animation manager
+    this.animatedFrames = new LevelAnimatedFrames();
 
     // Cache a reference to the hero
     this.heroRef = this.placements.find((p) => p.type === PLACEMENT_TYPE_HERO);
@@ -76,7 +84,7 @@ export class LevelState {
     // Check for movement here...
     if (this.directionControls.direction) {
       this.heroRef.controllerMoveRequested(this.directionControls.direction);
-    }else{
+    } else {
       this.heroRef.gravityMoveRequested();
     }
 
@@ -88,10 +96,16 @@ export class LevelState {
     // Update the camera
     this.camera.tick();
 
+    //Tick fuel
+    this.fuel.tick();
+
+    // Work on animation frames
+    this.animatedFrames.tick();
+
     //Emit any changes to React
     this.onEmit(this.getState());
   }
-0
+  0
   isPositionOutOfBounds(x, y) {
     return (
       x === 0 ||
@@ -117,6 +131,7 @@ export class LevelState {
       cameraTransform: this.camera.transform,
       inventory: this.inventory,
       finishGoals: this.levelData.finishGoals,
+      fuel: this.fuel,
       restart: () => {
         this.start();
       },

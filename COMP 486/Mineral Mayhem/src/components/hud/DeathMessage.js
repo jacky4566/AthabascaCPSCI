@@ -3,8 +3,9 @@ import LevelFailedSvg from "../object-graphics/LevelFailedSvg";
 import Sprite from "../object-graphics/Sprite";
 import { TILES } from "../../helpers/tiles";
 import {
-  DEATH_TYPE_CLOCK,
+  DEATH_TYPE_FUEL,
   PLACEMENT_TYPE_WATER,
+  PLACEMENT_TYPE_FIRE,
 } from "../../helpers/consts";
 import { useKeyPress } from "../../hooks/useKeyPress";
 
@@ -12,7 +13,9 @@ const showDeathType = (deathType) => {
   switch (deathType) {
     case PLACEMENT_TYPE_WATER:
       return <Sprite frameCoord={TILES.WATER1} />;
-    case DEATH_TYPE_CLOCK:
+    case PLACEMENT_TYPE_FIRE:
+      return <Sprite frameCoord={TILES.FIRE1} />;
+    case DEATH_TYPE_FUEL:
       return <Sprite frameCoord={TILES.CLOCK} />;
     default:
       console.error("Unknown Death")
