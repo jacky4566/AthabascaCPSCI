@@ -5,14 +5,10 @@ export const SPRITE_SHEET_SRC = "/mineral-mayhem-sprites.png"
 export const PLACEMENT_TYPE_HERO = "HERO";
 export const PLACEMENT_TYPE_GOAL = "GOAL";
 export const PLACEMENT_TYPE_WALL = "WALL";
-export const PLACEMENT_TYPE_FLOUR = "FLOUR";
 export const PLACEMENT_TYPE_CELEBRATION = "CELEBRATION";
 export const PLACEMENT_TYPE_ENGINE_SMOKE = "ENGINES_SMOKE";
-export const PLACEMENT_TYPE_LOCK = "LOCK";
-export const PLACEMENT_TYPE_KEY = "KEY";
 export const PLACEMENT_TYPE_WATER = "WATER";
 export const PLACEMENT_TYPE_FIRE = "FIRE";
-export const PLACEMENT_TYPE_WATER_PICKUP = "WATER_PICKUP";
 export const PLACEMENT_TYPE_TOPSOIL = "TOPSOIL";
 export const PLACEMENT_TYPE_MINERAL_DIRT = "MINERAL_DIRT";
 export const PLACEMENT_TYPE_MINERAL_COPPER = "MINERAL_COPPER";
@@ -41,11 +37,6 @@ export const directionUpdateMap = {
 
 export const BODY_SKINS = {
   NORMAL: "NORMAL",
-  WATER: "WATER",
-  ICE: "ICE",
-  CONVEYOR: "CONVEYOR",
-  FIRE: "FIRE",
-  TELEPORT: "TELEPORT",
   DEATH: "DEATH",
 };
 
