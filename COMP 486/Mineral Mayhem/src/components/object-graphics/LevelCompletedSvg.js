@@ -1,3 +1,13 @@
+/*
+Graphics for level success
+
+Writte with help from Ciabatta's revenge Tutorial by Drew Conley
+
+Jackson Wiebe 
+3519635
+09/10/2023
+*/
+
 export default function LevelCompletedSvg() {
     return (
       <svg

@@ -1,3 +1,11 @@
+/*
+Renders graphics for the fuel tank.
+
+Jackson Wiebe 
+3519635
+09/10/2023
+*/
+
 export default function FuelTank(fuel) {
   const filledHeight = (100.0 - fuel.fuel.fuelRemaining) + "%";
   const filledHeightGrad = (Math.min(100, (100.0 - fuel.fuel.fuelRemaining) + 5.0)) + "%";

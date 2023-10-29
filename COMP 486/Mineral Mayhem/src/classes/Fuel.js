@@ -1,3 +1,13 @@
+/*
+Handles the vehicle fuel level, calls graphics and keeps track of end states. 
+
+Written with help from Ciabatta's revenge Tutorial by Drew Conley
+
+Jackson Wiebe 
+3519635
+09/10/2023
+*/
+
 import soundsManager, { SFX } from "./Sounds";
 import {
     DEATH_TYPE_FUEL,

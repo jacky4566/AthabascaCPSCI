@@ -1,3 +1,12 @@
+/*
+Graphics for failing a level
+Writte with help from Ciabatta's revenge Tutorial by Drew Conley
+
+Jackson Wiebe 
+3519635
+09/10/2023
+*/
+
 export default function LevelFailedSvg() {
     return (
       <svg

@@ -8,6 +8,16 @@ import {
 } from "../helpers/consts";
 import soundsManager, { SFX } from "../classes/Sounds";
 
+/*
+Base class for placements that exports nessvary functions.
+
+Writte with help from Ciabatta's revenge Tutorial by Drew Conley
+
+Jackson Wiebe 
+3519635
+09/10/2023
+*/
+
 export class Placement {
   constructor(properties, level) {
     this.id = properties.id;

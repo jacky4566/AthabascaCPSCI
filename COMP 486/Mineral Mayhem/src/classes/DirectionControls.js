@@ -5,6 +5,16 @@ import {
   DIRECTION_LEFT,
 } from "../helpers/consts";
 
+/*
+Direction controller to process requests and submit them to the hero.
+
+Written with help from Ciabatta's revenge Tutorial by Drew Conley
+
+Jackson Wiebe 
+3519635
+09/10/2023
+*/
+
 /* A utility function to calculate area of triangle formed by (x1, y1), 
 (x2, y2) and (x3, y3) */
 function area(x1, y1, x2, y2, x3, y3) {

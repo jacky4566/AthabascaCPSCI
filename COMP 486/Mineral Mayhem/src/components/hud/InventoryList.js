@@ -3,6 +3,16 @@ import Sprite from "../object-graphics/Sprite";
 import PixelNumber from "../object-graphics/PixelNumber";
 import FuelTank from "./FuelTank";
 
+/*
+List out our inventory
+
+Writte with help from Ciabatta's revenge Tutorial by Drew Conley
+
+Jackson Wiebe 
+3519635
+09/10/2023
+*/
+
 export default function InventoryList({ level }) {
   const inventoryEntries = [];
 

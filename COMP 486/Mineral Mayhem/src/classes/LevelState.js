@@ -9,6 +9,16 @@ import { LevelAnimatedFrames } from "./LevelAnimatedFrames";
 import LevelGenerator from "../components/level-layout/LevelGenerator";
 import { Fuel } from "./Fuel";
 
+/*
+Big placement factory that converts list of items in objects crossreferenced.
+
+Written with help from Ciabatta's revenge Tutorial by Drew Conley
+
+Jackson Wiebe 
+3519635
+09/10/2023
+*/
+
 export class LevelState {
   constructor(levelId, onEmit) {
     this.id = levelId;

@@ -10,6 +10,14 @@ const CAMERA_SPEED = 0.02;
 const CAMERA_LOOKAHEAD = 3;
 const USE_SMOOTH_CAMERA = true;
 
+/*
+Jackson Wiebe
+3519635
+
+Handles our camera movement based on character location
+
+*/
+
 export class Camera {
   constructor(level) {
     this.level = level;

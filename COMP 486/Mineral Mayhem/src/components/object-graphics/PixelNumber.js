@@ -1,4 +1,14 @@
 import styles from "./PixelNumber.module.css";
+
+/*
+Used to draw the pixel type number
+
+Writte with help from Ciabatta's revenge Tutorial by Drew Conley
+
+Jackson Wiebe 
+3519635
+09/10/2023
+*/
  
 const Zero = () => {
   return (

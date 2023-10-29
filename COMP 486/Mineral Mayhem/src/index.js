@@ -5,6 +5,13 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { RecoilRoot } from "recoil";
 
+/*
+Jackson Wiebe
+3519635
+
+Index page to load app
+*/
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>

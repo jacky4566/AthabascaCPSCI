@@ -1,10 +1,10 @@
 import { Placement } from "./Placement";
-
 import Sprite from "../components/object-graphics/Sprite";
-
 import {
     PLACEMENT_TYPE_HERO,
 } from "../helpers/consts";
+
+
 
 export class FirePlacement extends Placement {
     damagesBodyOnCollide(body) {

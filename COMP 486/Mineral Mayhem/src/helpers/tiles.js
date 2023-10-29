@@ -1,13 +1,17 @@
+/*
+List of references to the tile sheet
+
+Written with help from Ciabatta's revenge Tutorial by Drew Conley
+
+Jackson Wiebe 
+3519635
+09/10/2023
+*/
+
 export const TILES = {
   // Basics
   BLANK: "0x0",
   SHADOW: "1x3",
-  FLOUR: "2x3",
-  FIRE_PICKUP: "3x3",
-  ICE_PICKUP: "4x3",
-  WATER_PICKUP: "5x3",
-  BULLET_PICKUP: "4x9",
-  BULLET: "3x9",
 
   // Icons
   CONTINUE_BUTTON: "7x3",

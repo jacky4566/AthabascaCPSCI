@@ -1,3 +1,13 @@
+/*
+Hanldes our inventory. Add items based on keys and return them with lookups
+
+Written with help from Ciabatta's revenge Tutorial by Drew Conley
+
+Jackson Wiebe 
+3519635
+09/10/2023
+*/
+
 export class Inventory {
   constructor() {
     this.inventoryMap = new Map();

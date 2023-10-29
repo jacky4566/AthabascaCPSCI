@@ -1,3 +1,13 @@
+/*
+Handles collisions and reports them back to the approriate object
+
+Written with help from Ciabatta's revenge Tutorial by Drew Conley
+
+Jackson Wiebe 
+3519635
+09/10/2023
+*/
+
 
 export class Collision {
   constructor(forBody, level, position = null) {

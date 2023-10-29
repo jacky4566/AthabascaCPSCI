@@ -9,6 +9,14 @@ import {
 } from "../../helpers/consts";
 import { useKeyPress } from "../../hooks/useKeyPress";
 
+/*
+Renders death message when user fails
+
+Jackson Wiebe 
+3519635
+09/10/2023
+*/
+
 const showDeathType = (deathType) => {
   switch (deathType) {
     case PLACEMENT_TYPE_WATER:

@@ -1,3 +1,11 @@
+/*
+Renders animated frames between thier defined graphics from the sprite sheet.
+
+Jackson Wiebe 
+3519635
+09/10/2023
+*/
+
 export class PlacementTypeAnimationFrames {
     constructor(framesSequence = ["0x1"], changeOnFrameCount = 30) {
         this.framesSequence = framesSequence;

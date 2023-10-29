@@ -1,5 +1,14 @@
 import { Howl } from "howler";
 
+/*
+Uses Howler to play sounds from a defined list.
+Each sound can only be playing once. But other sounds can overlap
+
+Jackson Wiebe 
+3519635
+09/10/2023
+*/
+
 export const SFX = {
   COLLECT: "COLLECT",
   WIN: "WIN",

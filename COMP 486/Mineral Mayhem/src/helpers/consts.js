@@ -1,3 +1,13 @@
+/*
+Constants for our game
+
+Writte with help from Ciabatta's revenge Tutorial by Drew Conley
+
+Jackson Wiebe 
+3519635
+09/10/2023
+*/
+
 export const CELL_SIZE = 32;
 export const Z_INDEX_LAYER_SIZE = 10;
 export const SPRITE_SHEET_SRC = "/mineral-mayhem-sprites.png"

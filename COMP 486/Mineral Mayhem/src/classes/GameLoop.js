@@ -1,3 +1,13 @@
+/*
+Main game loop function. Handles a tick function that processes on a regular interval
+
+Written with help from Ciabatta's revenge Tutorial by Drew Conley
+
+Jackson Wiebe 
+3519635
+09/10/2023
+*/
+
 export class GameLoop {
     constructor(onStep) {
         //Run this every redraw frame

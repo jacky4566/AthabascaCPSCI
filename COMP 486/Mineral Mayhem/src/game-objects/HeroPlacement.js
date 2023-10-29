@@ -18,6 +18,16 @@ import {
 import { TILES } from "../helpers/tiles";
 import { Collision } from "../classes/Collision";
 
+/*
+Hero placement for our game. Contains all the functions for our hero object
+
+Writte with help from Ciabatta's revenge Tutorial by Drew Conley
+
+Jackson Wiebe 
+3519635
+09/10/2023
+*/
+
 const heroSkinMap = {
   [BODY_SKINS.NORMAL]: TILES.HERO_RIGHT,
   [HERO_RUN_1]: TILES.HERO_RUN_1_RIGHT,
