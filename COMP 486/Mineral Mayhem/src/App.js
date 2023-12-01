@@ -1,7 +1,7 @@
 /*
 The main function for our game
 
-Writte with help from Ciabatta's revenge Tutorial by Drew Conley
+Written with help from Ciabatta's revenge Tutorial by Drew Conley
 
 Jackson Wiebe 
 3519635
