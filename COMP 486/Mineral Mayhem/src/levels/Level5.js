@@ -15,7 +15,7 @@ import { TILES } from "../helpers/tiles";
 
 const level = {
   theme: LEVEL_THEMES.EARTH,  // Theme of level sets background
-  title: "New dangers",
+  title: "Last Level",
   tilesWidth: 30,             // Size of Level
   tilesHeight: 48,           // Size of Level
   RNG: [                       // Variable for the RNG to fill in our map
@@ -24,8 +24,8 @@ const level = {
     { depthStart: 20, depthEnd: 48, odds: 50, type: PLACEMENT_TYPE_MINERAL_LITHIUM },
     { depthStart: 20, depthEnd: 48, odds: 50, type: PLACEMENT_TYPE_MINERAL_YTTRIUM },
     { depthStart: 20, depthEnd: 48, odds: 50, type: PLACEMENT_TYPE_MINERAL_NEODYMIUM },
-    { depthStart: 2, depthEnd: 24, odds: 50, type: PLACEMENT_TYPE_WATER },
-    { depthStart: 20, depthEnd: 48, odds: 50, type: PLACEMENT_TYPE_FIRE },
+    { depthStart: 2, depthEnd: 24, odds: 0, type: PLACEMENT_TYPE_WATER },
+    { depthStart: 10, depthEnd: 48, odds: 50, type: PLACEMENT_TYPE_FIRE },
     { depthStart: 2, depthEnd: 48, odds: 1.5, type: PLACEMENT_TYPE_MINERAL_DIRT },
   ],
   //Fix level placements
@@ -43,12 +43,12 @@ const level = {
     {
       key: "MINERAL_ZINC",
       tile: TILES.MINERAL_ZINC,
-      amount: 10,
+      amount: 0,
     },
     {
       key: "MINERAL_GOLD",
       tile: TILES.MINERAL_GOLD,
-      amount: 10,
+      amount: 0,
     },
     {
       key: "MINERAL_LITHIUM",

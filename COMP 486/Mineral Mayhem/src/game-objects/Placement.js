@@ -39,6 +39,10 @@ export class Placement {
 
   tick() { }
 
+  tickAttemptAiMove() {
+    return null;
+  }
+
   collect() {
     soundsManager.playSfx(SFX.COLLECT);
     this.level.inventory.add(this.addsItemToInventoryOnCollide());

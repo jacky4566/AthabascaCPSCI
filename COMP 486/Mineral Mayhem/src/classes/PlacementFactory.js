@@ -16,6 +16,8 @@ import {
   PLACEMENT_TYPE_TOPSOIL,
   PLACEMENT_TYPE_TUTORIAL,
   PLACEMENT_TYPE_ENDGAME,
+  PLACEMENT_TYPE_GROUND_ENEMY,
+  PLACEMENT_TYPE_FLYING_ENEMY,
 } from "../helpers/consts";
 import { HeroPlacement } from "../game-objects/HeroPlacement";
 import { GoalPlacement } from "../game-objects/GoalPlacement";
@@ -28,6 +30,8 @@ import { MineralPlacement } from "../game-objects/MineralPlacement";
 import { TopsoilPlacement } from "../game-objects/TopsoilPlacement";
 import { TutorialPlacement } from "../game-objects/TutorialPlacement";
 import { EndGamePlacement } from "../game-objects/EndGamePlacement";
+import { GroundEnemyPlacement } from "../game-objects/GroundEnemyPlacement";
+import { FlyingEnemyPlacement } from "../game-objects/FlyingEnemyPlacement";
 
 /*
 Does conversion from object type to file object
@@ -57,6 +61,8 @@ const placementTypeClassMap = {
   [PLACEMENT_TYPE_TOPSOIL]: TopsoilPlacement,
   [PLACEMENT_TYPE_TUTORIAL]: TutorialPlacement,
   [PLACEMENT_TYPE_ENDGAME]: EndGamePlacement,
+  [PLACEMENT_TYPE_GROUND_ENEMY]: GroundEnemyPlacement,
+  [PLACEMENT_TYPE_FLYING_ENEMY]: FlyingEnemyPlacement,
 };
 
 class PlacementFactory {

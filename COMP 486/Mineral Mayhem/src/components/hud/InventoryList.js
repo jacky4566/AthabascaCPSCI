@@ -2,6 +2,8 @@ import styles from "./InventoryList.module.css";
 import Sprite from "../object-graphics/Sprite";
 import PixelNumber from "../object-graphics/PixelNumber";
 import FuelTank from "./FuelTank";
+import { useRecoilState } from "recoil";
+import { currentLevelIdAtom } from "../../atoms/currentLevelIdAtom";
 
 /*
 List out our inventory
@@ -14,6 +16,7 @@ Jackson Wiebe
 */
 
 export default function InventoryList({ level }) {
+  const [currentId, setCurrentId] = useRecoilState(currentLevelIdAtom);
   const inventoryEntries = [];
 
   inventoryEntries.push(
@@ -35,6 +38,18 @@ export default function InventoryList({ level }) {
       );
     }
   });
+
+  inventoryEntries.push(
+
+    <div key={0} className={styles.inventoryEntry}>
+      <svg height="64" width="64" xmlns="http://www.w3.org/2000/svg">
+        <text x="50%" y="50%" textAnchor="middle" fill="#00ff00"  fontFamily="monospace">
+          <tspan x="50%">{currentId}</tspan>
+        </text>
+      </svg>
+    </div >
+
+  );
 
   return (
     <div className={styles.inventory}>

@@ -10,7 +10,7 @@ Jackson Wiebe
 
 export const CELL_SIZE = 32;
 export const Z_INDEX_LAYER_SIZE = 10;
-export const SPRITE_SHEET_SRC = "/mineral-mayhem-sprites.png"
+export const SPRITE_SHEET_SRC = "/sprite-sheet.png"
 
 export const PLACEMENT_TYPE_HERO = "HERO";
 export const PLACEMENT_TYPE_GOAL = "GOAL";
@@ -29,6 +29,8 @@ export const PLACEMENT_TYPE_MINERAL_NEODYMIUM = "MINERAL_NEODYMIUM";
 export const PLACEMENT_TYPE_MINERAL_YTTRIUM = "MINERAL_YTTRIUM";
 export const PLACEMENT_TYPE_TUTORIAL = "TUTORIAL";
 export const PLACEMENT_TYPE_ENDGAME = "ENDGAME";
+export const PLACEMENT_TYPE_GROUND_ENEMY = "GROUND_ENEMY";
+export const PLACEMENT_TYPE_FLYING_ENEMY = "FLYING_ENEMY";
 
 export const DIRECTION_LEFT = "LEFT";
 export const DIRECTION_RIGHT = "RIGHT";

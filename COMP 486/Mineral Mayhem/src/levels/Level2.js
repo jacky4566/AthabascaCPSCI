@@ -16,6 +16,7 @@ import { TILES } from "../helpers/tiles";
 
 const level = {
   theme: LEVEL_THEMES.EARTH,  // Theme of level sets background
+  title: "Progress",
   tilesWidth: 24,             // Size of Level
   tilesHeight: 48,           // Size of Level
   RNG: [                       // Variable for the RNG to fill in our map

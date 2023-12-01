@@ -15,9 +15,6 @@ export default function TopHud({ level }) {
       <div className={styles.topHudLeft}>
         <InventoryList level={level} />
       </div>
-      <div className={styles.topHudRight}>
-        {/*<span>Come back to me</span>*/}
-      </div>
     </div>
   );
 }
