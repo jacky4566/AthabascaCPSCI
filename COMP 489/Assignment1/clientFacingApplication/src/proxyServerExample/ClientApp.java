@@ -1,32 +1,29 @@
-package clientFacingApplication;
+package proxyServerExample;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.Proxy;
-import java.util.Properties;
 import java.util.Scanner;
+import java.util.logging.Logger;
 
-public class ClientFacingApplication {
+public class ClientApp {
+	private static final Logger LOGGER = Logger.getLogger(MainApp.class.getName());
 
-	private final static String PROXPORT = "8080";
-	private final static String PROXADDR = "localhost";
-
-	public static void main(String[] args) {
+	public static void run() {
 		System.out.println(
-				"This application takes an HTTP request in the form of a URL and sends it to a proxy server. Reponse is displayed on the terminal");
-		System.out.println("Proxy Address: \t" + PROXADDR);
-		System.out.println("Proxy Port: \t" + PROXPORT);
+				"This application takes an HTTP(S) request in the form of a URL and sends it to a proxy server. Reponse is displayed on the terminal");
+		System.out.println("Proxy Address: \t" + MainApp.PROXADDR);
+		System.out.println("Proxy Port: \t" + MainApp.PROXPORT);
 
 		// Start a new scanner
 		Scanner scanner = new Scanner(System.in);
-		
-		//Setup System Proxy conditions
-		System.setProperty("http.proxyHost", PROXADDR);
-		System.setProperty("http.proxyPort", PROXPORT);
-		System.setProperty("https.proxyHost", PROXADDR);
-		System.setProperty("https.proxyPort", PROXPORT);
+
+		// Setup System Proxy conditions
+		System.setProperty("http.proxyHost", MainApp.PROXADDR);
+		System.setProperty("http.proxyPort", MainApp.PROXPORT);
+		//System.setProperty("https.proxyHost", MainApp.PROXADDR);
+		//System.setProperty("https.proxyPort", MainApp.PROXPORT);
 
 		while (true) {
 			// Get the target URL from the user
@@ -48,8 +45,8 @@ public class ClientFacingApplication {
 					connection.connect();
 
 					// Get response code
-					int responseCode = connection.getResponseCode();
-					System.out.println("Response Code: " + responseCode);
+					//int responseCode = connection.getResponseCode();
+					//System.out.println("Response Code: " + responseCode);
 
 					// Read and display response data
 					try (BufferedReader reader = new BufferedReader(
@@ -78,6 +75,5 @@ public class ClientFacingApplication {
 		// Cleanup and close
 		scanner.close();
 		System.out.println("Exit");
-
 	}
 }
