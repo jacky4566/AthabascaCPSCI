@@ -1,12 +1,13 @@
 package proxyServerExample;
 
 import java.io.*;
+import java.net.HttpURLConnection;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.net.URL;
 import java.util.logging.Logger;
 
+//Helpful links
 //See https://stackoverflow.com/questions/9357585/creating-a-java-proxy-server-that-accepts-https
 //see http://www.jcgonzalez.com/java-simple-proxy-socket-server-examples#4
 
@@ -53,50 +54,40 @@ public class Proxy implements Runnable {
 	}
 
 	private static void handleClientRequest(Socket clientSocket) {
-		try {
-			InputStream clientIn = clientSocket.getInputStream();
-			OutputStream clientOut = clientSocket.getOutputStream();
+	    try (Socket socket = clientSocket) {
+	        InputStream clientInput = clientSocket.getInputStream();
+	        OutputStream clientOutput = clientSocket.getOutputStream();
 
-			byte[] buffer = new byte[4096];
-			int bytesRead;
+            // Read client request
+            byte[] requestBuffer = new byte[1024];
+            int bytesRead = clientInput.read(requestBuffer);
+            String request = new String(requestBuffer, 0, bytesRead);
 
-			// Read the client's request
-			bytesRead = clientIn.read(buffer);
-			String request = new String(buffer, 0, bytesRead);
+            // Extract target host and port from the request
+            String[] requestLines = request.split("\r\n");
+            String[] requestLine = requestLines[0].split(" ");
 
-			// Extract the target URL from the request
-			String targetUrl = extractTargetUrl(request);
-			LOGGER.info(targetUrl);
+            // Connect to the target server
+            String targetURL = requestLine[1];
+            HttpURLConnection connection = (HttpURLConnection) new URL(targetURL).openConnection();
+            connection.setRequestMethod(requestLine[0]);
+            connection.setDoOutput(true);
+            connection.getOutputStream().write(requestBuffer, 0, bytesRead);
 
-			// Open a connection to the target server
-			Socket targetSocket = new Socket(targetUrl, 80);
-			InputStream targetIn = targetSocket.getInputStream();
-			OutputStream targetOut = targetSocket.getOutputStream();
+            // Forward the response from the target server to the client
+            InputStream targetInput = connection.getInputStream();
+            byte[] responseBuffer = new byte[1024];
+            int targetBytesRead;
+            while ((targetBytesRead = targetInput.read(responseBuffer)) != -1) {
+                clientOutput.write(responseBuffer, 0, targetBytesRead);
+            }
 
-			// Forward the client's request to the target server
-			targetOut.write(request.getBytes());
-			targetOut.flush();
+            // Close the sockets
+            clientSocket.close();
+            targetInput.close();
 
-			// Forward the target server's response to the client
-			while ((bytesRead = targetIn.read(buffer)) != -1) {
-				clientOut.write(buffer, 0, bytesRead);
-				clientOut.flush();
-			}
-
-			// Close the sockets
-			targetSocket.close();
-			clientSocket.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 	}
-
-	private static String extractTargetUrl(String request) {
-		String[] lines = request.split("\\r\\n");
-		String[] requestLine = lines[0].split(" ");
-        // Use regex to remove "http://"
-        String cleanedUrl = requestLine[1].replaceFirst("^http://", "");
-		return cleanedUrl;
-	}
-
 }

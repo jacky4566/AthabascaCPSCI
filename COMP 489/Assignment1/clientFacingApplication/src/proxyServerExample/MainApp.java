@@ -2,6 +2,18 @@ package proxyServerExample;
 
 import java.util.logging.Logger;
 
+/*
+ * Jackson Wiebe
+ * 3519635
+ * 05/01/2024
+ * 
+ * Main APP
+ * 
+ * Main start loop for proxy demo. 
+ * Creates an instance of the proxy server, Web server, and HTTP client.
+ * 
+ */
+
 public class MainApp {
 	private static final Logger LOGGER = Logger.getLogger(MainApp.class.getName());
 

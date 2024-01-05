@@ -45,10 +45,10 @@ public class ClientApp {
 					connection.connect();
 
 					// Get response code
-					//int responseCode = connection.getResponseCode();
-					//System.out.println("Response Code: " + responseCode);
+					int responseCode = connection.getResponseCode();
+					System.out.println("Response Code: " + responseCode);
 
-					// Read and display response data
+					//Read and display response data
 					try (BufferedReader reader = new BufferedReader(
 							new InputStreamReader(connection.getInputStream()))) {
 						String line;
@@ -62,7 +62,7 @@ public class ClientApp {
 						System.out.println(response.toString());
 					}
 
-					// Clean up resources
+					// Clean up resources				
 					connection.disconnect();
 				} catch (Exception e) {
 					System.out.println("Something Went Wrong");
