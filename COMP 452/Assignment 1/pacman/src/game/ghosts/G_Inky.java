@@ -40,6 +40,7 @@ public class G_Inky extends Ghost {
             squad.put(G_Pink.class, ghosts.get(G_Pink.class));
 
             seekFormation(level_walls, player.getLoc(), squad);
+            
         }
 
         moveWithBounds(level_walls);

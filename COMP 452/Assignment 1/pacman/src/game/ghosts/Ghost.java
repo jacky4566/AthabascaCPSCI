@@ -28,13 +28,7 @@ public class Ghost {
     public Model.direction direction = Model.direction.RIGHT;
     Random random = new Random();
 
-    public enum State {
-        WANDER,
-        SEEK
-    }
-
     ImageIcon icon;
-    State myState = State.WANDER;
 
     public Ghost(Image image) {
         this.image = image;
@@ -48,12 +42,16 @@ public class Ghost {
     }
 
     /*
-     * Find path to target and return distnace in number of spaces to travel
+     * Find path to target and return distance in number of spaces to travel
      */
     int seek(short[][] level_walls, Point target) {
         List<Model.direction> pathToTarget = PathFinding.findPath(level_walls, this.location, target);
-        if (pathToTarget.size() > 0)
+        if (pathToTarget.isEmpty())
+            // Pathing was unsucceful, Assign random direction
+            wander();
+        else
             this.direction = pathToTarget.get(0);
+
         return pathToTarget.size();
     }
 
@@ -91,10 +89,19 @@ public class Ghost {
         // Find squad Center
         Point squadCentre = centroid(squad);
         // Check if squad is tight
-        if (squadTight(squad, squadCentre))
+        if (squadTight(squad, squadCentre)) {
+            // Move centriod towards Player
             seek(level_walls, target);
-        else
+        } else
             seek(level_walls, squadCentre);
+    }
+
+    /*
+     * Simply returns a random direction
+     */
+    void wander() {
+        Model.direction[] directions = Model.direction.values();
+        this.direction = directions[this.random.nextInt(directions.length)];
     }
 
     private Point centroid(Map<Class<? extends Ghost>, Ghost> squad) {
@@ -116,14 +123,6 @@ public class Ghost {
                 return false;
         }
         return true;
-    }
-
-    /*
-     * Simply returns a random direction
-     */
-    void wander() {
-        Model.direction[] directions = Model.direction.values();
-        this.direction = directions[this.random.nextInt(directions.length)];
     }
 
     /*

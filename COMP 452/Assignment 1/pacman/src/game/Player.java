@@ -2,10 +2,16 @@ package game;
 
 import java.awt.Point;
 
+/*
+ * Jackson Wiebe 
+ * 3519635
+ * 10/01/2024
+ * 
+ * Class of player that interacts with the game.
+ * This class holds all assests relating to the player character
+ */
+
 public class Player {
-
-    
-
     public Model.direction newDirection = Model.direction.RIGHT;
     private Model.direction playerDirection = Model.direction.RIGHT;
     private Point location;

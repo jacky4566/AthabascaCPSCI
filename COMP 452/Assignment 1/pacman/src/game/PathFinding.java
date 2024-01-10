@@ -11,7 +11,7 @@ import java.awt.Point;
  * 3519635
  * 09/01/2024
  * 
- * Implimentation of A* path finding
+ * Static path finding algorythem
  * 
  */
 public class PathFinding {
@@ -32,7 +32,8 @@ public class PathFinding {
     }
 
     /*
-     * A* path finding algorythem between two xy points.
+     * Breadth first search
+     * Performance could be improved with A* or other algorythems
      * Returns a list of directions to point
      */
     public static List<Model.direction> findPath(short[][] grid, Point start, Point end) {
@@ -42,9 +43,13 @@ public class PathFinding {
         int rows = grid.length;
         int cols = grid[0].length;
 
+        // Keeps track of explored nodes
         boolean[][] explored = new boolean[rows][cols];
 
+        // Next nodes to visit
         LinkedList<Node> nextToVisit = new LinkedList<>();
+
+        // Points are scaled to data
         Point startSearch = new Point(start.x / CONST.BLOCK_SIZE, start.y / CONST.BLOCK_SIZE);
         Point endSearch = new Point(end.x / CONST.BLOCK_SIZE, end.y / CONST.BLOCK_SIZE);
 
@@ -61,6 +66,7 @@ public class PathFinding {
             if (cur.xy.equals(endSearch))
                 return reconstructPath(cur);
 
+            // Add each child node
             for (int[] direction : DIRECTIONS) {
                 Node newNode = new Node(new Point(cur.xy.x + direction[0], cur.xy.y + direction[1]), cur);
                 if (newNode.xy.y < 0 || newNode.xy.y >= rows || newNode.xy.x < 0 || newNode.xy.x >= cols)
@@ -76,6 +82,9 @@ public class PathFinding {
 
     }
 
+    /*
+     * Returns a list of directions to follow the path
+     */
     private static List<Model.direction> reconstructPath(Node current) {
         List<Model.direction> path = new ArrayList<>();
 

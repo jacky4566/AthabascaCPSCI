@@ -18,7 +18,7 @@ import game.Player;
 
 public class G_Blink extends Ghost {
 
-    private static int SEEKAHEAD = (4 * CONST.BLOCK_SIZE); // How far blinky will seek
+    private static final int SEEKAHEAD = (4 * CONST.BLOCK_SIZE); // How far blinky will seek
 
     public G_Blink(Image image) {
         super(image);

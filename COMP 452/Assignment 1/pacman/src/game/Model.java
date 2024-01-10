@@ -28,13 +28,16 @@ import game.ghosts.Ghost;
 
 public class Model extends JPanel implements ActionListener {
 
-    private Dimension d = new Dimension(400, 400);;
+    // Set some graphic parameters
+    private Dimension d = new Dimension(400, 400);
     private final Font smallFont = new Font("Arial", Font.BOLD, 14);
 
+    // Images
     private Image heart;
     private Image blinkyIMG, pinkyIMG, inkyIMG, clydeIMG;
     private Image up, down, left, right;
 
+    // Game stats
     private boolean playing = false;
     private boolean dying = false;
     private int lives = 3;
@@ -259,6 +262,9 @@ public class Model extends JPanel implements ActionListener {
         playing = false;
     }
 
+    /*
+     * Draw score board
+     */
     private void drawScore(Graphics2D g) {
         g.setFont(smallFont);
         g.setColor(new Color(5, 181, 79));
@@ -270,6 +276,9 @@ public class Model extends JPanel implements ActionListener {
         }
     }
 
+    /*
+     * Draw Maze
+     */
     private void drawMaze(Graphics2D g2d) {
         for (int y = 0; y < CONST.N_BLOCKS; y++) {
             for (int x = 0; x < CONST.N_BLOCKS; x++) {
