@@ -5,8 +5,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
@@ -41,7 +41,7 @@ public class Model extends JPanel implements ActionListener {
     private int score = 0;
 
     private Player player = new Player();
-    private List<Ghost> ghosts = new ArrayList<>();
+    private Map<Class<? extends Ghost>, Ghost> ghosts = new HashMap<>();
 
     private Timer timer;
 
@@ -58,24 +58,27 @@ public class Model extends JPanel implements ActionListener {
      * 1 = Wall
      * 2 = Points
      */
-    private final short[][] levelWalls = {
+    public short[][] level_walls = {
             { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2 },
-            { 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2 },
+            { 2, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 2 },
             { 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2 },
-            { 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2 },
-            { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2 },
+            { 2, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2 },
+            { 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 2, 2, 2, 2 },
+            { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2 },
             { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 2 },
-            { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 2 },
-            { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 2 },
-            { 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2 },
+            { 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 1, 1, 1, 1, 2 },
+            { 2, 2, 2, 2, 1, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2 },
             { 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2 },
             { 2, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 1, 2, 2 },
             { 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2 },
             { 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2 },
-            { 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2 },
-            { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 1, 2, 2 }
+            { 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 1, 2, 1, 2, 2 },
+            { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2 }
     };
 
+    /*
+     * Constructor, build new game enviroment
+     */
     public Model() {
         loadImages();
         addKeyListener(new TAdapter());
@@ -83,6 +86,23 @@ public class Model extends JPanel implements ActionListener {
         initGame();
     }
 
+    /*
+     * Main game loop, will execute with timer
+     */
+    private void playGame(Graphics2D g2d) {
+        if (dying) {
+            death();
+        } else {
+            player.movePlayer(level_walls);
+            drawPacman(g2d);
+            moveDrawGhosts(g2d);
+            checkMaze();
+        }
+    }
+
+    /*
+     * A function to load images, will exit game if files are not found.
+     */
     private void loadImages() {
         try {
             pinkyIMG = new ImageIcon(getClass().getResource("images/pinky.gif")).getImage();
@@ -100,75 +120,64 @@ public class Model extends JPanel implements ActionListener {
         }
     }
 
+    /*
+     * Build up game variables for each play
+     */
     private void initGame() {
         // Reset empty space to pills
         for (int i = 0; i < CONST.N_BLOCKS; i++) {
             for (int j = 0; j < CONST.N_BLOCKS; j++) {
-                if (levelWalls[j][i] == 0) {
-                    levelWalls[j][i] = 2;
+                if (level_walls[j][i] == 0) {
+                    level_walls[j][i] = 2;
                 }
             }
         }
 
         // Reset player location
-        player.locationX = 0;
-        player.locationY = 0;
+        player = new Player();
 
-        ghosts.add(new G_Pink(pinkyIMG));
-        ghosts.add(new G_Blink(blinkyIMG));
-        ghosts.add(new G_Inky(inkyIMG));
-        ghosts.add(new G_Clyde(clydeIMG));
+        // Reset ghosts
+        ghosts.clear();
+        ghosts.put(G_Pink.class, new G_Pink(pinkyIMG));
+        ghosts.put(G_Blink.class, new G_Blink(blinkyIMG));
+        ghosts.put(G_Inky.class, new G_Inky(inkyIMG));
+        ghosts.put(G_Clyde.class, new G_Clyde(clydeIMG));
 
         // Start timer
-        timer = new Timer(50, this);
+        timer = new Timer(CONST.TIMER_TICK, this);
         timer.start();
     }
 
-    private void playGame(Graphics2D g2d) {
-        if (dying) {
-            death();
-        } else {
-            player.movePlayer(levelWalls);
-            collectPoints();
-            drawPacman(g2d);
-            // moveGhosts(g2d);
-            drawGhost(g2d);
-            checkMaze();
-        }
-    }
-
-    private void drawGhost(Graphics2D g2d) {
-        for (Ghost ghost : ghosts) {
-            g2d.drawImage(ghost.image, ghost.locationX, ghost.locationY, this);
-        }
-    }
-
-    private void collectPoints() {
-        int xGrid = player.locationX / CONST.BLOCK_SIZE;
-        int yGrid = player.locationY / CONST.BLOCK_SIZE;
-        if (levelWalls[yGrid][xGrid] == 2) {
-            levelWalls[yGrid][xGrid] = 0;
-            score++;
+    /*
+     * Move and draw each ghost
+     */
+    private void moveDrawGhosts(Graphics2D g2d) {
+        for (Map.Entry<Class<? extends Ghost>, Ghost> entry : ghosts.entrySet()) {
+            entry.getValue().move(level_walls, player, ghosts);
+            g2d.drawImage(entry.getValue().image, entry.getValue().location.x, entry.getValue().location.y, this);
         }
     }
 
     private void drawPacman(Graphics2D g2d) {
-        switch (player.playerDirection) {
+        switch (player.getDir()) {
             case LEFT:
-                g2d.drawImage(left, player.locationX + 1, player.locationY + 1, this);
+                g2d.drawImage(left, player.getLoc().x + 1, player.getLoc().y + 1, this);
                 break;
             case RIGHT:
-                g2d.drawImage(right, player.locationX + 1, player.locationY + 1, this);
+                g2d.drawImage(right, player.getLoc().x + 1, player.getLoc().y + 1, this);
                 break;
             case UP:
-                g2d.drawImage(up, player.locationX + 1, player.locationY + 1, this);
+                g2d.drawImage(up, player.getLoc().x + 1, player.getLoc().y + 1, this);
                 break;
             case DOWN:
-                g2d.drawImage(down, player.locationX + 1, player.locationY + 1, this);
+                g2d.drawImage(down, player.getLoc().x + 1, player.getLoc().y + 1, this);
                 break;
         }
     }
 
+    /*
+     * Main drawing loop
+     */
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
@@ -196,6 +205,9 @@ public class Model extends JPanel implements ActionListener {
         g2d.drawString(start, (CONST.SCREEN_SIZE) / 4, 150);
     }
 
+    /*
+     * Run on player death
+     */
     private void death() {
         lives--;
 
@@ -204,19 +216,45 @@ public class Model extends JPanel implements ActionListener {
             lives = 3;
             playing = false;
         }
+
+        playing = false;
+        dying = false;
     }
 
+    /*
+     * Check maze for win conditions
+     */
     private void checkMaze() {
+        // Collect points
+        int xGrid = player.getLoc().x / CONST.BLOCK_SIZE;
+        int yGrid = player.getLoc().y / CONST.BLOCK_SIZE;
+        if (level_walls[yGrid][xGrid] == 2) {
+            level_walls[yGrid][xGrid] = 0;
+            score++;
+        }
+
+        // Check for ghost collision
+        Point PlayerLoc = new Point(player.getLoc().x / CONST.BLOCK_SIZE, player.getLoc().y / CONST.BLOCK_SIZE);
+        for (Map.Entry<Class<? extends Ghost>, Ghost> entry : ghosts.entrySet()) {
+            Point ghostLoc = new Point(entry.getValue().location.x / CONST.BLOCK_SIZE,
+                    entry.getValue().location.y / CONST.BLOCK_SIZE);
+            if (ghostLoc.equals(PlayerLoc))
+                dying = true;
+        }
+
         // Check for uncollected pills
         for (int i = 0; i < CONST.N_BLOCKS; i++) {
             for (int j = 0; j < CONST.N_BLOCKS; j++) {
-                if (levelWalls[j][i] == 2) {
+                if (level_walls[j][i] == 2) {
+                    // Game is not over
                     return;
                 }
             }
         }
 
-        // Start new game
+        /*
+         * Game has ended
+         */
         score += 50;
         playing = false;
     }
@@ -235,7 +273,7 @@ public class Model extends JPanel implements ActionListener {
     private void drawMaze(Graphics2D g2d) {
         for (int y = 0; y < CONST.N_BLOCKS; y++) {
             for (int x = 0; x < CONST.N_BLOCKS; x++) {
-                switch (levelWalls[y][x]) {
+                switch (level_walls[y][x]) {
                     case 1:
                         g2d.setColor(new Color(0, 72, 251));
                         g2d.setStroke(new BasicStroke(5));
@@ -256,6 +294,9 @@ public class Model extends JPanel implements ActionListener {
         }
     }
 
+    /*
+     * KeyAdapter for proccessing key presses
+     */
     class TAdapter extends KeyAdapter {
 
         @Override
@@ -264,11 +305,6 @@ public class Model extends JPanel implements ActionListener {
             int key = e.getKeyCode();
 
             if (playing) {
-                // Escape game
-                if (key == KeyEvent.VK_ESCAPE) {
-                    playing = false;
-                }
-                // Apply new direction
                 if (key == KeyEvent.VK_LEFT) {
                     player.newDirection = Model.direction.LEFT;
                 } else if (key == KeyEvent.VK_RIGHT) {
@@ -277,6 +313,8 @@ public class Model extends JPanel implements ActionListener {
                     player.newDirection = Model.direction.UP;
                 } else if (key == KeyEvent.VK_DOWN) {
                     player.newDirection = Model.direction.DOWN;
+                } else if (key == KeyEvent.VK_ESCAPE) {
+                    playing = false;
                 }
 
             } else {
