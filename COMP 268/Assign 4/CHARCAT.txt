@@ -1,4 +1,0 @@
-query:"I am Cheshire Cat." he says.\nIt looked good-natured, Alice thought: still it had very long claws and a great many teeth, so she felt that it ought to be treated with respect. \n"In that direction, is the Mad Hatter, He is surely a strange fellow, do you know what his favorite drink is?"
-answer:tea
-responseCorrect:The cat vanished quite slowly, beginning with the end of the tail, and ending with the grin, which remained some time after the rest of it had gone.
-responseWrong:Guess again!

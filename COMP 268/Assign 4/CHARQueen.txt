@@ -1,5 +1,0 @@
-query:What have you to say, the Queen demanded? Who took my tarts?!
-answer:hatter
-responseCorrect:
-responseWrong:You dare Question me in this courtroom!
-responseHint:

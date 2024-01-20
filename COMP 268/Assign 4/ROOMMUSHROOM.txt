@@ -1,4 +1,0 @@
-ROOMDESCRIPTION:An odd corner of the garden where a caterpillar resides
-PromptString:?
-EntryString:An odd corner of the garden where a caterpillar resides
-ReturnString:An odd corner of the garden where a caterpillar resides

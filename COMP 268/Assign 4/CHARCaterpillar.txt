@@ -1,5 +1,0 @@
-query:You see a large blue caterpillar, sitting on the top of a mushroom with its arms folded, quietly smoking a long hookah, \nand taking not the smallest notice of her or of anything else.\nWho are you?, he directs. Alice felt a little irritated at the Caterpillar’s making such very short remarks, and she drew herself up and said, very gravely, \nI think, you ought to tell me who you are, first. and after a long exhaustive conversation alice learned that eating part of the mushroom could make her grow or shrink. 
-answer: !
-responseCorrect:
-responseWrong:Guess again!
-responseHint:Guess again!

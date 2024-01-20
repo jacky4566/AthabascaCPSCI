@@ -1,3 +1,0 @@
-EntryString:Are their heads off? shouted the Queen.\nTheir heads are gone, if it please your Majesty! the soldiers shouted in reply.\nThats right! shouted the Queen...
-PromptString:Can you play croquet?\nThe soldiers were silent, and looked at Alice, as the question was evidently meant for her.\n
-ROOMDESCRIPTION:A large rose-tree stood near the entrance of the garden: the roses growing on it were white, but there were three gardeners at it, busily painting them red. \nAlice thought this a very curious thing, and she went nearer to watch them, and just as she came up to them she heard one of them say, Look out now, Five! Dont go splashing paint over me like that!
