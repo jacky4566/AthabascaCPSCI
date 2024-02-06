@@ -22,12 +22,12 @@ public class ClientApp {
 		// Setup System Proxy conditions
 		System.setProperty("http.proxyHost", MainApp.PROXADDR);
 		System.setProperty("http.proxyPort", MainApp.PROXPORT);
-		//System.setProperty("https.proxyHost", MainApp.PROXADDR);
-		//System.setProperty("https.proxyPort", MainApp.PROXPORT);
+		System.setProperty("https.proxyHost", MainApp.PROXADDR);
+		System.setProperty("https.proxyPort", MainApp.PROXPORT);
 
 		while (true) {
 			// Get the target URL from the user
-			System.out.println("Enter the target URL (e.g., http://www.google.com) ");
+			System.out.println("Enter the target URL (e.g., https://www.google.com) ");
 			System.out.println("or type 'exit' to quit: ");
 			String path = scanner.nextLine();
 

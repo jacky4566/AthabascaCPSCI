@@ -43,7 +43,7 @@ public class Proxy implements Runnable {
 					thread.start();
 				}
 			} catch (IOException e) {
-				e.printStackTrace(); // TODO: implement catch
+				e.printStackTrace();
 			}
 
 		} catch (java.net.SocketException e) {
