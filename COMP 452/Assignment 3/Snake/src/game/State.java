@@ -39,7 +39,7 @@ public class State {
     public State() {
     }
 
-    public int getState() {
+    public int getHash() {
         int state = 0;
         state |= (foodEast ? 1 : 0) << 7;
         state |= (foodWest ? 1 : 0) << 6;

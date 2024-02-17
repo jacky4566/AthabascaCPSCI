@@ -40,19 +40,19 @@ public class AI {
      */
     public void updateQValue(boolean dead, Point food, Player ply) {
         // Get Q values for last state
-        int[] values = QTable.get(currentState.getState());
+        int[] values = QTable.get(currentState.getHash());
 
         if (dead) {
             // Snake died, apply penalty
             values[lastDir] = values[lastDir] - 100;
-            QTable.put(currentState.getState(), values);
+            QTable.put(currentState.getHash(), values);
             return;
         }
 
         if (food.y == ply.y && food.x == ply.x) {
             // Snake found food, apply reward
             values[lastDir] = values[lastDir] + 100;
-            QTable.put(currentState.getState(), values);
+            QTable.put(currentState.getHash(), values);
             return;
         }
 
@@ -65,11 +65,11 @@ public class AI {
         if (changeInDistance < 0) {
             // Reduced distance
             values[lastDir] = values[lastDir] + 2;
-            QTable.put(currentState.getState(), values);
+            QTable.put(currentState.getHash(), values);
         } else if (changeInDistance > 0) {
             // distance increased
             values[lastDir] = values[lastDir] - 1;
-            QTable.put(currentState.getState(), values);
+            QTable.put(currentState.getHash(), values);
         }
 
     }
@@ -104,8 +104,8 @@ public class AI {
         });
 
         // This state has not been seen yet, add to the QTable
-        if (!QTable.containsKey(currentState.getState())) {
-            QTable.put(currentState.getState(), new int[] { 0, 0, 0, 0 });
+        if (!QTable.containsKey(currentState.getHash())) {
+            QTable.put(currentState.getHash(), new int[] { 0, 0, 0, 0 });
             System.out.println("QTable size " + QTable.size());
         }
     }
@@ -119,7 +119,7 @@ public class AI {
             lastDir = rand.nextInt(4);
         } else {
             // Find the largest Q values for the current state
-            int[] Qvalues = QTable.get(currentState.getState());
+            int[] Qvalues = QTable.get(currentState.getHash());
             int largestQ = Integer.MIN_VALUE;
             int indexLargestQ = 0;
             for (int i = 0; i < Qvalues.length; i++) {
